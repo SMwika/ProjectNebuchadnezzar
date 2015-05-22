@@ -96,7 +96,7 @@ namespace ClientService
             //SetSericeStatus(this.ServiceHandle, ref serviceStatus);
             int port = 9191;
             //System.Net.IPHostEntry ipHostInfo = System.Net.Dns.GetHostEntry("127.0.0.1");
-            System.Net.IPAddress ipAddress = System.Net.IPAddress.Parse("127.0.0.1");// ipHostInfo.AddressList[0];
+            System.Net.IPAddress ipAddress = System.Net.IPAddress.Parse("192.168.1.51");// ipHostInfo.AddressList[0];
             System.Net.IPEndPoint remoteEP = new System.Net.IPEndPoint(ipAddress, port);
             this.sockfd = new System.Net.Sockets.Socket(System.Net.Sockets.AddressFamily.InterNetwork,
                 System.Net.Sockets.SocketType.Stream, System.Net.Sockets.ProtocolType.Tcp);
@@ -108,6 +108,7 @@ namespace ClientService
             catch (Exception e)
             {
                 eventLog1.WriteEntry(e.ToString(), EventLogEntryType.Error);
+                Console.WriteLine(e.ToString());
             }
             //initWatcher();
             eventLog1.WriteEntry("In OnStart");

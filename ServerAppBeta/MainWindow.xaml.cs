@@ -27,7 +27,7 @@ namespace ServerAppBeta
         {
             byte[] bytes = new Byte[1024];
             //IPHostEntry ipHostInfo = Dns.Resolve(Dns.GetHostName());
-            IPAddress ipAddress = IPAddress.Parse("127.0.0.1");//ipHostInfo.AddressList[0];
+            IPAddress ipAddress = IPAddress.Parse("192.168.1.51");//ipHostInfo.AddressList[0];
             IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 9191);
 
             Socket listener = new Socket(AddressFamily.InterNetwork,

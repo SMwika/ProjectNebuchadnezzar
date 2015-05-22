@@ -117,8 +117,8 @@ namespace ClientService
         {
             eventLog1.WriteEntry("Created file " + e.FullPath, System.Diagnostics.EventLogEntryType.Information);
             System.Console.WriteLine("Created file " + e.FullPath + " " + GetFileHash(e.FullPath));
-            //byte[] msg = System.Text.Encoding.ASCII.GetBytes("Created file " + e.Name + "<EOF>");
-            //int bytesSent = sockfd.Send(msg);
+            byte[] msg = System.Text.Encoding.ASCII.GetBytes("Created file " + e.Name + "<EOF>");
+            int bytesSent = sockfd.Send(msg);
         }
 
         private void watcherRenamed(object sender, System.IO.RenamedEventArgs e)
