@@ -1,4 +1,6 @@
-﻿namespace ClientService
+﻿using System.Security.Cryptography;
+using System.Text;
+namespace ClientService
 {
     partial class NebuchadnezzarClient
     {
@@ -60,11 +62,49 @@
         private System.Diagnostics.EventLog eventLog1;
         private System.IO.FileSystemWatcher watcher;
 
+        private string GetFileHash(string path)
+        {
+            System.IO.FileStream fs = null;
+            for (int i = 1; i <= 3; i++)
+            {
+                try
+                {
+                    fs = new System.IO.FileStream(path, System.IO.FileMode.Open, System.IO.FileAccess.Read, System.IO.FileShare.None);
+                    break;
+                }
+                catch (System.IO.IOException e)
+                {
+                    if (i == 3) System.Console.WriteLine(e.ToString());
+                    System.Threading.Thread.Sleep(1000);
+                    //System.Console.WriteLine(e.ToString());
+                }
+            }
+                
+            return GetFileHash(fs);
+        }
+
+        private string GetFileHash(System.IO.FileStream stream)
+        {
+            StringBuilder sb = new StringBuilder();
+            if (null != stream)
+            {
+                stream.Seek(0, System.IO.SeekOrigin.Begin);
+
+                MD5 md5 = MD5CryptoServiceProvider.Create();
+                byte[] hash = md5.ComputeHash(stream);
+                foreach (byte b in hash)
+                    sb.Append(b.ToString("x2"));
+                stream.Seek(0, System.IO.SeekOrigin.Begin);
+                stream.Close();
+                System.Console.WriteLine("StreamClosed");
+            }
+            return sb.ToString();
+        }
 
         #region FileSystemWatcher_Events
         private void watcherChanged(object sender, System.IO.FileSystemEventArgs e)
         {
-            System.Console.WriteLine("Changed file " + e.Name);
+            System.Console.WriteLine("Changed file " + e.FullPath + " " + GetFileHash(e.FullPath));
         }
 
         private void watcherDeleted(object sender, System.IO.FileSystemEventArgs e)
@@ -76,7 +116,7 @@
         private void watcherCreated(object sender, System.IO.FileSystemEventArgs e)
         {
             eventLog1.WriteEntry("Created file " + e.FullPath, System.Diagnostics.EventLogEntryType.Information);
-            System.Console.WriteLine("Created file " + e.FullPath);
+            System.Console.WriteLine("Created file " + e.FullPath + " " + GetFileHash(e.FullPath));
             //byte[] msg = System.Text.Encoding.ASCII.GetBytes("Created file " + e.Name + "<EOF>");
             //int bytesSent = sockfd.Send(msg);
         }
