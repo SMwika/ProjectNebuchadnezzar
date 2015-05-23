@@ -42,11 +42,12 @@ namespace ServerAppBeta
                 Console.WriteLine("Listening");
 
                 // Start listening for connections.
+                Console.WriteLine("Waiting for a connection...");
+                // Program is suspended while waiting for an incoming connection.
+                Socket handler = listener.Accept();
                 while (true)
                 {
-                    Console.WriteLine("Waiting for a connection...");
-                    // Program is suspended while waiting for an incoming connection.
-                    Socket handler = listener.Accept();
+                    
                     data = null;
 
                     // An incoming connection needs to be processed.
@@ -66,9 +67,10 @@ namespace ServerAppBeta
                     this.lInfo.Content = data;
                     // Echo the data back to the client.
                     
-                    handler.Shutdown(SocketShutdown.Both);
-                    handler.Close();
+                    
                 }
+                handler.Shutdown(SocketShutdown.Both);
+                handler.Close();
 
             }
             catch (Exception e)
