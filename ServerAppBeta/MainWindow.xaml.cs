@@ -33,7 +33,7 @@ namespace ServerAppBeta
             Socket listener = new Socket(AddressFamily.InterNetwork,
             SocketType.Stream, ProtocolType.Tcp);
             Console.WriteLine("Socket created");
-
+            Socket handler = null ;
             try
             {
                 listener.Bind(localEndPoint);
@@ -44,7 +44,7 @@ namespace ServerAppBeta
                 // Start listening for connections.
                 Console.WriteLine("Waiting for a connection...");
                 // Program is suspended while waiting for an incoming connection.
-                Socket handler = listener.Accept();
+                handler = listener.Accept();
                 while (true)
                 {
                     
@@ -69,13 +69,18 @@ namespace ServerAppBeta
                     
                     
                 }
-                handler.Shutdown(SocketShutdown.Both);
-                handler.Close();
+                //handler.Shutdown(SocketShutdown.Both);
+                //handler.Close();
 
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+            }
+            finally
+            {
+                handler.Shutdown(SocketShutdown.Both);
+                handler.Close();
             }
 
             Console.WriteLine("\nPress ENTER to continue...");
