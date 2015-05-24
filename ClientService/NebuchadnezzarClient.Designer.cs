@@ -120,7 +120,7 @@ namespace ClientService
         private void SendObject(object o)
         {
             if (!isConnected) return;
-            IFormatter formatter = new SoapFormatter();
+            IFormatter formatter = new BinaryFormatter();
             System.Net.Sockets.NetworkStream stream = new System.Net.Sockets.NetworkStream(sockfd);
             formatter.Serialize(stream, o);
         }
@@ -141,7 +141,7 @@ namespace ClientService
         {
             eventLog1.WriteEntry("Created file " + e.FullPath, System.Diagnostics.EventLogEntryType.Information);
             System.Console.WriteLine("Created file " + e.FullPath + " " + GetFileHash(e.FullPath));
-            int bytesSent = this.Send("Created file " + e.Name + "<EOF>");
+            //int bytesSent = this.Send("Created file " + e.Name + "<EOF>");
             this.SendObject(new Packet("user", System.DateTime.Now, e.Name, GetFileHash(e.FullPath)));
 
         }

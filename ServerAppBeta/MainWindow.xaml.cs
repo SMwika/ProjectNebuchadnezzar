@@ -18,6 +18,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Runtime.Serialization.Formatters.Soap;
 using SharedClasses;
+using System.Threading;
 
 namespace ServerAppBeta
 {
@@ -28,12 +29,49 @@ namespace ServerAppBeta
     {
         private string data = null;
         private Packet pck;
+        private Socket handler;
 
         private object ReceiveObject(Socket sock){
+            if (!sock.Connected) return null;
             NetworkStream stream = new NetworkStream(sock);
-            IFormatter formatter = new SoapFormatter();
+            IFormatter formatter = new BinaryFormatter();
             object o = (object)formatter.Deserialize(stream);
             return o;
+        }
+
+        private void listenerThread()
+        {
+            Thread.Sleep(300);
+            while (true)
+            {
+                pck = null;
+                // An incoming connection needs to be processed.
+                //while (true)
+                //{
+                //    bytes = new byte[1024];
+                //    int bytesRec = handler.Receive(bytes);
+                //    data += Encoding.ASCII.GetString(bytes, 0, bytesRec);
+                //    if (data.IndexOf("<EOF>") > -1)
+                //    {
+                //        break;
+                //    }
+                //}
+
+                pck = (Packet)ReceiveObject(handler);
+                if (pck == null)
+                {
+                    //Console.WriteLine("Null Object");
+                    continue;
+                }
+
+                // Show the data on the console.
+                //Console.WriteLine("Text received : {0}", data);
+                Console.WriteLine("Packet received : {0}", pck.getString());
+                this.lInfo.Content = pck.getString();
+                // Echo the data back to the client.
+
+
+            }
         }
         private void startListening()
         {
@@ -45,7 +83,7 @@ namespace ServerAppBeta
             Socket listener = new Socket(AddressFamily.InterNetwork,
             SocketType.Stream, ProtocolType.Tcp);
             Console.WriteLine("Socket created");
-            Socket handler = null ;
+            //Socket handler = null ;
             try
             {
                 listener.Bind(localEndPoint);
@@ -57,32 +95,33 @@ namespace ServerAppBeta
                 Console.WriteLine("Waiting for a connection...");
                 // Program is suspended while waiting for an incoming connection.
                 handler = listener.Accept();
+                //new Thread(listenerThread).Start();
                 while (true)
                 {
-                    
-                    data = null;
+
+                    //data = null;
                     pck = null;
                     // An incoming connection needs to be processed.
-                    while (true)
-                    {
-                        bytes = new byte[1024];
-                        int bytesRec = handler.Receive(bytes);
-                        data += Encoding.ASCII.GetString(bytes, 0, bytesRec);
-                        if (data.IndexOf("<EOF>") > -1)
-                        {
-                            break;
-                        }
-                    }
+                    //while (true)
+                    //{
+                    //    bytes = new byte[1024];
+                    //    int bytesRec = handler.Receive(bytes);
+                    //    data += Encoding.ASCII.GetString(bytes, 0, bytesRec);
+                    //    if (data.IndexOf("<EOF>") > -1)
+                    //    {
+                    //        break;
+                    //    }
+                    //}
 
                     pck = (Packet)ReceiveObject(handler);
 
-                    // Show the data on the console.
-                    Console.WriteLine("Text received : {0}", data);
+                //    // Show the data on the console.
+                    //Console.WriteLine("Text received : {0}", data);
                     Console.WriteLine("Packet received : {0}", pck.getString());
-                    this.lInfo.Content = data;
-                    // Echo the data back to the client.
-                    
-                    
+                    //this.lInfo.Content = data;
+                //    // Echo the data back to the client.
+
+
                 }
                 //handler.Shutdown(SocketShutdown.Both);
                 //handler.Close();
