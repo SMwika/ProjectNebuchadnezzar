@@ -74,7 +74,7 @@ namespace ClientService
                     eventLog1.WriteEntry("Cannot connect to server. Still trying...", EventLogEntryType.Warning);
                     Console.WriteLine("Cannot connect to server. Still trying...");
                 }
-                Thread.Sleep(1000 * 10);
+                Thread.Sleep(1000 * 30);
             }
             Console.WriteLine("Connection Worker ended successfully");
             
