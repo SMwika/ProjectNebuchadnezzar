@@ -11,6 +11,7 @@ using System.Runtime.InteropServices;
 using System.Collections;
 using System.Runtime.Remoting.Contexts;
 using System.IO;
+using System.Threading;
 
 namespace ClientService
 {
@@ -41,7 +42,44 @@ namespace ClientService
         [DllImport("advapi32.dll", SetLastError = true)]
         private static extern bool SetSericeStatus(IntPtr handle, ref ServiceStatus serviceStatus);
 
+
+        #region ConnectionThread
         private System.Net.Sockets.Socket sockfd;
+        private string ip = "192.168.1.51";
+        private int port = 9191;
+        private ManualResetEvent _shutdownConnThreadEvent = new ManualResetEvent(false);
+        private Thread _connectionThread;
+        private bool isConnected = false;
+
+        private void ConnectionThreadWorker()
+        {
+            //Environment.SpecialFolder.
+            eventLog1.WriteEntry("Connection Worker started...", EventLogEntryType.Information);
+            System.Net.IPAddress ipAddress = System.Net.IPAddress.Parse(ip);
+            System.Net.IPEndPoint remoteEP = new System.Net.IPEndPoint(ipAddress, port);
+            this.sockfd = new System.Net.Sockets.Socket(System.Net.Sockets.AddressFamily.InterNetwork,
+                System.Net.Sockets.SocketType.Stream, System.Net.Sockets.ProtocolType.Tcp);
+
+            while (true)
+            {
+                try
+                {
+                    this.sockfd.Connect(remoteEP);
+                    isConnected = true;
+                    Console.WriteLine("Connected!");
+                    break;
+                }
+                catch (Exception e)
+                {
+                    eventLog1.WriteEntry("Cannot connect to server. Still trying...", EventLogEntryType.Warning);
+                    Console.WriteLine("Cannot connect to server. Still trying...");
+                }
+                Thread.Sleep(1000 * 10);
+            }
+            Console.WriteLine("Connection Worker ended successfully");
+            
+        }
+        #endregion
         public NebuchadnezzarClient(string[] args)
         {
             InitializeComponent();
@@ -64,62 +102,23 @@ namespace ClientService
             eventLog1.Log = logName;
         }
 
-        private void initWatcher()
-        {
-            watcher.Path = "C:\temp";
-            watcher.Filter = "*.txt";
-            watcher.IncludeSubdirectories = true;
-            watcher.EnableRaisingEvents = true;
-            watcher.NotifyFilter = NotifyFilters.DirectoryName | NotifyFilters.FileName | NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.Size;
-            watcher.Changed += new FileSystemEventHandler(watcherChanged);
-            watcher.Created += new FileSystemEventHandler(watcherCreated);
-            watcher.Deleted += new FileSystemEventHandler(watcherDeleted);
-            watcher.Renamed += new RenamedEventHandler(watcherRenamed);
-        }
-
         public void onTimer(object sender, System.Timers.ElapsedEventArgs args){
             //eventLog1.WriteEntry("Monitoring the System", EventLogEntryType.Information, 123);
         }
-
-        //protected override void OnBeforeInstall(IDictionary savedState) { 
-        //    string parameter = "MySource1\" \"MyLogFile1";
-        //    Context.Parameters["assemblypath"] = "\"" + Context.Parameters["assemblypath"] + "\" \"" + parameter + "\""; 
-        //    base.OnBeforeInstall(savedState); 
-        //}
-
+    
         protected override void OnStart(string[] args)
         {
-            //Debugger.Break();
-            //ServiceStatus serviceStatus = new ServiceStatus();
-            //serviceStatus.dwCurrentState = ServiceState.SERVICE_START_PENDING;
-            //serviceStatus.dwWaitHint = 1000000;
-            //SetSericeStatus(this.ServiceHandle, ref serviceStatus);
-            int port = 9191;
             //System.Net.IPHostEntry ipHostInfo = System.Net.Dns.GetHostEntry("127.0.0.1");
-            System.Net.IPAddress ipAddress = System.Net.IPAddress.Parse("192.168.1.51");// ipHostInfo.AddressList[0];
-            System.Net.IPEndPoint remoteEP = new System.Net.IPEndPoint(ipAddress, port);
-            this.sockfd = new System.Net.Sockets.Socket(System.Net.Sockets.AddressFamily.InterNetwork,
-                System.Net.Sockets.SocketType.Stream, System.Net.Sockets.ProtocolType.Tcp);
-            try
-            {
-                this.sockfd.Connect(remoteEP);
-
-            }
-            catch (Exception e)
-            {
-                eventLog1.WriteEntry(e.ToString(), EventLogEntryType.Error);
-                Console.WriteLine(e.ToString());
-            }
-            //initWatcher();
+            _connectionThread = new Thread(ConnectionThreadWorker);
+            _connectionThread.Name = "Connection Maker";
+            _connectionThread.IsBackground = true;
+            _connectionThread.Start();
             eventLog1.WriteEntry("In OnStart");
             System.Timers.Timer timer = new System.Timers.Timer();
             timer.Enabled = true;
             timer.Interval = 60000;
             timer.Elapsed += new System.Timers.ElapsedEventHandler(this.onTimer);
             timer.Start();
-
-            //serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
-            //SetSericeStatus(this.ServiceHandle, ref serviceStatus);
         }
 
         protected override void OnStop()

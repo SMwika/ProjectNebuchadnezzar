@@ -75,7 +75,7 @@ namespace ClientService
                 catch (System.IO.IOException e)
                 {
                     if (i == 3) System.Console.WriteLine(e.ToString());
-                    System.Threading.Thread.Sleep(1000);
+                    System.Threading.Thread.Sleep(500);
                     //System.Console.WriteLine(e.ToString());
                 }
             }
