@@ -19,6 +19,7 @@ using System.Windows.Shapes;
 using System.Runtime.Serialization.Formatters.Soap;
 using SharedClasses;
 using System.Threading;
+using System.IO;
 
 namespace ServerAppBeta
 {
@@ -35,8 +36,15 @@ namespace ServerAppBeta
             if (!sock.Connected) return null;
             NetworkStream stream = new NetworkStream(sock);
             IFormatter formatter = new BinaryFormatter();
-            object o = (object)formatter.Deserialize(stream);
-            return o;
+            try
+            {
+                object o = (object)formatter.Deserialize(stream);
+                return o;
+            }
+            catch(SocketException se){
+                Console.WriteLine("Exception socket");
+            }
+            return null;
         }
 
         private void listenerThread()
@@ -45,30 +53,11 @@ namespace ServerAppBeta
             while (true)
             {
                 pck = null;
-                // An incoming connection needs to be processed.
-                //while (true)
-                //{
-                //    bytes = new byte[1024];
-                //    int bytesRec = handler.Receive(bytes);
-                //    data += Encoding.ASCII.GetString(bytes, 0, bytesRec);
-                //    if (data.IndexOf("<EOF>") > -1)
-                //    {
-                //        break;
-                //    }
-                //}
 
                 pck = (Packet)ReceiveObject(handler);
-                if (pck == null)
-                {
-                    //Console.WriteLine("Null Object");
-                    continue;
-                }
-
-                // Show the data on the console.
-                //Console.WriteLine("Text received : {0}", data);
+                if (pck == null) continue;
                 Console.WriteLine("Packet received : {0}", pck.getString());
                 this.lInfo.Content = pck.getString();
-                // Echo the data back to the client.
 
 
             }
@@ -98,34 +87,23 @@ namespace ServerAppBeta
                 //new Thread(listenerThread).Start();
                 while (true)
                 {
-
-                    //data = null;
                     pck = null;
-                    // An incoming connection needs to be processed.
-                    //while (true)
-                    //{
-                    //    bytes = new byte[1024];
-                    //    int bytesRec = handler.Receive(bytes);
-                    //    data += Encoding.ASCII.GetString(bytes, 0, bytesRec);
-                    //    if (data.IndexOf("<EOF>") > -1)
-                    //    {
-                    //        break;
-                    //    }
-                    //}
-
                     pck = (Packet)ReceiveObject(handler);
-
-                //    // Show the data on the console.
-                    //Console.WriteLine("Text received : {0}", data);
                     Console.WriteLine("Packet received : {0}", pck.getString());
-                    //this.lInfo.Content = data;
-                //    // Echo the data back to the client.
 
 
                 }
                 //handler.Shutdown(SocketShutdown.Both);
                 //handler.Close();
 
+            }
+            catch (SocketException se)
+            {
+                Console.WriteLine("Unexpected");
+            }
+            catch (IOException ioe)
+            {
+                Console.WriteLine("IOE");
             }
             catch (Exception e)
             {

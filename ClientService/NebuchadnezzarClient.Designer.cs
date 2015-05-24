@@ -129,12 +129,14 @@ namespace ClientService
         private void watcherChanged(object sender, System.IO.FileSystemEventArgs e)
         {
             System.Console.WriteLine("Changed file " + e.FullPath + " " + GetFileHash(e.FullPath));
+            this.SendObject(new Packet("user", System.DateTime.Now, e.Name, GetFileHash(e.FullPath), WatcherInfoType.FILE_CHANGED));
         }
 
         private void watcherDeleted(object sender, System.IO.FileSystemEventArgs e)
         {
             eventLog1.WriteEntry("Deleted file " + e.FullPath, System.Diagnostics.EventLogEntryType.Information);
             System.Console.WriteLine("Deleted file " + e.FullPath);
+            this.SendObject(new Packet("user", System.DateTime.Now, e.Name, "", WatcherInfoType.FILE_DELETED));
         }
 
         private void watcherCreated(object sender, System.IO.FileSystemEventArgs e)
@@ -142,7 +144,7 @@ namespace ClientService
             eventLog1.WriteEntry("Created file " + e.FullPath, System.Diagnostics.EventLogEntryType.Information);
             System.Console.WriteLine("Created file " + e.FullPath + " " + GetFileHash(e.FullPath));
             //int bytesSent = this.Send("Created file " + e.Name + "<EOF>");
-            this.SendObject(new Packet("user", System.DateTime.Now, e.Name, GetFileHash(e.FullPath)));
+            this.SendObject(new Packet("user", System.DateTime.Now, e.Name, GetFileHash(e.FullPath), WatcherInfoType.FILE_CREATED));
 
         }
 
@@ -150,6 +152,7 @@ namespace ClientService
         {
             eventLog1.WriteEntry("Renamed file " + e.OldFullPath + " to " + e.FullPath, System.Diagnostics.EventLogEntryType.Information);
             System.Console.WriteLine("Renamed file " + e.OldFullPath + " to " + e.FullPath);
+            this.SendObject(new Packet("user", System.DateTime.Now, e.Name, GetFileHash(e.FullPath), WatcherInfoType.FILE_RENAMED));
         }
         #endregion
     }
