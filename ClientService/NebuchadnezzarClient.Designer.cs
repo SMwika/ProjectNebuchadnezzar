@@ -1,5 +1,10 @@
-﻿using System.Security.Cryptography;
+﻿using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization.Formatters.Soap;
+using System.Security.Cryptography;
 using System.Text;
+using SharedClasses;
+
 namespace ClientService
 {
     partial class NebuchadnezzarClient
@@ -101,6 +106,25 @@ namespace ClientService
             return sb.ToString();
         }
 
+        private int Send(string msg)
+        {
+            byte[] byteMsg = System.Text.Encoding.ASCII.GetBytes(msg);
+            return this.Send(byteMsg);
+        }
+        private int Send(byte[] msg){
+            if (isConnected)
+                return sockfd.Send(msg);
+            else return -1;
+        }
+
+        private void SendObject(object o)
+        {
+            if (!isConnected) return;
+            IFormatter formatter = new SoapFormatter();
+            System.Net.Sockets.NetworkStream stream = new System.Net.Sockets.NetworkStream(sockfd);
+            formatter.Serialize(stream, o);
+        }
+
         #region FileSystemWatcher_Events
         private void watcherChanged(object sender, System.IO.FileSystemEventArgs e)
         {
@@ -117,8 +141,9 @@ namespace ClientService
         {
             eventLog1.WriteEntry("Created file " + e.FullPath, System.Diagnostics.EventLogEntryType.Information);
             System.Console.WriteLine("Created file " + e.FullPath + " " + GetFileHash(e.FullPath));
-            byte[] msg = System.Text.Encoding.ASCII.GetBytes("Created file " + e.Name + "<EOF>");
-            int bytesSent = sockfd.Send(msg);
+            int bytesSent = this.Send("Created file " + e.Name + "<EOF>");
+            this.SendObject(new Packet("user", System.DateTime.Now, e.Name, GetFileHash(e.FullPath)));
+
         }
 
         private void watcherRenamed(object sender, System.IO.RenamedEventArgs e)

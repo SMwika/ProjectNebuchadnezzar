@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -14,6 +16,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Runtime.Serialization.Formatters.Soap;
+using SharedClasses;
 
 namespace ServerAppBeta
 {
@@ -23,6 +27,14 @@ namespace ServerAppBeta
     public partial class MainWindow : Window
     {
         private string data = null;
+        private Packet pck;
+
+        private object ReceiveObject(Socket sock){
+            NetworkStream stream = new NetworkStream(sock);
+            IFormatter formatter = new SoapFormatter();
+            object o = (object)formatter.Deserialize(stream);
+            return o;
+        }
         private void startListening()
         {
             byte[] bytes = new Byte[1024];
@@ -49,7 +61,7 @@ namespace ServerAppBeta
                 {
                     
                     data = null;
-
+                    pck = null;
                     // An incoming connection needs to be processed.
                     while (true)
                     {
@@ -62,8 +74,11 @@ namespace ServerAppBeta
                         }
                     }
 
+                    pck = (Packet)ReceiveObject(handler);
+
                     // Show the data on the console.
                     Console.WriteLine("Text received : {0}", data);
+                    Console.WriteLine("Packet received : {0}", pck.getString());
                     this.lInfo.Content = data;
                     // Echo the data back to the client.
                     
