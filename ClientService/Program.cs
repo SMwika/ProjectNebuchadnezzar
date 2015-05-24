@@ -20,6 +20,7 @@ namespace ClientService
             {
                 NebuchadnezzarClient service1 = new NebuchadnezzarClient(args);
                 service1.TestStartupAndStop(args);
+
             }
             else
             {
