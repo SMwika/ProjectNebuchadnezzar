@@ -20,7 +20,7 @@ namespace SharedClasses
         {
             this.user = usr;
             this.date = dt;
-            this.fileName = name;
+            this.fileName = name.Replace("\\", "\\\\");
             this.fileHash = hash;
             this.iType = type;
         }
