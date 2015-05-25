@@ -10,6 +10,7 @@ using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;
 using System.IO;
+using System.Configuration;
 
 namespace ServerService
 {
@@ -18,8 +19,10 @@ namespace ServerService
         private Thread _connectionThread;
         private Thread _clientServiceThread;
 
-        private String ip = "127.0.0.1";
-        private int port = 9191;
+        private String ip = ConfigurationManager.AppSettings["listenerIP"];//"127.0.0.1";
+        private int port = Convert.ToInt32(ConfigurationManager.AppSettings["listenerPort"]);//9191;
+        //private String ip = "192.168.1.51";
+        //private int port = 9191;
 
         private object ReceiveObject(Socket sock)
         {
@@ -92,6 +95,7 @@ namespace ServerService
         }
         public Server()
         {
+            Console.WriteLine(ip + ":" + port);
             _connectionThread = new Thread(connectionThreadFunc);
             _connectionThread.Name = "Server connection thread";
             _connectionThread.Start();
