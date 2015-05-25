@@ -83,8 +83,10 @@ namespace ClientService
         public NebuchadnezzarClient(string[] args)
         {
             InitializeComponent();
-            string eventSourceName = "MySource";
-            string logName = "MyNewLog";
+            //string eventSourceName = "MySource";
+            //string logName = "MyNewLog";
+            string eventSourceName = "NebuchadnezzarClientService";
+            string logName = "NebuchadnezzarMon";
             if (args.Count() > 0)
             {
                 eventSourceName = args[0];
