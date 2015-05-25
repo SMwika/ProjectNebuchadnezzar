@@ -15,6 +15,15 @@ namespace ServerService
         public NebuchadnezzarServer(string[] args)
         {
             InitializeComponent();
+            string eventSourceName = "NebuchadnezzarServerService";
+            string logName = "NebuchadnezzarMon";
+            eventLog1 = new System.Diagnostics.EventLog();
+            if (!System.Diagnostics.EventLog.SourceExists(eventSourceName))
+            {
+                System.Diagnostics.EventLog.CreateEventSource(eventSourceName, logName);
+            }
+            eventLog1.Source = eventSourceName;
+            eventLog1.Log = logName;
         }
 
         protected override void OnStart(string[] args)
@@ -30,6 +39,11 @@ namespace ServerService
             this.OnStart(args);
             Console.ReadLine();
             this.OnStop();
+        }
+
+        private void eventLog1_EntryWritten(object sender, EntryWrittenEventArgs e)
+        {
+
         }
     }
 }
