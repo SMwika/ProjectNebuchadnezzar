@@ -17,7 +17,7 @@ namespace ServerService
         private Thread _connectionThread;
         private Thread _clientServiceThread;
 
-        private String ip = "192.168.1.51";
+        private String ip = "127.0.0.1";
         private int port = 9191;
 
         private object ReceiveObject(Socket sock)
@@ -66,11 +66,13 @@ namespace ServerService
 
         private void clientServiceThreadFunc(Socket s)
         {
-
+            /* obsługa każdego klienta - odczyt obiektów z socketa (funkcja ReceiveObject(Socket sock) )*/
         }
         public Server()
         {
-
+            _connectionThread = new Thread(connectionThreadFunc);
+            _connectionThread.Name = "Server connection thread";
+            _connectionThread.Start();
         }
 
 
