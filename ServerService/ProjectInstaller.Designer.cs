@@ -40,7 +40,7 @@
             // serviceInstaller1
             // 
             this.serviceInstaller1.Description = "Nebuchadnezzar File Monitor Service Server";
-            this.serviceInstaller1.DisplayName = "NebuchadnezzarServer";
+            this.serviceInstaller1.DisplayName = "Nebuchadnezzar Monitoring Service Server";
             this.serviceInstaller1.ServiceName = "ServerService";
             // 
             // ProjectInstaller

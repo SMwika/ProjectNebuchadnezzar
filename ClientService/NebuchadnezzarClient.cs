@@ -12,6 +12,7 @@ using System.Collections;
 using System.Runtime.Remoting.Contexts;
 using System.IO;
 using System.Threading;
+using System.Configuration;
 
 namespace ClientService
 {
@@ -45,8 +46,10 @@ namespace ClientService
 
         #region ConnectionThread
         private System.Net.Sockets.Socket sockfd;
-        private string ip = "127.0.0.1";
-        private int port = 9191;
+        //private string ip = "127.0.0.1";
+        //private int port = 9191;
+        private String ip = ConfigurationManager.AppSettings["serverIP"];//"127.0.0.1";
+        private int port = Convert.ToInt32(ConfigurationManager.AppSettings["serverPort"]);//9191;
         private ManualResetEvent _shutdownConnThreadEvent = new ManualResetEvent(false);
         private Thread _connectionThread;
         private bool isConnected = false;
@@ -54,6 +57,8 @@ namespace ClientService
         private void ConnectionThreadWorker()
         {
             //Environment.SpecialFolder.
+
+            Console.WriteLine(ip + ":" + port);
             eventLog1.WriteEntry("Connection Worker started...", EventLogEntryType.Information);
             System.Net.IPAddress ipAddress = System.Net.IPAddress.Parse(ip);
             System.Net.IPEndPoint remoteEP = new System.Net.IPEndPoint(ipAddress, port);
