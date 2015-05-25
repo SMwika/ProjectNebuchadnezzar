@@ -9,6 +9,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;
+using System.IO;
 
 namespace ServerService
 {
@@ -29,6 +30,10 @@ namespace ServerService
             {
                 object o = (object)formatter.Deserialize(stream);
                 return o;
+            }
+            catch (IOException e)
+            {
+                Console.WriteLine(e.ToString());
             }
             catch (SocketException se)
             {
@@ -67,10 +72,23 @@ namespace ServerService
 
         private void clientServiceThreadFunc(Socket s)
         {
+            IPEndPoint ipep = s.RemoteEndPoint as IPEndPoint;
+            String ip = ipep.Address.ToString();
             /* obsługa każdego klienta - odczyt obiektów z socketa (funkcja ReceiveObject(Socket sock) )*/
             Console.WriteLine("Connected in Thread");
-            Packet pck = (Packet)ReceiveObject(s);
-            Console.WriteLine(pck.getString());
+            while (true)
+            {
+                Packet pck = null;
+                pck = (Packet)ReceiveObject(s);
+                if (pck == null)
+                {
+                    s.Close();
+                    return;
+                }
+                Console.WriteLine(pck.getString());
+                DBConnect db = new DBConnect();
+                db.addPacket(pck, ip);
+            }
         }
         public Server()
         {
