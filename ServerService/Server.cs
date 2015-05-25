@@ -39,23 +39,24 @@ namespace ServerService
 
         private void connectionThreadFunc()
         {
-            Packet pck = null;
+            //Packet pck = null;
             IPAddress ipAddress = IPAddress.Parse(ip);
             IPEndPoint localEndPoint = new IPEndPoint(ipAddress, port);
 
             Socket listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            listener.Bind(localEndPoint);
+            Console.WriteLine("Bind created");
+            listener.Listen(10);
+            Console.WriteLine("Listening...");
 
             while(true){
                 try
                 {
-                    listener.Bind(localEndPoint);
-                    Console.WriteLine("Bind created");
-                    listener.Listen(10);
-                    Console.WriteLine("Listening...");
-
                     Socket handler;
                     handler = listener.Accept();
+                    Console.WriteLine("Connected before Thread");
                     Thread clientService = new Thread(() => clientServiceThreadFunc(handler));
+                    clientService.Start();
                 }
                 catch (SocketException se)
                 {
@@ -67,6 +68,9 @@ namespace ServerService
         private void clientServiceThreadFunc(Socket s)
         {
             /* obsługa każdego klienta - odczyt obiektów z socketa (funkcja ReceiveObject(Socket sock) )*/
+            Console.WriteLine("Connected in Thread");
+            Packet pck = (Packet)ReceiveObject(s);
+            Console.WriteLine(pck.getString());
         }
         public Server()
         {

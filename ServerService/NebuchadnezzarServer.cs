@@ -12,6 +12,7 @@ namespace ServerService
 {
     public partial class NebuchadnezzarServer : ServiceBase
     {
+        Server srv;
         public NebuchadnezzarServer(string[] args)
         {
             InitializeComponent();
@@ -28,6 +29,7 @@ namespace ServerService
 
         protected override void OnStart(string[] args)
         {
+            srv = new Server();
         }
 
         protected override void OnStop()
