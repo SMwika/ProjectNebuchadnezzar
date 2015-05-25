@@ -45,7 +45,7 @@ namespace ClientService
 
         #region ConnectionThread
         private System.Net.Sockets.Socket sockfd;
-        private string ip = "192.168.1.51";
+        private string ip = "127.0.0.1";
         private int port = 9191;
         private ManualResetEvent _shutdownConnThreadEvent = new ManualResetEvent(false);
         private Thread _connectionThread;
