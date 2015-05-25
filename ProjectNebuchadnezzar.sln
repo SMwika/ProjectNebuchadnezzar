@@ -12,6 +12,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerService", "ServerService\ServerService.csproj", "{93879016-B3AD-4FF1-821A-AA75E6EE4F6B}"
 EndProject
 Project("{6141683F-8A12-4E36-9623-2EB02B2C2303}") = "ClientServiceSetup", "ClientServiceSetup\ClientServiceSetup.isproj", "{1D065954-DAFE-40E7-A55F-0D2534E749B6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EFA323BE-C9CE-4221-9D5E-A7429AC30D52} = {EFA323BE-C9CE-4221-9D5E-A7429AC30D52}
+	EndProjectSection
 EndProject
 Project("{6141683F-8A12-4E36-9623-2EB02B2C2303}") = "ServerServiceSetup", "ServerServiceSetup\ServerServiceSetup.isproj", "{10FE6DE4-8694-4EC6-83BB-0B285E8ABCCD}"
 EndProject
