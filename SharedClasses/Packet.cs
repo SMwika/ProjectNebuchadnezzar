@@ -10,11 +10,11 @@ namespace SharedClasses
     [Serializable()]
     public class Packet
     {
-        String user;
-        DateTime date;
-        String fileName;
-        String fileHash;
-        WatcherInfoType iType;
+        public String user {get; set;}
+        public DateTime date { get; set; }
+        public String fileName { get; set; }
+        public String fileHash { get; set; }
+        public WatcherInfoType iType { get; set; }
 
         public Packet(String usr, DateTime dt, String name, String hash, WatcherInfoType type)
         {
