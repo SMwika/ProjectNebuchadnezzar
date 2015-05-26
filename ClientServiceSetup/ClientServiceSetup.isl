@@ -1180,7 +1180,7 @@
 		<row><td>USERPROFILE</td><td>TARGETDIR</td><td>.:USERPR~1|UserProfile</td><td/><td>0</td><td/></row>
 		<row><td>WindowsFolder</td><td>TARGETDIR</td><td>.:Windows</td><td/><td>0</td><td/></row>
 		<row><td>WindowsVolume</td><td>TARGETDIR</td><td>.:WinRoot</td><td/><td>0</td><td/></row>
-		<row><td>company_name</td><td>ProgramMenuFolder</td><td>ODROBI~1|Odrobina&amp;Pałac Company</td><td/><td>1</td><td/></row>
+		<row><td>company_name</td><td>ProgramMenuFolder</td><td>ODROBI~1|Odrobina_Pałac Company</td><td/><td>1</td><td/></row>
 		<row><td>nebuch_1_nebuchadnezzar_monitoring_system_client</td><td>company_name</td><td>NEBUCH~1|Nebuchadnezzar Monitoring System Client</td><td/><td>1</td><td/></row>
 	</table>
 
