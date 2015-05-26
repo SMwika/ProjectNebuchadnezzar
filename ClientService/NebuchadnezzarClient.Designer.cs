@@ -66,6 +66,7 @@ namespace ClientService
 
         private System.Diagnostics.EventLog eventLog1;
         private System.IO.FileSystemWatcher watcher;
+        private System.Collections.Generic.List<Packet> packetList = new System.Collections.Generic.List<Packet>();
 
         private string GetFileHash(string path)
         {
@@ -79,7 +80,7 @@ namespace ClientService
                 }
                 catch (System.IO.FileNotFoundException)
                 {
-                    return "TEMP_DELETED";
+                    return "";
                 }
                 catch (System.IO.IOException e)
                 {
@@ -121,9 +122,30 @@ namespace ClientService
             else return -1;
         }
 
+        private void SendPacketList(System.Collections.Generic.List<Packet> list){
+            foreach (Packet p in list)
+            {
+                SendObject(p);
+                //list.Remove(p);
+            }
+            list.Clear();
+        }
+
+        private int xxx;
+
         private void SendObject(object o)
         {
-            if (!isConnected) return;
+            //System.Console.WriteLine("count: " + xxx);
+            if (!isConnected)
+            {
+                packetList.Add((Packet)o);
+                return;
+            }
+            //if (!nonConnectedListSent)
+            //{
+            //    SendPacketList(packetList);
+            //    nonConnectedListSent = true;
+            //}
             IFormatter formatter = new BinaryFormatter();
             System.Net.Sockets.NetworkStream stream = new System.Net.Sockets.NetworkStream(sockfd);
             formatter.Serialize(stream, o);
@@ -132,7 +154,7 @@ namespace ClientService
         #region FileSystemWatcher_Events
         private void watcherChanged(object sender, System.IO.FileSystemEventArgs e)
         {
-            System.Console.WriteLine("Changed file " + e.FullPath + " " + GetFileHash(e.FullPath));
+            //System.Console.WriteLine("Changed file " + e.FullPath + " " + GetFileHash(e.FullPath));
             this.SendObject(new Packet("user", System.DateTime.Now, e.FullPath, GetFileHash(e.FullPath), WatcherInfoType.FILE_CHANGED));
         }
 
@@ -145,8 +167,9 @@ namespace ClientService
 
         private void watcherCreated(object sender, System.IO.FileSystemEventArgs e)
         {
-            eventLog1.WriteEntry("Created file " + e.FullPath, System.Diagnostics.EventLogEntryType.Information);
-            System.Console.WriteLine("Created file " + e.FullPath + " " + GetFileHash(e.FullPath));
+            //xxx++;
+            //eventLog1.WriteEntry("Created file " + e.FullPath, System.Diagnostics.EventLogEntryType.Information);
+            //System.Console.WriteLine("Created file " + e.FullPath + " " + GetFileHash(e.FullPath));
             //int bytesSent = this.Send("Created file " + e.Name + "<EOF>");
             this.SendObject(new Packet("user", System.DateTime.Now, e.FullPath, GetFileHash(e.FullPath), WatcherInfoType.FILE_CREATED));
 
