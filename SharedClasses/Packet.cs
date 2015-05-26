@@ -10,12 +10,65 @@ namespace SharedClasses
     [Serializable()]
     public class Packet
     {
-        public String user {get; set;}
-        public DateTime date { get; set; }
-        public String fileName { get; set; }
-        public String fileHash { get; set; }
-        public WatcherInfoType iType { get; set; }
+        private String user {get; set;}
+        private DateTime date { get; set; }
+        private String fileName { get; set; }
+        private String oldFileName { get; set; }
+        private String fileHash { get; set; }
+        private WatcherInfoType iType { get; set; }
 
+        public String User{
+            get
+            {
+                return this.user;
+            }
+        }
+
+        public DateTime Date
+        {
+            get
+            {
+                return this.date;
+            }
+        }
+
+        public String FileName
+        {
+            get
+            {
+                return this.fileName;
+            }
+        }
+
+        public String OldFileName
+        {
+            get
+            {
+                return this.oldFileName;
+            }
+        }
+
+        public String FileHash
+        {
+            get
+            {
+                return this.fileHash;
+            }
+        }
+
+        public WatcherInfoType IType
+        {
+            get
+            {
+                return this.iType;
+            }
+        }
+
+        public Packet(String usr, DateTime dt, String name, String oldName, String hash, WatcherInfoType type)
+            : this(usr, dt, name, hash, type)
+        {
+            this.oldFileName = oldName.Replace("\\", "\\\\");
+        }
         public Packet(String usr, DateTime dt, String name, String hash, WatcherInfoType type)
         {
             this.user = usr;

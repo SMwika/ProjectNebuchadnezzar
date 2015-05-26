@@ -102,8 +102,8 @@ namespace ServerService
 
         public void addPacket(Packet p, String ip)
         {
-            string query = String.Format("INSERT INTO packet(user, date, fileName, filehash, iType, ip) VALUES('{0}', '{1}', '{2}', '{3}', {4}, '{5}')",
-                p.user, p.date.ToString(), p.fileName, p.fileHash, (int)p.iType, ip);
+            string query = String.Format("INSERT INTO packet(user, date, fileName, filehash, iType, ip, oldFileName) VALUES('{0}', '{1}', '{2}', '{3}', {4}, '{5}', '{6}')",
+                p.User, p.Date.ToString(), p.FileName, p.FileHash, (int)p.IType, ip, p.OldFileName);
             this.ExecuteNonQuery(query);
         }
 

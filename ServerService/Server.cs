@@ -18,6 +18,7 @@ namespace ServerService
     {
         private Thread _connectionThread;
         private Thread _clientServiceThread;
+        private System.Diagnostics.EventLog events;
 
         private String ip = ConfigurationManager.AppSettings["listenerIP"];//"127.0.0.1";
         private int port = Convert.ToInt32(ConfigurationManager.AppSettings["listenerPort"]);//9191;
@@ -34,13 +35,19 @@ namespace ServerService
                 object o = (object)formatter.Deserialize(stream);
                 return o;
             }
+            catch (SocketException)
+            {
+                return null;
+            }
             catch (IOException e)
             {
-                Console.WriteLine(e.ToString());
-            }
-            catch (SocketException se)
-            {
-                Console.WriteLine(se.ToString());
+                if (e.InnerException is SocketException)
+                {
+                    IPEndPoint ipep = sock.RemoteEndPoint as IPEndPoint;
+                    String ip = ipep.Address.ToString();
+                    events.WriteEntry("Client " + ip + " forcibly closed connection", System.Diagnostics.EventLogEntryType.Warning);
+                    return null;
+                }
             }
             return null;
         }
@@ -78,7 +85,7 @@ namespace ServerService
             IPEndPoint ipep = s.RemoteEndPoint as IPEndPoint;
             String ip = ipep.Address.ToString();
             /* obsługa każdego klienta - odczyt obiektów z socketa (funkcja ReceiveObject(Socket sock) )*/
-            Console.WriteLine("Connected in Thread");
+            Console.WriteLine("[" + ip + "]Connected in Thread");
             while (true)
             {
                 Packet pck = null;
@@ -86,15 +93,17 @@ namespace ServerService
                 if (pck == null)
                 {
                     s.Close();
-                    return;
+                    break;
                 }
                 Console.WriteLine(pck.getString());
                 DBConnect db = new DBConnect();
                 db.addPacket(pck, ip);
             }
+            Console.WriteLine("[" + ip + "]Thread Ended");
         }
-        public Server()
+        public Server(System.Diagnostics.EventLog events)
         {
+            this.events = events;
             Console.WriteLine(ip + ":" + port);
             _connectionThread = new Thread(connectionThreadFunc);
             _connectionThread.Name = "Server connection thread";

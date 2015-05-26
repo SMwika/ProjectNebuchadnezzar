@@ -29,7 +29,7 @@ namespace ServerService
 
         protected override void OnStart(string[] args)
         {
-            srv = new Server();
+            srv = new Server(eventLog1);
         }
 
         protected override void OnStop()
