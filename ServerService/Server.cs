@@ -19,6 +19,7 @@ namespace ServerService
         private Thread _connectionThread;
         private Thread _clientServiceThread;
         private System.Diagnostics.EventLog events;
+        private DBConnect db;
 
         private String ip = ConfigurationManager.AppSettings["listenerIP"];//"127.0.0.1";
         private int port = Convert.ToInt32(ConfigurationManager.AppSettings["listenerPort"]);//9191;
@@ -96,7 +97,6 @@ namespace ServerService
                     break;
                 }
                 Console.WriteLine(pck.getString());
-                DBConnect db = new DBConnect();
                 db.addPacket(pck, ip);
             }
             Console.WriteLine("[" + ip + "]Thread Ended");
@@ -105,6 +105,7 @@ namespace ServerService
         {
             this.events = events;
             Console.WriteLine(ip + ":" + port);
+            db = new DBConnect();
             _connectionThread = new Thread(connectionThreadFunc);
             _connectionThread.Name = "Server connection thread";
             _connectionThread.Start();
