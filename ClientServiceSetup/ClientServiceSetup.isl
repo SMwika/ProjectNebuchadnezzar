@@ -1180,7 +1180,7 @@
 		<row><td>USERPROFILE</td><td>TARGETDIR</td><td>.:USERPR~1|UserProfile</td><td/><td>0</td><td/></row>
 		<row><td>WindowsFolder</td><td>TARGETDIR</td><td>.:Windows</td><td/><td>0</td><td/></row>
 		<row><td>WindowsVolume</td><td>TARGETDIR</td><td>.:WinRoot</td><td/><td>0</td><td/></row>
-		<row><td>company_name</td><td>ProgramMenuFolder</td><td>ODROBI~1|Odrobina&amp;Pałac Company</td><td/><td>1</td><td/></row>
+		<row><td>company_name</td><td>ProgramMenuFolder</td><td>ODROBI~1|Odrobina_Pałac Company</td><td/><td>1</td><td/></row>
 		<row><td>nebuch_1_nebuchadnezzar_monitoring_system_client</td><td>company_name</td><td>NEBUCH~1|Nebuchadnezzar Monitoring System Client</td><td/><td>1</td><td/></row>
 	</table>
 
@@ -2345,6 +2345,7 @@
 		<row><td>ISProjectDataFolder</td><td/><td/><td>1</td></row>
 		<row><td>ISProjectFolder</td><td/><td/><td>1</td></row>
 		<row><td>ProgramFilesFolder</td><td/><td/><td>1</td></row>
+		<row><td>SharedClasses</td><td>SharedClasses\SharedClasses.csproj</td><td/><td>2</td></row>
 		<row><td>SystemFolder</td><td/><td/><td>1</td></row>
 		<row><td>WindowsFolder</td><td/><td/><td>1</td></row>
 	</table>
@@ -2623,6 +2624,7 @@
 		<col def="I2">Order</col>
 		<col def="I2">ISSetupLocation</col>
 		<col def="S255">ISReleaseFlags</col>
+		<row><td>_13528215_DB39_4F2D_9181_6F9A1A9D8784_</td><td>Microsoft .NET Framework 4.0 Client (Web Download).prq</td><td/><td/><td/></row>
 	</table>
 
 	<table name="ISSetupType">
@@ -4005,7 +4007,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>ISTheme</td><td>InstallShield Blue.theme</td></row>
 		<row><td>ISUSLock</td><td>{7357F6C9-A85C-4DE2-A635-1BB132CE2B66}</td></row>
 		<row><td>ISUSSignature</td><td>{C29C63AC-A48D-455E-93A9-CA2E7EAD56C0}</td></row>
-		<row><td>ISVisitedViews</td><td>viewAssistant,viewAppFiles,viewRelease,viewProject,viewUpgradePaths,viewRealSetupDesign,viewServices,viewShortcuts,viewSystemSearch,viewUI</td></row>
+		<row><td>ISVisitedViews</td><td>viewAssistant,viewAppFiles,viewRelease,viewProject,viewUpgradePaths,viewRealSetupDesign,viewServices,viewShortcuts,viewSystemSearch,viewUI,viewFeatureFiles,viewUpdateService,viewAppV,viewInstallScriptStd,viewCustomActions,viewIniFiles,viewFileExtensions,viewVRoots,viewEnvironmentVariables,viewObjects</td></row>
 		<row><td>Limited</td><td>1</td></row>
 		<row><td>LockPermissionMode</td><td>1</td></row>
 		<row><td>MsiExecCmdLineOptions</td><td/></row>
@@ -4018,6 +4020,8 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>SccEnabled</td><td>0</td></row>
 		<row><td>SccPath</td><td/></row>
 		<row><td>SchemaVersion</td><td>774</td></row>
+		<row><td>SwidtagLocalComponent</td><td/></row>
+		<row><td>SwidtagSystemComponent</td><td/></row>
 		<row><td>Type</td><td>MSIE</td></row>
 	</table>
 
