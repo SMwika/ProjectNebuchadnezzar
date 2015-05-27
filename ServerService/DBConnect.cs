@@ -102,13 +102,18 @@ namespace ServerService
         private int addFiles(String content)
         {
            int id = 0;
-         
-            MySqlDataReader dataReader = new MySqlCommand("SELECT MAX(id_files) FROM files", conn).ExecuteReader();
-            while (dataReader.Read())
-            {
-               id = dataReader.GetInt32(0);
-             }
-        //  this.ExecuteNonQuery(String.Format(""));
+           if (this.OpenConnection() == true)
+           {
+               MySqlDataReader dataReader = new MySqlCommand("SELECT MAX(id_files) FROM files", conn).ExecuteReader();
+               while (dataReader.Read())
+               {
+                   id = dataReader.GetInt32(0);
+               }
+               //list[4].Add(dataReader["category"] + "");
+               //  this.ExecuteNonQuery(String.Format(""));
+               this.CloseConnection();
+
+           }
            return id;
         }
 
