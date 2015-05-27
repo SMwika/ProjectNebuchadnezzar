@@ -47,6 +47,7 @@ namespace ClientService
             this.watcher.IncludeSubdirectories = true;
             this.watcher.NotifyFilter = ((System.IO.NotifyFilters)((System.IO.NotifyFilters.FileName | System.IO.NotifyFilters.Size)));
             this.watcher.Path = System.Configuration.ConfigurationManager.AppSettings["folderPath"];
+            this.watcher.Filter = System.Configuration.ConfigurationManager.AppSettings["fileFilter"];
             this.watcher.Changed += new System.IO.FileSystemEventHandler(this.watcherChanged);
             this.watcher.Created += new System.IO.FileSystemEventHandler(this.watcherCreated);
             this.watcher.Deleted += new System.IO.FileSystemEventHandler(this.watcherDeleted);

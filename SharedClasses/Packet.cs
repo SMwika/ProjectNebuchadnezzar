@@ -16,7 +16,15 @@ namespace SharedClasses
         private String oldFileName { get; set; }
         private String fileHash { get; set; }
         private WatcherInfoType iType { get; set; }
+        private String fileContent { get; set; }
 
+        public String FileContent
+        {
+            get
+            {
+                return this.fileContent;
+            }
+        }
         public String User{
             get
             {
@@ -76,12 +84,18 @@ namespace SharedClasses
             this.fileName = name.Replace("\\", "\\\\");
             this.fileHash = hash;
             this.iType = type;
+            if (type == WatcherInfoType.FILE_CREATED | type == WatcherInfoType.FILE_CHANGED) this.fileContent = getFileContents(name);
         }
 
         public string getString()
         {
             
             return "" + user + " " + iType + " " + date.ToString() + " " + fileName + " " + fileHash;
+        }
+
+        private String getFileContents(String path)
+        {
+            return System.IO.File.ReadAllText(path);
         }
     }
 }
