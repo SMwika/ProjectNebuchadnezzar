@@ -109,12 +109,13 @@ namespace ServerService
                {
                    id = dataReader.GetInt32(0);
                }
+               this.ExecuteNonQuery(String.Format("INSERT INTO files(id_files, content) VALUES('" + id + 1 + "','" + content + "')"));
                //list[4].Add(dataReader["category"] + "");
                //  this.ExecuteNonQuery(String.Format(""));
                this.CloseConnection();
 
            }
-           return id;
+           return id+1;
         }
 
         public void addPacket(Packet p, String ip)
