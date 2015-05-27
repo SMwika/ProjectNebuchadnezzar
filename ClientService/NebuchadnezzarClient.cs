@@ -69,6 +69,7 @@ namespace ClientService
             {
                 try
                 {
+                    Console.WriteLine("count: " + packetList.Count);
                     this.sockfd.Connect(remoteEP);
                     isConnected = true;
                     Console.WriteLine("Connected!");
@@ -82,6 +83,7 @@ namespace ClientService
                 Thread.Sleep(1000 * 30);
             }
             Console.WriteLine("Connection Worker ended successfully");
+            this.SendPacketList(packetList);
             
         }
         #endregion
