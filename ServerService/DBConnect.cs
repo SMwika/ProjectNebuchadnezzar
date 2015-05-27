@@ -22,6 +22,12 @@ namespace ServerService
             connString = "SERVER=" + server + ";PORT=3306;DATABASE=psr;UID=psr_user;PASSWORD=MisUszatek9;";
 
             conn = new MySqlConnection(connString);
+            this.OpenConnection();
+        }
+
+        public void Destroy()
+        {
+            this.CloseConnection();
         }
 
         private bool OpenConnection()
@@ -84,14 +90,13 @@ namespace ServerService
         private void ExecuteNonQuery(String query)
         {
             Console.WriteLine(query);
-            if (this.OpenConnection() == true)
-            {
+            //if (this.OpenConnection() == true)
+            //{
                 MySqlCommand cmd = new MySqlCommand(query, conn);
-
                 cmd.ExecuteNonQuery();
 
-                this.CloseConnection();
-            }
+                //this.CloseConnection();
+            //}
         }
 
         public void AddShop(String sname)
@@ -99,17 +104,55 @@ namespace ServerService
             string query = String.Format("INSERT INTO shops(sname) VALUES('{0}');", sname);
             this.ExecuteNonQuery(query);
         }
+        private int addFiles(String content)
+        {
+           int id =0;
+           //if (this.OpenConnection() == true)
+           //{
+           using (MySqlDataReader dataReader = new MySqlCommand("SELECT MAX(id_files) FROM files", conn).ExecuteReader())
+           {
+               while (dataReader.Read())
+               {
+                   id = dataReader.GetInt32(0);
+               }
+           }
+           id++;
+           MySqlCommand comm = conn.CreateCommand();
+           comm.CommandText = "INSERT INTO files(id_files, content) VALUES(@id, @content)";
+           comm.Parameters.AddWithValue("@id", id);
+           comm.Parameters.AddWithValue("@content", content);
+           comm.ExecuteNonQuery();
+              // this.ExecuteNonQuery(String.Format("INSERT INTO files(id_files, content) VALUES('" + id + "','" + content + "')"));
+               //this.CloseConnection();
+
+           //}
+           return id;
+        }
 
         public void addPacket(Packet p, String ip)
         {
-            string query = String.Format("INSERT INTO packet(user, date, fileName, filehash, iType, ip, oldFileName) VALUES('{0}', '{1}', '{2}', '{3}', {4}, '{5}', '{6}')",
+          //  Console.WriteLine(addFiles("alejajaa"));
+            int id_file = -666;
+            string query;
+            if (p.IType == WatcherInfoType.FILE_CREATED | p.IType == WatcherInfoType.FILE_CHANGED)
+            {
+                id_file = this.addFiles(p.FileContent);
+                query = String.Format("INSERT INTO packet(user, date, fileName, filehash, iType, ip, oldFileName, id_files) VALUES('{0}', '{1}', '{2}', '{3}', {4}, '{5}', '{6}','{7}')",
+                p.User, p.Date.ToString(), p.FileName, p.FileHash, (int)p.IType, ip, p.OldFileName, id_file);
+            }
+            else
+            {
+                query = String.Format("INSERT INTO packet(user, date, fileName, filehash, iType, ip, oldFileName) VALUES('{0}', '{1}', '{2}', '{3}', {4}, '{5}', '{6}')",
                 p.User, p.Date.ToString(), p.FileName, p.FileHash, (int)p.IType, ip, p.OldFileName);
+            }
+                 
+            
             this.ExecuteNonQuery(query);
         }
 
         public void addLogs(String mess)
         {
-            string query = String.Format("INSERT INTO logs(message, date) VALUES ('"+mess+"','"+System.DateTime.Now+"')");
+            string query = String.Format("INSERT INTO logs(message, date) VALUES ('" + mess + "','" + System.DateTime.Now + "')");
             this.ExecuteNonQuery(query);
         }
 

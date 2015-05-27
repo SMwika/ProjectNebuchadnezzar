@@ -18,6 +18,8 @@ Project("{6141683F-8A12-4E36-9623-2EB02B2C2303}") = "ClientServiceSetup", "Clien
 EndProject
 Project("{6141683F-8A12-4E36-9623-2EB02B2C2303}") = "ServerServiceSetup", "ServerServiceSetup\ServerServiceSetup.isproj", "{10FE6DE4-8694-4EC6-83BB-0B285E8ABCCD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tester", "Tester\Tester.csproj", "{399572C3-8D24-48DF-A217-7D86882A4CA9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CD_ROM|Any CPU = CD_ROM|Any CPU
@@ -87,6 +89,16 @@ Global
 		{10FE6DE4-8694-4EC6-83BB-0B285E8ABCCD}.Release|Any CPU.Build.0 = SingleImage
 		{10FE6DE4-8694-4EC6-83BB-0B285E8ABCCD}.SingleImage|Any CPU.ActiveCfg = SingleImage
 		{10FE6DE4-8694-4EC6-83BB-0B285E8ABCCD}.SingleImage|Any CPU.Build.0 = SingleImage
+		{399572C3-8D24-48DF-A217-7D86882A4CA9}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
+		{399572C3-8D24-48DF-A217-7D86882A4CA9}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
+		{399572C3-8D24-48DF-A217-7D86882A4CA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{399572C3-8D24-48DF-A217-7D86882A4CA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{399572C3-8D24-48DF-A217-7D86882A4CA9}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
+		{399572C3-8D24-48DF-A217-7D86882A4CA9}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
+		{399572C3-8D24-48DF-A217-7D86882A4CA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{399572C3-8D24-48DF-A217-7D86882A4CA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{399572C3-8D24-48DF-A217-7D86882A4CA9}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
+		{399572C3-8D24-48DF-A217-7D86882A4CA9}.SingleImage|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
