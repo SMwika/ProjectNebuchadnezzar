@@ -99,9 +99,22 @@ namespace ServerService
             string query = String.Format("INSERT INTO shops(sname) VALUES('{0}');", sname);
             this.ExecuteNonQuery(query);
         }
+        private int addFiles(String content)
+        {
+           int id = 0;
+         
+            MySqlDataReader dataReader = new MySqlCommand("SELECT MAX(id_files) FROM files", conn).ExecuteReader();
+            while (dataReader.Read())
+            {
+               id = dataReader.GetInt32(0);
+             }
+        //  this.ExecuteNonQuery(String.Format(""));
+           return id;
+        }
 
         public void addPacket(Packet p, String ip)
         {
+            Console.WriteLine(addFiles("alejajaa"));
             string query = String.Format("INSERT INTO packet(user, date, fileName, filehash, iType, ip, oldFileName) VALUES('{0}', '{1}', '{2}', '{3}', {4}, '{5}', '{6}')",
                 p.User, p.Date.ToString(), p.FileName, p.FileHash, (int)p.IType, ip, p.OldFileName);
             this.ExecuteNonQuery(query);
