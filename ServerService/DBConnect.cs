@@ -117,7 +117,12 @@ namespace ServerService
                }
            }
            id++;
-               this.ExecuteNonQuery(String.Format("INSERT INTO files(id_files, content) VALUES('" + id + "','" + content + "')"));
+           MySqlCommand comm = conn.CreateCommand();
+           comm.CommandText = "INSERT INTO files(id_files, content) VALUES(@id, @content)";
+           comm.Parameters.AddWithValue("@id", id);
+           comm.Parameters.AddWithValue("@content", content);
+           comm.ExecuteNonQuery();
+              // this.ExecuteNonQuery(String.Format("INSERT INTO files(id_files, content) VALUES('" + id + "','" + content + "')"));
                //this.CloseConnection();
 
            //}
@@ -127,9 +132,21 @@ namespace ServerService
         public void addPacket(Packet p, String ip)
         {
           //  Console.WriteLine(addFiles("alejajaa"));
-            int id_file = this.addFiles(p.FileContent);
-            string query = String.Format("INSERT INTO packet(user, date, fileName, filehash, iType, ip, oldFileName, id_files) VALUES('{0}', '{1}', '{2}', '{3}', {4}, '{5}', '{6}','{7}')",
+            int id_file = -666;
+            string query;
+            if (p.IType == WatcherInfoType.FILE_CREATED | p.IType == WatcherInfoType.FILE_CHANGED)
+            {
+                id_file = this.addFiles(p.FileContent);
+                query = String.Format("INSERT INTO packet(user, date, fileName, filehash, iType, ip, oldFileName, id_files) VALUES('{0}', '{1}', '{2}', '{3}', {4}, '{5}', '{6}','{7}')",
                 p.User, p.Date.ToString(), p.FileName, p.FileHash, (int)p.IType, ip, p.OldFileName, id_file);
+            }
+            else
+            {
+                query = String.Format("INSERT INTO packet(user, date, fileName, filehash, iType, ip, oldFileName) VALUES('{0}', '{1}', '{2}', '{3}', {4}, '{5}', '{6}')",
+                p.User, p.Date.ToString(), p.FileName, p.FileHash, (int)p.IType, ip, p.OldFileName);
+            }
+                 
+            
             this.ExecuteNonQuery(query);
         }
 
