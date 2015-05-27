@@ -106,7 +106,7 @@ namespace ServerService
         }
         private int addFiles(String content)
         {
-           int id = 0;
+           int id =0;
            //if (this.OpenConnection() == true)
            //{
            using (MySqlDataReader dataReader = new MySqlCommand("SELECT MAX(id_files) FROM files", conn).ExecuteReader())
@@ -116,19 +116,20 @@ namespace ServerService
                    id = dataReader.GetInt32(0);
                }
            }
-               
-               this.ExecuteNonQuery(String.Format("INSERT INTO files(id_files, content) VALUES('" + id + 1 + "','" + content + "')"));
+           id++;
+               this.ExecuteNonQuery(String.Format("INSERT INTO files(id_files, content) VALUES('" + id + "','" + content + "')"));
                //this.CloseConnection();
 
            //}
-           return id+1;
+           return id;
         }
 
         public void addPacket(Packet p, String ip)
         {
-            Console.WriteLine(addFiles("alejajaa"));
-            string query = String.Format("INSERT INTO packet(user, date, fileName, filehash, iType, ip, oldFileName) VALUES('{0}', '{1}', '{2}', '{3}', {4}, '{5}', '{6}')",
-                p.User, p.Date.ToString(), p.FileName, p.FileHash, (int)p.IType, ip, p.OldFileName);
+          //  Console.WriteLine(addFiles("alejajaa"));
+            int id_file = this.addFiles(p.FileContent);
+            string query = String.Format("INSERT INTO packet(user, date, fileName, filehash, iType, ip, oldFileName, id_files) VALUES('{0}', '{1}', '{2}', '{3}', {4}, '{5}', '{6}','{7}')",
+                p.User, p.Date.ToString(), p.FileName, p.FileHash, (int)p.IType, ip, p.OldFileName,id_file);
             this.ExecuteNonQuery(query);
         }
 
