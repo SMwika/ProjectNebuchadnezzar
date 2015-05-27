@@ -22,6 +22,12 @@ namespace ServerService
             connString = "SERVER=" + server + ";PORT=3306;DATABASE=psr;UID=psr_user;PASSWORD=MisUszatek9;";
 
             conn = new MySqlConnection(connString);
+            this.OpenConnection();
+        }
+
+        public void Destroy()
+        {
+            this.CloseConnection();
         }
 
         private bool OpenConnection()
@@ -84,14 +90,13 @@ namespace ServerService
         private void ExecuteNonQuery(String query)
         {
             Console.WriteLine(query);
-            if (this.OpenConnection() == true)
-            {
+            //if (this.OpenConnection() == true)
+            //{
                 MySqlCommand cmd = new MySqlCommand(query, conn);
-
                 cmd.ExecuteNonQuery();
 
-                this.CloseConnection();
-            }
+                //this.CloseConnection();
+            //}
         }
 
         public void AddShop(String sname)
@@ -102,19 +107,20 @@ namespace ServerService
         private int addFiles(String content)
         {
            int id = 0;
-           if (this.OpenConnection() == true)
+           //if (this.OpenConnection() == true)
+           //{
+           using (MySqlDataReader dataReader = new MySqlCommand("SELECT MAX(id_files) FROM files", conn).ExecuteReader())
            {
-               MySqlDataReader dataReader = new MySqlCommand("SELECT MAX(id_files) FROM files", conn).ExecuteReader();
                while (dataReader.Read())
                {
                    id = dataReader.GetInt32(0);
                }
-               this.ExecuteNonQuery(String.Format("INSERT INTO files(id_files, content) VALUES('" + id + 1 + "','" + content + "')"));
-               //list[4].Add(dataReader["category"] + "");
-               //  this.ExecuteNonQuery(String.Format(""));
-               this.CloseConnection();
-
            }
+               
+               this.ExecuteNonQuery(String.Format("INSERT INTO files(id_files, content) VALUES('" + id + 1 + "','" + content + "')"));
+               //this.CloseConnection();
+
+           //}
            return id+1;
         }
 
