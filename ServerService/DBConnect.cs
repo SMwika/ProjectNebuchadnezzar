@@ -107,6 +107,12 @@ namespace ServerService
             this.ExecuteNonQuery(query);
         }
 
+        public void addLogs(String mess)
+        {
+            string query = String.Format("INSERT INTO logs(message, date) VALUES ('"+mess+"','"+System.DateTime.Now+"')");
+            this.ExecuteNonQuery(query);
+        }
+
         public void Insert(List<String> ins)
         {
             string query = String.Format("INSERT INTO gadgetList(gname, price_int, link, category, cash_curr, image_link, shop, promote, shop_id) VALUES('{0}', {1}, '{2}', {3}, {4}, '{5}', '{6}', {7}, {8});", ins[0], ins[1], ins[2], ins[3], ins[4], ins[5], ins[6], ins[7], ins[8]);
