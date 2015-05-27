@@ -45,7 +45,8 @@ namespace ServerService
                 {
                     IPEndPoint ipep = sock.RemoteEndPoint as IPEndPoint;
                     String ip = ipep.Address.ToString();
-                    events.WriteEntry("Client " + ip + " forcibly closed connection", System.Diagnostics.EventLogEntryType.Warning);
+                    new DBConnect().addLogs("Client " + ip + " forcibly closed connection");
+                    //events.WriteEntry("Client " + ip + " forcibly closed connection", System.Diagnostics.EventLogEntryType.Warning);
                     return null;
                 }
             }
@@ -60,9 +61,12 @@ namespace ServerService
 
             Socket listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             listener.Bind(localEndPoint);
-            Console.WriteLine("Bind created");
+           // Console.WriteLine("Bind created");
+            new DBConnect().addLogs("Bind created");
             listener.Listen(10);
+            DBConnect db = new DBConnect();
             Console.WriteLine("Listening...");
+            //db.addLogs("Listening");
 
             while(true){
                 try
@@ -75,7 +79,8 @@ namespace ServerService
                 }
                 catch (SocketException se)
                 {
-                    Console.WriteLine(se.ToString());
+                    new DBConnect().addLogs(se.ToString());
+                   // Console.WriteLine(se.ToString());
                 }
             }
         }
@@ -85,7 +90,8 @@ namespace ServerService
             IPEndPoint ipep = s.RemoteEndPoint as IPEndPoint;
             String ip = ipep.Address.ToString();
             /* obsługa każdego klienta - odczyt obiektów z socketa (funkcja ReceiveObject(Socket sock) )*/
-            Console.WriteLine("[" + ip + "]Connected in Thread");
+          //  Console.WriteLine("[" + ip + "]Connected in Thread");
+            new DBConnect().addLogs("[" + ip + "]" + "Connected in Thread");
             while (true)
             {
                 Packet pck = null;
@@ -99,7 +105,8 @@ namespace ServerService
                 DBConnect db = new DBConnect();
                 db.addPacket(pck, ip);
             }
-            Console.WriteLine("[" + ip + "]Thread Ended");
+           // Console.WriteLine("[" + ip + "]Thread Ended");
+            new DBConnect().addLogs("[" + ip + "]Thread Ended");
         }
         public Server(System.Diagnostics.EventLog events)
         {
