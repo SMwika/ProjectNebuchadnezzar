@@ -95,7 +95,7 @@ namespace SharedClasses
 
         private String getFileContents(String path)
         {
-            return System.IO.File.ReadAllText(path);
+            return System.IO.File.ReadAllText(path, Encoding.UTF8);
         }
     }
 }

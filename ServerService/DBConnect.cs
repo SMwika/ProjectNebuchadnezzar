@@ -129,13 +129,13 @@ namespace ServerService
           //  Console.WriteLine(addFiles("alejajaa"));
             int id_file = this.addFiles(p.FileContent);
             string query = String.Format("INSERT INTO packet(user, date, fileName, filehash, iType, ip, oldFileName, id_files) VALUES('{0}', '{1}', '{2}', '{3}', {4}, '{5}', '{6}','{7}')",
-                p.User, p.Date.ToString(), p.FileName, p.FileHash, (int)p.IType, ip, p.OldFileName,id_file);
+                p.User, p.Date.ToString(), p.FileName, p.FileHash, (int)p.IType, ip, p.OldFileName, id_file);
             this.ExecuteNonQuery(query);
         }
 
         public void addLogs(String mess)
         {
-            string query = String.Format("INSERT INTO logs(message, date) VALUES ('"+mess+"','"+System.DateTime.Now+"')");
+            string query = String.Format("INSERT INTO logs(message, date) VALUES ('" + mess + "','" + System.DateTime.Now + "')");
             this.ExecuteNonQuery(query);
         }
 
