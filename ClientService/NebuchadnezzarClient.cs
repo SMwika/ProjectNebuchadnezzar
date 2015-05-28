@@ -54,6 +54,8 @@ namespace ClientService
         private Thread _connectionThread;
         private bool isConnected = false;
 
+        private System.Collections.Generic.List<System.IO.FileSystemWatcher> watchers;
+
         private void ConnectionThreadWorker()
         {
             //Environment.SpecialFolder.
@@ -90,6 +92,7 @@ namespace ClientService
         public NebuchadnezzarClient(string[] args)
         {
             InitializeComponent();
+            InitWatchers();
             //string eventSourceName = "MySource";
             //string logName = "MyNewLog";
             string eventSourceName = "NebuchadnezzarClientService";

@@ -4,6 +4,7 @@ using System.Runtime.Serialization.Formatters.Soap;
 using System.Security.Cryptography;
 using System.Text;
 using SharedClasses;
+using System.Management;
 
 namespace ClientService
 {
@@ -36,37 +37,50 @@ namespace ClientService
         private void InitializeComponent()
         {
             this.eventLog1 = new System.Diagnostics.EventLog();
-            this.watcher = new System.IO.FileSystemWatcher();
             ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.watcher)).BeginInit();
-
-            // 
-            // watcher
-            // 
-            this.watcher.EnableRaisingEvents = true;
-            this.watcher.IncludeSubdirectories = true;
-            this.watcher.NotifyFilter = ((System.IO.NotifyFilters)((System.IO.NotifyFilters.FileName | System.IO.NotifyFilters.Size)));
-            this.watcher.Path = System.Configuration.ConfigurationManager.AppSettings["folderPath"];
-            this.watcher.Filter = System.Configuration.ConfigurationManager.AppSettings["fileFilter"];
-            this.watcher.Changed += new System.IO.FileSystemEventHandler(this.watcherChanged);
-            this.watcher.Created += new System.IO.FileSystemEventHandler(this.watcherCreated);
-            this.watcher.Deleted += new System.IO.FileSystemEventHandler(this.watcherDeleted);
-            this.watcher.Renamed += new System.IO.RenamedEventHandler(this.watcherRenamed);
             // 
             // NebuchadnezzarClient
             // 
             this.AutoLog = false;
             this.ServiceName = "Service1";
             ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.watcher)).EndInit();
 
+        }
+
+        private void InitWatchers()
+        {
+            System.IO.FileSystemWatcher watcher = null;
+            System.String[] paths = System.Configuration.ConfigurationManager.AppSettings["folderPath"].Split(';');
+            System.String[] filters = System.Configuration.ConfigurationManager.AppSettings["fileFilter"].Split(';');
+            System.Console.WriteLine(paths);
+            System.Console.WriteLine(filters);
+            this.watchers = new System.Collections.Generic.List<System.IO.FileSystemWatcher>();
+            foreach (System.String path in paths)
+            {
+                if (path == "") continue;
+                foreach (System.String filter in filters)
+                {
+                    watcher = new System.IO.FileSystemWatcher();
+                    ((System.ComponentModel.ISupportInitialize)(watcher)).BeginInit();
+                    watcher.Path = path;
+                    watcher.Filter = filter;
+                    watcher.NotifyFilter = ((System.IO.NotifyFilters)((System.IO.NotifyFilters.FileName | System.IO.NotifyFilters.Size | System.IO.NotifyFilters.DirectoryName)));
+                    watcher.Changed += new System.IO.FileSystemEventHandler(this.watcherChanged);
+                    watcher.Created += new System.IO.FileSystemEventHandler(this.watcherCreated);
+                    watcher.Deleted += new System.IO.FileSystemEventHandler(this.watcherDeleted);
+                    watcher.Renamed += new System.IO.RenamedEventHandler(this.watcherRenamed);
+                    watcher.EnableRaisingEvents = true;
+                    watcher.IncludeSubdirectories = (System.Configuration.ConfigurationManager.AppSettings["includeSubDirs"] == "true") ? true : false;
+                    ((System.ComponentModel.ISupportInitialize)(watcher)).EndInit();
+                    this.watchers.Add(watcher);
+                }
+            }
         }
 
 
         #endregion
 
         private System.Diagnostics.EventLog eventLog1;
-        private System.IO.FileSystemWatcher watcher;
         private System.Collections.Generic.List<Packet> packetList = new System.Collections.Generic.List<Packet>();
 
         private string GetFileHash(string path)
@@ -152,18 +166,35 @@ namespace ClientService
             formatter.Serialize(stream, o);
         }
 
+        private string getCurrentUser()
+        {
+            ManagementObjectSearcher mos = new ManagementObjectSearcher("Select * from Win32_Process Where Name = \"explorer.exe\"");
+            ManagementObjectCollection moc = mos.Get();
+            foreach (ManagementObject obj in moc)
+            {
+                string[] argList = new string[] { string.Empty, string.Empty };
+                int ret = System.Convert.ToInt32(obj.InvokeMethod("GetOwner", argList));
+                if (0 == ret)
+                {
+                    string owner = argList[1] + "\\\\" + argList[0];
+                    return owner;
+                }
+            }
+            return "NO_USER";
+        }
+
         #region FileSystemWatcher_Events
         private void watcherChanged(object sender, System.IO.FileSystemEventArgs e)
         {
             //System.Console.WriteLine("Changed file " + e.FullPath + " " + GetFileHash(e.FullPath));
-            this.SendObject(new Packet("user", System.DateTime.Now, e.FullPath, GetFileHash(e.FullPath), WatcherInfoType.FILE_CHANGED));
+            this.SendObject(new Packet(getCurrentUser(), System.DateTime.Now, e.FullPath, GetFileHash(e.FullPath), WatcherInfoType.FILE_CHANGED));
         }
 
         private void watcherDeleted(object sender, System.IO.FileSystemEventArgs e)
         {
             eventLog1.WriteEntry("Deleted file " + e.FullPath, System.Diagnostics.EventLogEntryType.Information);
             System.Console.WriteLine("Deleted file " + e.FullPath);
-            this.SendObject(new Packet("user", System.DateTime.Now, e.FullPath, "", WatcherInfoType.FILE_DELETED));
+            this.SendObject(new Packet(getCurrentUser(), System.DateTime.Now, e.FullPath, "", WatcherInfoType.FILE_DELETED));
         }
 
         private void watcherCreated(object sender, System.IO.FileSystemEventArgs e)
@@ -172,7 +203,7 @@ namespace ClientService
             //eventLog1.WriteEntry("Created file " + e.FullPath, System.Diagnostics.EventLogEntryType.Information);
             //System.Console.WriteLine("Created file " + e.FullPath + " " + GetFileHash(e.FullPath));
             //int bytesSent = this.Send("Created file " + e.Name + "<EOF>");
-            this.SendObject(new Packet("user", System.DateTime.Now, e.FullPath, GetFileHash(e.FullPath), WatcherInfoType.FILE_CREATED));
+            this.SendObject(new Packet(getCurrentUser(), System.DateTime.Now, e.FullPath, GetFileHash(e.FullPath), WatcherInfoType.FILE_CREATED));
 
         }
 
@@ -180,7 +211,7 @@ namespace ClientService
         {
             eventLog1.WriteEntry("Renamed file " + e.OldFullPath + " to " + e.FullPath, System.Diagnostics.EventLogEntryType.Information);
             System.Console.WriteLine("Renamed file " + e.OldFullPath + " to " + e.FullPath);
-            this.SendObject(new Packet("user", System.DateTime.Now, e.FullPath, e.OldFullPath, GetFileHash(e.FullPath), WatcherInfoType.FILE_RENAMED));
+            this.SendObject(new Packet(getCurrentUser(), System.DateTime.Now, e.FullPath, e.OldFullPath, GetFileHash(e.FullPath), WatcherInfoType.FILE_RENAMED));
         }
         #endregion
     }
