@@ -1,8 +1,16 @@
 ﻿<Window x:Class="ServerGUI.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="430" Width="707">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="172*"/>
+            <ColumnDefinition Width="527*"/>
+        </Grid.ColumnDefinitions>
+        <ListBox Margin="0,54,0,0" Name="lbFileList"/>
+        <Label Content="lFileList" HorizontalAlignment="Left" Height="29" VerticalAlignment="Top" Width="122" Name="lFileList" Margin="0,25,0,0"/>
+        <DatePicker HorizontalAlignment="Left" VerticalAlignment="Top" Width="128" Name="dpDatePicker"/>
+        <TextBox Grid.Column="1" HorizontalAlignment="Left" Margin="0,26,0,0" TextWrapping="Wrap" Text="TextBox" Width="527" Name="tbFilePreview"/>
+        <Label Content="lFilePreview" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Name="lFilePreview"/>
     </Grid>
 </Window>
