@@ -37,37 +37,50 @@ namespace ClientService
         private void InitializeComponent()
         {
             this.eventLog1 = new System.Diagnostics.EventLog();
-            this.watcher = new System.IO.FileSystemWatcher();
             ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.watcher)).BeginInit();
-
-            // 
-            // watcher
-            // 
-            this.watcher.EnableRaisingEvents = true;
-            this.watcher.IncludeSubdirectories = true;
-            this.watcher.NotifyFilter = ((System.IO.NotifyFilters)((System.IO.NotifyFilters.FileName | System.IO.NotifyFilters.Size)));
-            this.watcher.Path = System.Configuration.ConfigurationManager.AppSettings["folderPath"];
-            this.watcher.Filter = System.Configuration.ConfigurationManager.AppSettings["fileFilter"];
-            this.watcher.Changed += new System.IO.FileSystemEventHandler(this.watcherChanged);
-            this.watcher.Created += new System.IO.FileSystemEventHandler(this.watcherCreated);
-            this.watcher.Deleted += new System.IO.FileSystemEventHandler(this.watcherDeleted);
-            this.watcher.Renamed += new System.IO.RenamedEventHandler(this.watcherRenamed);
             // 
             // NebuchadnezzarClient
             // 
             this.AutoLog = false;
             this.ServiceName = "Service1";
             ((System.ComponentModel.ISupportInitialize)(this.eventLog1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.watcher)).EndInit();
 
+        }
+
+        private void InitWatchers()
+        {
+            System.IO.FileSystemWatcher watcher = null;
+            System.String[] paths = System.Configuration.ConfigurationManager.AppSettings["folderPath"].Split(';');
+            System.String[] filters = System.Configuration.ConfigurationManager.AppSettings["fileFilter"].Split(';');
+            System.Console.WriteLine(paths);
+            System.Console.WriteLine(filters);
+            this.watchers = new System.Collections.Generic.List<System.IO.FileSystemWatcher>();
+            foreach (System.String path in paths)
+            {
+                if (path == "") continue;
+                foreach (System.String filter in filters)
+                {
+                    watcher = new System.IO.FileSystemWatcher();
+                    ((System.ComponentModel.ISupportInitialize)(watcher)).BeginInit();
+                    watcher.Path = path;
+                    watcher.Filter = filter;
+                    watcher.NotifyFilter = ((System.IO.NotifyFilters)((System.IO.NotifyFilters.FileName | System.IO.NotifyFilters.Size | System.IO.NotifyFilters.DirectoryName)));
+                    watcher.Changed += new System.IO.FileSystemEventHandler(this.watcherChanged);
+                    watcher.Created += new System.IO.FileSystemEventHandler(this.watcherCreated);
+                    watcher.Deleted += new System.IO.FileSystemEventHandler(this.watcherDeleted);
+                    watcher.Renamed += new System.IO.RenamedEventHandler(this.watcherRenamed);
+                    watcher.EnableRaisingEvents = true;
+                    watcher.IncludeSubdirectories = (System.Configuration.ConfigurationManager.AppSettings["includeSubDirs"] == "true") ? true : false;
+                    ((System.ComponentModel.ISupportInitialize)(watcher)).EndInit();
+                    this.watchers.Add(watcher);
+                }
+            }
         }
 
 
         #endregion
 
         private System.Diagnostics.EventLog eventLog1;
-        private System.IO.FileSystemWatcher watcher;
         private System.Collections.Generic.List<Packet> packetList = new System.Collections.Generic.List<Packet>();
 
         private string GetFileHash(string path)
