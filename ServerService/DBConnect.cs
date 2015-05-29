@@ -184,11 +184,11 @@ namespace ServerService
             string query;
             if (date == "NO_DATE")
             {
-                query = "SELECT user, date, fileName, oldFileName, fileHash, iType, id_Packet, id_files, COUNT(*) as count FROM packet GROUP BY fileName ORDER BY id_Packet DESC";
+                query = "SELECT user, date, fileName, oldFileName, fileHash, iType, id_Packet, id_files, ip, COUNT(*) as count FROM packet GROUP BY fileName ORDER BY id_Packet DESC";
             }
             else
             {
-                query = String.Format("SELECT user, date, fileName, oldFileName, fileHash, iType, id_Packet, id_files, COUNT(*) as count FROM packet WHERE DATE(date) = '{0}' GROUP BY fileName ORDER BY id_Packet DESC", date);
+                query = String.Format("SELECT user, date, fileName, oldFileName, fileHash, iType, id_Packet, id_files, ip, COUNT(*) as count FROM packet WHERE DATE(date) = '{0}' GROUP BY fileName ORDER BY id_Packet DESC", date);
             }
             List<PacketDB> packets = new List<PacketDB>();
             MySqlCommand cmd = new MySqlCommand(query, conn);
@@ -200,7 +200,8 @@ namespace ServerService
                     reader["fileName"] + "", "NULL", reader["fileHash"] + "", (WatcherInfoType)reader["iType"], 1), 
                     Convert.ToInt32(reader["id_Packet"]), 
                     Convert.ToInt32(0), 
-                    Convert.ToInt32(reader["count"]));
+                    Convert.ToInt32(reader["count"]),
+                    reader["ip"] + "");
                 packets.Add(pack);
             }
             return packets;

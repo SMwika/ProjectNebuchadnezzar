@@ -33,6 +33,14 @@ namespace ServerGUI
             binding.MaxReceivedMessageSize = 65536 * 32;
             ChannelFactory<IServerConnector> pipeFactory = new ChannelFactory<IServerConnector>(binding, new EndpointAddress("net.pipe://localhost/PipePacketDB"));
             connector = pipeFactory.CreateChannel();
+            List<PacketDB> list = connector.GetUniqueFileNames();
+            lbFileList.Items.Clear();
+            foreach (PacketDB packet in list)
+            {
+                lbFileList.Items.Add(packet.FileName);
+            }
+            List<string> uniqueIPs = list.Select(x => x.IpAddress).Distinct().ToList();
+            cbIPList.ItemsSource = uniqueIPs;
         }
 
         private void dpDatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
@@ -43,6 +51,11 @@ namespace ServerGUI
             {
                 lbFileList.Items.Add(packet.FileName);
             }
+        }
+
+        private void cbIPList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }
