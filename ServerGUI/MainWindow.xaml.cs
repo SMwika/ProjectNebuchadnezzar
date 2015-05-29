@@ -99,11 +99,11 @@ namespace ServerGUI
                 return this.isConnected;
             }
         }
-
+        private List<PacketDB> list;
         private void updateLists()
         {
             connector = pipeFactory.CreateChannel();
-            List<PacketDB> list = connector.GetUniqueFileNames();
+            list = connector.GetUniqueFileNames();
             if (this.cbIPList.Dispatcher.CheckAccess())
             {
                 lbFileList.Items.Clear();
@@ -149,7 +149,25 @@ namespace ServerGUI
         {
             if (isConnected)
             {
-
+                if ((string)cbIPList.SelectedValue == "<ANY>")
+                {
+                    lbFileList.Items.Clear();
+                    foreach (PacketDB packet in list)
+                    {
+                        lbFileList.Items.Add(packet.FileName);
+                    }
+                }
+                else
+                {
+                    List<PacketDB> listByIp = new List<PacketDB>();
+                    listByIp = list.Where(x => x.IpAddress == (string)cbIPList.SelectedValue).ToList();
+                    lbFileList.Items.Clear();
+                    foreach (PacketDB packet in listByIp)
+                    {
+                        lbFileList.Items.Add(packet.FileName);
+                    }
+                }
+                
             }
         }
     }

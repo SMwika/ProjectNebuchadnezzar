@@ -195,11 +195,15 @@ namespace ServerService
             MySqlDataReader reader = cmd.ExecuteReader();
             while (reader.Read())
             {
+                int id_files = -666;
+                string oldFileName = "NULL";
+                if (!(reader["id_files"] is DBNull)) id_files = Convert.ToInt32(reader["id_files"]);
+                if (!(reader["oldFileName"] is DBNull)) oldFileName = reader["oldFileName"] + ""; 
                 PacketDB pack = new PacketDB(new Packet(reader["user"] + "", 
                     DateTime.ParseExact(reader["date"] + "","yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture),
-                    reader["fileName"] + "", "NULL", reader["fileHash"] + "", (WatcherInfoType)reader["iType"], 1), 
+                    reader["fileName"] + "", oldFileName, reader["fileHash"] + "", (WatcherInfoType)reader["iType"], 1), 
                     Convert.ToInt32(reader["id_Packet"]), 
-                    Convert.ToInt32(0), 
+                    Convert.ToInt32(id_files), 
                     Convert.ToInt32(reader["count"]),
                     reader["ip"] + "");
                 packets.Add(pack);
