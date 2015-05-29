@@ -111,28 +111,31 @@ namespace ServerGUI
                 {
                     lbFileList.Items.Add(packet.FileName);
                 }
-                List<string> uniqueIPs = list.Select(x => x.IpAddress).Distinct().ToList();
-                cbIPList.Items.Clear();
-                cbIPList.Items.Add("<ANY>");
-                cbIPList.SelectedIndex = 0;
-                foreach (String ip in uniqueIPs)
-                {
-                    cbIPList.Items.Add(ip);
-                }
+                updateIpList();
             }
             else
             {
                 this.cbIPList.Dispatcher.Invoke(updateLists);
             }
-            
+        }
 
+        private void updateIpList()
+        {
+            List<string> uniqueIPs = list.Select(x => x.IpAddress).Distinct().ToList();
+            cbIPList.Items.Clear();
+            cbIPList.Items.Add("<ANY>");
+            cbIPList.SelectedIndex = 0;
+            foreach (String ip in uniqueIPs)
+            {
+                cbIPList.Items.Add(ip);
+            }
         }
 
         private void dpDatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             if (isConnected)
             {
-                List<PacketDB> list;
+                //List<PacketDB> list;
                 if(((DatePicker)sender).SelectedDate == null)
                     list = connector.GetUniqueFileNames();
                 else
@@ -142,6 +145,7 @@ namespace ServerGUI
                 {
                     lbFileList.Items.Add(packet.FileName);
                 }
+                updateIpList();
             }            
         }
 
