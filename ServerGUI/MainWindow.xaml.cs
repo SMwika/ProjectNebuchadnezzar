@@ -100,6 +100,7 @@ namespace ServerGUI
             }
         }
         private List<PacketDB> list;
+        private List<PacketDB> shownList;
         private void updateLists()
         {
             connector = pipeFactory.CreateChannel();
@@ -117,6 +118,7 @@ namespace ServerGUI
             {
                 this.cbIPList.Dispatcher.Invoke(updateLists);
             }
+            shownList = list;
         }
 
         private void updateIpList()
@@ -146,7 +148,9 @@ namespace ServerGUI
                     lbFileList.Items.Add(packet.FileName);
                 }
                 updateIpList();
-            }            
+                shownList = list;
+            }
+            lbFileList.SelectedIndex = -1;
         }
 
         private void cbIPList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -160,6 +164,7 @@ namespace ServerGUI
                     {
                         lbFileList.Items.Add(packet.FileName);
                     }
+                    shownList = list;
                 }
                 else
                 {
@@ -170,8 +175,22 @@ namespace ServerGUI
                     {
                         lbFileList.Items.Add(packet.FileName);
                     }
+                    shownList = listByIp;
                 }
+                lbFileList.SelectedIndex = -1;
                 
+            }
+        }
+
+        private void lbFileList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (((ListBox)sender).SelectedIndex == -1)
+            {
+                this.tbFilePreview.Text = "";
+            }
+            else
+            {
+                this.tbFilePreview.Text = shownList[((ListBox)sender).SelectedIndex].ToString();
             }
         }
     }

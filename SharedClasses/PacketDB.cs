@@ -49,5 +49,10 @@ namespace SharedClasses
             this.count = count;
             this.ipAddress = ip;
         }
+
+        public override string ToString()
+        {
+            return base.ToString() + " " + this.id_packet + " " + this.id_files + " " + this.count + " " + this.ipAddress;
+        }
     }
 }
