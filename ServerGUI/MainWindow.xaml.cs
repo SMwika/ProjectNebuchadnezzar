@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using SharedClasses;
 using System.ServiceModel;
+using System.Threading;
 
 namespace ServerGUI
 {
@@ -26,36 +27,123 @@ namespace ServerGUI
     public partial class MainWindow : Window
     {
         IServerConnector connector;
+        private bool isConnected = false;
+        delegate void SetIsConnectedCallback(bool conn);
+        private ChannelFactory<IServerConnector> pipeFactory;
+
+        private void WcfConnectionThreadFunc()
+        {
+            while (true)
+            {
+                try
+                {
+                    updateLists();
+                    this.SetConnected(true);
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    if(ex is EndpointNotFoundException || ex is CommunicationObjectFaultedException)
+                    {
+                        this.SetConnected(false);
+                        Thread.Sleep(5000);
+                    }
+                }
+            }
+        }
         public MainWindow()
         {
             InitializeComponent();
             NetNamedPipeBinding binding = new NetNamedPipeBinding();
             binding.MaxReceivedMessageSize = 65536 * 32;
-            ChannelFactory<IServerConnector> pipeFactory = new ChannelFactory<IServerConnector>(binding, new EndpointAddress("net.pipe://localhost/PipePacketDB"));
+            pipeFactory = new ChannelFactory<IServerConnector>(binding, new EndpointAddress("net.pipe://localhost/PipePacketDB"));
+            new Thread(WcfConnectionThreadFunc).Start();
+            //updateLists();
+        }
+
+        private void SetConnected(bool conn)
+        {
+            if (this.circleNotifier.Dispatcher.CheckAccess())
+            {
+                this.IsConnected = conn;
+            }
+            else
+            {
+                SetIsConnectedCallback d = new SetIsConnectedCallback(SetConnected);
+                this.circleNotifier.Dispatcher.Invoke(d, new object[] {conn});
+            }
+        }
+
+        private bool IsConnected
+        {
+            set
+            {
+                this.isConnected = value;
+                if (value == true)
+                {
+                    circleNotifier.Fill = new SolidColorBrush(Color.FromArgb(255, 0, 255, 0));
+
+                }
+                else
+                    circleNotifier.Fill = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
+            }
+            get
+            {
+                return this.isConnected;
+            }
+        }
+
+        private void updateLists()
+        {
             connector = pipeFactory.CreateChannel();
             List<PacketDB> list = connector.GetUniqueFileNames();
-            lbFileList.Items.Clear();
-            foreach (PacketDB packet in list)
+            if (this.cbIPList.Dispatcher.CheckAccess())
             {
-                lbFileList.Items.Add(packet.FileName);
+                lbFileList.Items.Clear();
+                foreach (PacketDB packet in list)
+                {
+                    lbFileList.Items.Add(packet.FileName);
+                }
+                List<string> uniqueIPs = list.Select(x => x.IpAddress).Distinct().ToList();
+                cbIPList.Items.Clear();
+                cbIPList.Items.Add("<ANY>");
+                cbIPList.SelectedIndex = 0;
+                foreach (String ip in uniqueIPs)
+                {
+                    cbIPList.Items.Add(ip);
+                }
             }
-            List<string> uniqueIPs = list.Select(x => x.IpAddress).Distinct().ToList();
-            cbIPList.ItemsSource = uniqueIPs;
+            else
+            {
+                this.cbIPList.Dispatcher.Invoke(updateLists);
+            }
+            
+
         }
 
         private void dpDatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
-            List<PacketDB> list = connector.GetUniqueFileNamesByDate(dpDatePicker.SelectedDate.ToString());
-            lbFileList.Items.Clear();
-            foreach (PacketDB packet in list)
+            if (isConnected)
             {
-                lbFileList.Items.Add(packet.FileName);
-            }
+                List<PacketDB> list;
+                if(((DatePicker)sender).SelectedDate == null)
+                    list = connector.GetUniqueFileNames();
+                else
+                    list = connector.GetUniqueFileNamesByDate(((DatePicker)sender).SelectedDate.ToString());
+                lbFileList.Items.Clear();
+                foreach (PacketDB packet in list)
+                {
+                    lbFileList.Items.Add(packet.FileName);
+                }
+            }            
         }
 
         private void cbIPList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (isConnected)
+            {
 
+            }
         }
     }
 }
