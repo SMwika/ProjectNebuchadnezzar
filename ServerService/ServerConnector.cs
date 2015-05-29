@@ -17,11 +17,21 @@ namespace ServerService
             return new DBConnect().GetUniqueFileNames(dt);
         }
 
-        public string GetFileContents(int id)
+        public String GetFileContents(int id)
         {
-            string str = new DBConnect().GetFileContents(id);
+            String str = new DBConnect().GetFileContents(id);
             //Console.WriteLine(str);
             return str;
+        }
+
+        public List<SharedClasses.PacketDB> GetFileRevisions(String name)
+        {
+            return new DBConnect().GetFileRevisions(name);
+        }
+
+        public int GetLastRevisionID(String name)
+        {
+            return new DBConnect().GetLastRevisionID(name);
         }
     }
 }

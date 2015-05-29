@@ -211,6 +211,38 @@ namespace ServerService
             return packets;
         }
 
+        public List<PacketDB> GetFileRevisions(String name)
+        {
+            string query = String.Format("SELECT user, date, fileName, oldFileName, fileHash, iType, id_Packet, id_files, ip FROM packet WHERE fileName = '{0}'", name);
+            Console.WriteLine(query);
+            List<PacketDB> packets = new List<PacketDB>();
+            MySqlCommand cmd = new MySqlCommand(query, conn);
+            MySqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                int id_files = -666;
+                string oldFileName = "NULL";
+                if (!(reader["id_files"] is DBNull)) id_files = Convert.ToInt32(reader["id_files"]);
+                if (!(reader["oldFileName"] is DBNull)) oldFileName = reader["oldFileName"] + "";
+                PacketDB pack = new PacketDB(new Packet(reader["user"] + "",
+                    DateTime.ParseExact(reader["date"] + "", "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture),
+                    reader["fileName"] + "", oldFileName, reader["fileHash"] + "", (WatcherInfoType)reader["iType"], 1),
+                    Convert.ToInt32(reader["id_Packet"]),
+                    Convert.ToInt32(id_files),
+                    Convert.ToInt32(0),
+                    reader["ip"] + "");
+                packets.Add(pack);
+            }
+            return packets;
+        }
+
+        public int GetLastRevisionID(String name)
+        {
+            List<PacketDB> list = GetFileRevisions(name);
+            int id = list.Max(x => x.Id_files);
+            return id;
+        }
+
         public String GetFileContents(int id)
         {
             string query = String.Format("SELECT content FROM files WHERE id_files = '{0}'", id);
@@ -219,7 +251,7 @@ namespace ServerService
             string content = "";
             while (reader.Read())
             {
-                content = ((string)reader["content"]);
+                content = reader.GetString(0);
             }
             return content;            
         }
