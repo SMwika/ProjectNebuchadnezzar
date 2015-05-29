@@ -7,7 +7,7 @@
             <ColumnDefinition Width="172*"/>
             <ColumnDefinition Width="527*"/>
         </Grid.ColumnDefinitions>
-        <ListBox Margin="0,79,0,0" Name="lbFileList"/>
+        <ListBox Margin="0,79,0,0" Name="lbFileList" SelectionChanged="lbFileList_SelectionChanged"/>
         <Label Content="lFileList" HorizontalAlignment="Left" Height="29" VerticalAlignment="Top" Width="122" Name="lFileList" Margin="0,50,0,0"/>
         <DatePicker HorizontalAlignment="Left" VerticalAlignment="Top" Width="128" Name="dpDatePicker" SelectedDateChanged="dpDatePicker_SelectedDateChanged"/>
         <TextBox Grid.Column="1" HorizontalAlignment="Left" Margin="0,26,0,0" TextWrapping="Wrap" Text="TextBox" Width="527" Name="tbFilePreview"/>

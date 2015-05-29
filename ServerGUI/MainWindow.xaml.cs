@@ -99,11 +99,12 @@ namespace ServerGUI
                 return this.isConnected;
             }
         }
-
+        private List<PacketDB> list;
+        private List<PacketDB> shownList;
         private void updateLists()
         {
             connector = pipeFactory.CreateChannel();
-            List<PacketDB> list = connector.GetUniqueFileNames();
+            list = connector.GetUniqueFileNames();
             if (this.cbIPList.Dispatcher.CheckAccess())
             {
                 lbFileList.Items.Clear();
@@ -111,28 +112,32 @@ namespace ServerGUI
                 {
                     lbFileList.Items.Add(packet.FileName);
                 }
-                List<string> uniqueIPs = list.Select(x => x.IpAddress).Distinct().ToList();
-                cbIPList.Items.Clear();
-                cbIPList.Items.Add("<ANY>");
-                cbIPList.SelectedIndex = 0;
-                foreach (String ip in uniqueIPs)
-                {
-                    cbIPList.Items.Add(ip);
-                }
+                updateIpList();
             }
             else
             {
                 this.cbIPList.Dispatcher.Invoke(updateLists);
             }
-            
+            shownList = list;
+        }
 
+        private void updateIpList()
+        {
+            List<string> uniqueIPs = list.Select(x => x.IpAddress).Distinct().ToList();
+            cbIPList.Items.Clear();
+            cbIPList.Items.Add("<ANY>");
+            cbIPList.SelectedIndex = 0;
+            foreach (String ip in uniqueIPs)
+            {
+                cbIPList.Items.Add(ip);
+            }
         }
 
         private void dpDatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             if (isConnected)
             {
-                List<PacketDB> list;
+                //List<PacketDB> list;
                 if(((DatePicker)sender).SelectedDate == null)
                     list = connector.GetUniqueFileNames();
                 else
@@ -142,14 +147,59 @@ namespace ServerGUI
                 {
                     lbFileList.Items.Add(packet.FileName);
                 }
-            }            
+                updateIpList();
+                shownList = list;
+            }
+            lbFileList.SelectedIndex = -1;
         }
 
         private void cbIPList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (isConnected)
             {
+                if ((string)cbIPList.SelectedValue == "<ANY>")
+                {
+                    lbFileList.Items.Clear();
+                    foreach (PacketDB packet in list)
+                    {
+                        lbFileList.Items.Add(packet.FileName);
+                    }
+                    shownList = list;
+                }
+                else
+                {
+                    List<PacketDB> listByIp = new List<PacketDB>();
+                    listByIp = list.Where(x => x.IpAddress == (string)cbIPList.SelectedValue).ToList();
+                    lbFileList.Items.Clear();
+                    foreach (PacketDB packet in listByIp)
+                    {
+                        lbFileList.Items.Add(packet.FileName);
+                    }
+                    shownList = listByIp;
+                }
+                lbFileList.SelectedIndex = -1;
+                
+            }
+        }
 
+        private void lbFileList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (((ListBox)sender).SelectedIndex == -1)
+            {
+                this.tbFilePreview.Text = "";
+            }
+            else
+            {
+                //this.tbFilePreview.Text = shownList[((ListBox)sender).SelectedIndex].ToString();
+                int id = shownList[((ListBox)sender).SelectedIndex].Id_files;
+                if (id < 0)
+                {
+                    this.tbFilePreview.Text = "No content available";
+                }
+                else
+                {
+                    this.tbFilePreview.Text = connector.GetFileContents(shownList[((ListBox)sender).SelectedIndex].Id_files);
+                }
             }
         }
     }

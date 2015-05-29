@@ -16,5 +16,12 @@ namespace ServerService
         {
             return new DBConnect().GetUniqueFileNames(dt);
         }
+
+        public string GetFileContents(int id)
+        {
+            string str = new DBConnect().GetFileContents(id);
+            //Console.WriteLine(str);
+            return str;
+        }
     }
 }

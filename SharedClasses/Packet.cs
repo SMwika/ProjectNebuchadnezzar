@@ -121,6 +121,11 @@ namespace SharedClasses
             return "" + user + " " + iType + " " + date.ToString() + " " + fileName + " " + fileHash;
         }
 
+        public override string ToString()
+        {
+            return this.getString();
+        }
+
         private String getFileContents(String path)
         {
             return System.IO.File.ReadAllText(path, Encoding.GetEncoding("ISO-8859-2"));
