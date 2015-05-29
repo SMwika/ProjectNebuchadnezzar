@@ -209,7 +209,19 @@ namespace ServerService
                 packets.Add(pack);
             }
             return packets;
+        }
 
+        public String GetFileContents(int id)
+        {
+            string query = String.Format("SELECT content FROM files WHERE id_files = '{0}'", id);
+            MySqlCommand cmd = new MySqlCommand(query, conn);
+            MySqlDataReader reader = cmd.ExecuteReader();
+            string content = "";
+            while (reader.Read())
+            {
+                content = reader["content"] + "";
+            }
+            return content;            
         }
 
         public List<PacketDB> GetUniqueFileNames()

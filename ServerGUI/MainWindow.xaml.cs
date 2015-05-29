@@ -190,7 +190,16 @@ namespace ServerGUI
             }
             else
             {
-                this.tbFilePreview.Text = shownList[((ListBox)sender).SelectedIndex].ToString();
+                //this.tbFilePreview.Text = shownList[((ListBox)sender).SelectedIndex].ToString();
+                int id = shownList[((ListBox)sender).SelectedIndex].Id_files;
+                if (id < 0)
+                {
+                    this.tbFilePreview.Text = "No content available";
+                }
+                else
+                {
+                    this.tbFilePreview.Text = connector.GetFileContents(shownList[((ListBox)sender).SelectedIndex].Id_files);
+                }
             }
         }
     }

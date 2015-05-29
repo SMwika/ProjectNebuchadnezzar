@@ -14,5 +14,8 @@ namespace SharedClasses
 
         [OperationContract]
         List<PacketDB> GetUniqueFileNamesByDate(string dt);
+
+        [OperationContract]
+        String GetFileContents(int id);
     }
 }
