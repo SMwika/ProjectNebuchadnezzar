@@ -5,6 +5,7 @@ using System.Text;
 
 namespace SharedClasses
 {
+    [Serializable()]
     public class PacketDB : Packet
     {
         private int id_packet { get; set; }
@@ -33,7 +34,8 @@ namespace SharedClasses
             }
         }
 
-        public PacketDB(Packet pack, int id_packet, int id_files, int count) : base(pack.User, pack.Date, pack.FileName, pack.OldFileName, pack.FileHash, pack.IType)
+        public PacketDB(Packet pack, int id_packet, int id_files, int count) 
+            : base(pack.User, pack.Date, pack.FileName, pack.OldFileName, pack.FileHash, pack.IType, 1)
         {
             this.id_packet = id_packet;
             this.id_files = id_files;

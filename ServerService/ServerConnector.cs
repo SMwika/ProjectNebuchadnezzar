@@ -7,12 +7,12 @@ namespace ServerService
 {
     class ServerConnector : SharedClasses.IServerConnector
     {
-        public override List<SharedClasses.PacketDB> GetUniqueFileNames()
+        public List<SharedClasses.PacketDB> GetUniqueFileNames()
         {
             return new DBConnect().GetUniqueFileNames();
         }
 
-        public override List<SharedClasses.PacketDB> GetUniqueFileNames(string dt)
+        public List<SharedClasses.PacketDB> GetUniqueFileNamesByDate(string dt)
         {
             return new DBConnect().GetUniqueFileNames(dt);
         }

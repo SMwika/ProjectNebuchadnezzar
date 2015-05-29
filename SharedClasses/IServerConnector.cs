@@ -13,6 +13,6 @@ namespace SharedClasses
         List<PacketDB> GetUniqueFileNames();
 
         [OperationContract]
-        List<PacketDB> GetUniqueFileNames(string dt);
+        List<PacketDB> GetUniqueFileNamesByDate(string dt);
     }
 }

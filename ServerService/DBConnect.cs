@@ -184,22 +184,22 @@ namespace ServerService
             string query;
             if (date == "NO_DATE")
             {
-                query = "SELECT *, COUNT(*) as count FROM packet GROUP BY fileName ORDER BY id_Packet DESC";
+                query = "SELECT user, date, fileName, oldFileName, fileHash, iType, id_Packet, id_files, COUNT(*) as count FROM packet GROUP BY fileName ORDER BY id_Packet DESC";
             }
             else
             {
-                query = String.Format("SELECT *, COUNT(*) as count FROM packet WHERE DATE(date) = '{0}' GROUP BY fileName ORDER BY id_Packet DESC", date);
+                query = String.Format("SELECT user, date, fileName, oldFileName, fileHash, iType, id_Packet, id_files, COUNT(*) as count FROM packet WHERE DATE(date) = '{0}' GROUP BY fileName ORDER BY id_Packet DESC", date);
             }
-            List<PacketDB> packets = new List<PacketDB>;
+            List<PacketDB> packets = new List<PacketDB>();
             MySqlCommand cmd = new MySqlCommand(query, conn);
             MySqlDataReader reader = cmd.ExecuteReader();
             while (reader.Read())
             {
                 PacketDB pack = new PacketDB(new Packet(reader["user"] + "", 
                     DateTime.ParseExact(reader["date"] + "","yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture),
-                    reader["fileName"] + "", reader["oldFileName"] + "", reader["fileHash"] + "", (WatcherInfoType)reader["iType"]), 
+                    reader["fileName"] + "", "NULL", reader["fileHash"] + "", (WatcherInfoType)reader["iType"], 1), 
                     Convert.ToInt32(reader["id_Packet"]), 
-                    Convert.ToInt32(reader["id_files"]), 
+                    Convert.ToInt32(0), 
                     Convert.ToInt32(reader["count"]));
                 packets.Add(pack);
             }

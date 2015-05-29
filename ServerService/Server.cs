@@ -11,6 +11,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;
 using System.IO;
 using System.Configuration;
+using System.ServiceModel;
 
 namespace ServerService
 {
@@ -18,6 +19,7 @@ namespace ServerService
     {
         private Thread _connectionThread;
         private Thread _clientServiceThread;
+        private Thread _WCFThread;
         private System.Diagnostics.EventLog events;
         private DBConnect db;
 
@@ -107,6 +109,11 @@ namespace ServerService
             }
            // Console.WriteLine("[" + ip + "]Thread Ended");
             new DBConnect().addLogs("[" + ip + "]Thread Ended");
+        }
+
+        private void WCFThreadFunc()
+        {
+            
         }
         public Server(System.Diagnostics.EventLog events)
         {

@@ -72,19 +72,47 @@ namespace SharedClasses
             }
         }
 
-        public Packet(String usr, DateTime dt, String name, String oldName, String hash, WatcherInfoType type)
-            : this(usr, dt, name, hash, type)
+        public Packet(String usr, DateTime dt, String name, String oldName, String hash, WatcherInfoType type, int sender)
+            : this(usr, dt, name, hash, type, sender)
         {
-            this.oldFileName = oldName.Replace("\\", "\\\\");
+            if (0 == sender)
+            {
+                this.oldFileName = oldName.Replace("\\", "\\\\");
+            }
+            else
+            {
+                this.oldFileName = oldName;
+            }
         }
-        public Packet(String usr, DateTime dt, String name, String hash, WatcherInfoType type)
+        public Packet(String usr, DateTime dt, String name, String oldName, String hash, WatcherInfoType type)
+            : this(usr, dt, name, hash, type, 0)
         {
-            this.user = usr;
-            this.date = dt;
-            this.fileName = name.Replace("\\", "\\\\");
-            this.fileHash = hash;
-            this.iType = type;
-            if (type == WatcherInfoType.FILE_CREATED | type == WatcherInfoType.FILE_CHANGED) this.fileContent = getFileContents(name);
+            //this.oldFileName = oldName.Replace("\\", "\\\\");
+        }
+        public Packet(String usr, DateTime dt, String name, String hash, WatcherInfoType type) 
+            : this(usr, dt,name, hash, type, 0)
+        {
+
+        }
+        public Packet(String usr, DateTime dt, String name, String hash, WatcherInfoType type, int sender)
+        {
+            if (0 == sender)
+            {
+                this.user = usr;
+                this.date = dt;
+                this.fileName = name.Replace("\\", "\\\\");
+                this.fileHash = hash;
+                this.iType = type;
+                if (type == WatcherInfoType.FILE_CREATED | type == WatcherInfoType.FILE_CHANGED) this.fileContent = getFileContents(name);
+            }
+            else
+            {
+                this.user = usr;
+                this.date = dt;
+                this.fileName = name;
+                this.fileHash = hash;
+                this.iType = type;
+            }
         }
 
         public string getString()
