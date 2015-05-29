@@ -7,10 +7,12 @@
             <ColumnDefinition Width="172*"/>
             <ColumnDefinition Width="527*"/>
         </Grid.ColumnDefinitions>
-        <ListBox Margin="0,54,0,0" Name="lbFileList"/>
-        <Label Content="lFileList" HorizontalAlignment="Left" Height="29" VerticalAlignment="Top" Width="122" Name="lFileList" Margin="0,25,0,0"/>
-        <DatePicker HorizontalAlignment="Left" VerticalAlignment="Top" Width="128" Name="dpDatePicker"/>
+        <ListBox Margin="0,79,0,0" Name="lbFileList"/>
+        <Label Content="lFileList" HorizontalAlignment="Left" Height="29" VerticalAlignment="Top" Width="122" Name="lFileList" Margin="0,50,0,0"/>
+        <DatePicker HorizontalAlignment="Left" VerticalAlignment="Top" Width="128" Name="dpDatePicker" SelectedDateChanged="dpDatePicker_SelectedDateChanged"/>
         <TextBox Grid.Column="1" HorizontalAlignment="Left" Margin="0,26,0,0" TextWrapping="Wrap" Text="TextBox" Width="527" Name="tbFilePreview"/>
         <Label Content="lFilePreview" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Name="lFilePreview"/>
+        <ComboBox HorizontalAlignment="Left" Height="26" Margin="38,24,0,0" VerticalAlignment="Top" Width="124" Name="cbIPList" SelectionChanged="cbIPList_SelectionChanged"/>
+        <Label Content="lIP:" HorizontalAlignment="Left" Margin="0,24,0,0" VerticalAlignment="Top" Name="lIP"/>
     </Grid>
 </Window>
