@@ -84,6 +84,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Server.cs" />
+    <Compile Include="ServerConnector.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
