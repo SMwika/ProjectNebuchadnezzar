@@ -19,7 +19,9 @@ namespace ServerService
 
         public string GetFileContents(int id)
         {
-            return new DBConnect().GetFileContents(id);
+            string str = new DBConnect().GetFileContents(id);
+            //Console.WriteLine(str);
+            return str;
         }
     }
 }

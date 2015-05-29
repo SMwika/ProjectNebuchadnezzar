@@ -219,7 +219,7 @@ namespace ServerService
             string content = "";
             while (reader.Read())
             {
-                content = reader["content"] + "";
+                content = ((string)reader["content"]);
             }
             return content;            
         }
