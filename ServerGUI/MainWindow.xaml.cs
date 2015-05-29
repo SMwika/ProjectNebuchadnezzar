@@ -198,7 +198,11 @@ namespace ServerGUI
                 }
                 else
                 {
-                    this.tbFilePreview.Text = connector.GetFileContents(shownList[((ListBox)sender).SelectedIndex].Id_files);
+                    id = connector.GetLastRevisionID(((ListBox)sender).SelectedValue.ToString().Replace("\\", "\\\\"));
+                    //this.tbFilePreview.Text = ((ListBox)sender).SelectedIndex.ToString();
+                    //this.tbFilePreview.Text += id;
+                    //this.tbFilePreview.Text = connector.GetFileContents(shownList[((ListBox)sender).SelectedIndex].Id_files);
+                    this.tbFilePreview.Text = connector.GetFileContents(id);
                 }
             }
         }

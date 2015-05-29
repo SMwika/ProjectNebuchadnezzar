@@ -17,5 +17,11 @@ namespace SharedClasses
 
         [OperationContract]
         String GetFileContents(int id);
+
+        [OperationContract]
+        List<PacketDB> GetFileRevisions(String name);
+
+        [OperationContract]
+        int GetLastRevisionID(String name);
     }
 }
