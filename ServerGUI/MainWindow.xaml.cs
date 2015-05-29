@@ -82,10 +82,17 @@ namespace ServerGUI
                 if (value == true)
                 {
                     circleNotifier.Fill = new SolidColorBrush(Color.FromArgb(255, 0, 255, 0));
+                    dpDatePicker.IsEnabled = true;
+                    cbIPList.IsEnabled = true;
 
                 }
                 else
+                {
                     circleNotifier.Fill = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
+                    dpDatePicker.IsEnabled = false;
+                    cbIPList.IsEnabled = false;
+                }
+                    
             }
             get
             {
