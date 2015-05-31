@@ -213,7 +213,7 @@ namespace ServerService
 
         public List<PacketDB> GetFileRevisions(String name)
         {
-            string query = String.Format("SELECT user, date, fileName, oldFileName, fileHash, iType, id_Packet, id_files, ip FROM packet WHERE fileName = '{0}'", name);
+            string query = String.Format("SELECT user, date, fileName, oldFileName, fileHash, iType, id_Packet, id_files, ip FROM packet WHERE fileName = '{0}' ORDER BY date DESC", name);
             Console.WriteLine(query);
             List<PacketDB> packets = new List<PacketDB>();
             MySqlCommand cmd = new MySqlCommand(query, conn);
