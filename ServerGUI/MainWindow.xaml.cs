@@ -182,26 +182,66 @@ namespace ServerGUI
             }
         }
 
+        List<PacketDB> revList;
+
         private void lbFileList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (((ListBox)sender).SelectedIndex == -1)
             {
-                this.tbFilePreview.Text = "";
+                this.tbFilePreview.Text = "No file selected";
             }
             else
             {
+                revList = connector.GetFileRevisions(((ListBox)sender).SelectedValue.ToString().Replace("\\", "\\\\"));
+                cbRevList.Items.Clear();
+
+                foreach (PacketDB packet in revList)
+                {
+                    cbRevList.Items.Add(packet.Date.ToString("dd-MM-yyyy HH:mm:ss")); ;
+                }
+                if (cbRevList.Items.Count > 0) cbRevList.SelectedIndex = 0;
                 //this.tbFilePreview.Text = shownList[((ListBox)sender).SelectedIndex].ToString();
-                int id = shownList[((ListBox)sender).SelectedIndex].Id_files;
+                //int id = shownList[((ListBox)sender).SelectedIndex].Id_files;
+                //if (id < 0)
+                //{
+                //    this.tbFilePreview.Text = "No content available";
+                //}
+                //else
+                //{
+                //    id = connector.GetLastRevisionID(((ListBox)sender).SelectedValue.ToString().Replace("\\", "\\\\"));
+                //    //this.tbFilePreview.Text = ((ListBox)sender).SelectedIndex.ToString();
+                //    //this.tbFilePreview.Text += id;
+                //    //this.tbFilePreview.Text = connector.GetFileContents(shownList[((ListBox)sender).SelectedIndex].Id_files);
+                //    this.tbFilePreview.Text = connector.GetFileContents(id);
+                //}
+            }
+        }
+
+        private void cbRevList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (((ComboBox)sender).SelectedIndex == -1)
+            {
+                this.tbFilePreview.Text = "No file selected";
+            }
+            else
+            {
+                int id = revList[((ComboBox)sender).SelectedIndex].Id_files;
                 if (id < 0)
                 {
                     this.tbFilePreview.Text = "No content available";
                 }
                 else
                 {
-                    id = connector.GetLastRevisionID(((ListBox)sender).SelectedValue.ToString().Replace("\\", "\\\\"));
-                    //this.tbFilePreview.Text = ((ListBox)sender).SelectedIndex.ToString();
-                    //this.tbFilePreview.Text += id;
-                    //this.tbFilePreview.Text = connector.GetFileContents(shownList[((ListBox)sender).SelectedIndex].Id_files);
+                    String content = connector.GetFileContents(id);
+                    if (content == "")
+                    {
+                        this.tbFilePreview.Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
+                        content = "<Empty File>";
+                    }
+                    else
+                    {
+                        this.tbFilePreview.Foreground = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
+                    }
                     this.tbFilePreview.Text = connector.GetFileContents(id);
                 }
             }
