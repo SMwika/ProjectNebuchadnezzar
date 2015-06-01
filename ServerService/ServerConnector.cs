@@ -33,5 +33,17 @@ namespace ServerService
         {
             return new DBConnect().GetLastRevisionID(name);
         }
+
+        public List<String> GetActiveConnections()
+        {
+            List<String> list = new List<String>();
+            list = Server.clientList;
+            return list;
+        }
+
+        public List<String> GetLogs()
+        {
+            return new DBConnect().GetAllLogs(-1);
+        }
     }
 }

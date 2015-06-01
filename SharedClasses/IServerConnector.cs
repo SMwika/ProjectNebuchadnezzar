@@ -23,5 +23,11 @@ namespace SharedClasses
 
         [OperationContract]
         int GetLastRevisionID(String name);
+
+        [OperationContract]
+        List<String> GetActiveConnections();
+
+        [OperationContract]
+        List<String> GetLogs();
     }
 }

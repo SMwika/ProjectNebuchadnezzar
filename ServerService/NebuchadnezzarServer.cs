@@ -8,6 +8,7 @@ using System.ServiceModel;
 using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
+using SharedClasses;
 
 namespace ServerService
 {
@@ -16,6 +17,8 @@ namespace ServerService
         Server srv;
         ServerConnector srvConn;
         ServiceHost wcfHost;
+
+        //ChannelFactory<IGuiWcfConnector> pipeFactory;
         public NebuchadnezzarServer(string[] args)
         {
             InitializeComponent();
@@ -37,12 +40,15 @@ namespace ServerService
             {
                 wcfHost.Close();
             }
-
-            wcfHost = new ServiceHost(typeof(ServerConnector), new Uri[] { new Uri("net.pipe://localhost") });
+            wcfHost = new ServiceHost(typeof(ServerConnector), new Uri[] { new Uri("net.pipe://localhost/server") });
             //srvConn = new ServerConnector();
             //wcfHost.AddServiceEndpoint(typeof(SharedClasses.IServerConnector), new BasicHttpBinding(), "PacketDB");
             wcfHost.AddServiceEndpoint(typeof(SharedClasses.IServerConnector), new NetNamedPipeBinding(), "PipePacketDB");
             wcfHost.Open();
+            //NetNamedPipeBinding binding = new NetNamedPipeBinding();
+            //binding.MaxReceivedMessageSize = 65536 * 32;
+            //pipeFactory = new ChannelFactory<IGuiWcfConnector>(binding, new EndpointAddress("net.pipe://localhost/client/PipeLiverGUI"));
+            //srv.StartWcfGuiConnection(pipeFactory);
         }
 
         protected override void OnStop()

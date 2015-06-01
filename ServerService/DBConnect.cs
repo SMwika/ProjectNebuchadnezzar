@@ -152,10 +152,15 @@ namespace ServerService
             this.ExecuteNonQuery(query);
         }
 
+        public void addLogs(String mess, int type)
+        {
+            string query = String.Format("INSERT INTO logs(message, date, type) VALUES ('" + mess + "','" + System.DateTime.Now + "', {0})", type);
+            this.ExecuteNonQuery(query);
+        }
+
         public void addLogs(String mess)
         {
-            string query = String.Format("INSERT INTO logs(message, date) VALUES ('" + mess + "','" + System.DateTime.Now + "')");
-            this.ExecuteNonQuery(query);
+            addLogs(mess, 0);
         }
 
         public void Insert(List<String> ins)
@@ -176,6 +181,24 @@ namespace ServerService
             string query = String.Format("DELETE FROM gadgetList WHERE id={0};", id);
 
             this.ExecuteNonQuery(query);
+        }
+
+        public List<String> GetAllLogs(int id)
+        {
+            string query;
+            if (id < 0)
+                query = "SELECT type, message FROM logs";
+            else
+                query = "SELECT type, message FROM logs WHERE id_logs = id";
+            List<String> logs = new List<String>();
+
+            MySqlCommand cmd = new MySqlCommand(query, conn);
+            MySqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                logs.Add(String.Format("[{0}]{1}", reader["type"] + "", reader["message"] + ""));
+            }
+            return logs;
         }
 
 

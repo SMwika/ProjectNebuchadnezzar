@@ -30,6 +30,8 @@ namespace ServerGUI
         private bool isConnected = false;
         delegate void SetIsConnectedCallback(bool conn);
         private ChannelFactory<IServerConnector> pipeFactory;
+        private List<String> ipList = new List<String>();
+        //ServiceHost wcfHost;
 
         private void WcfConnectionThreadFunc()
         {
@@ -51,15 +53,56 @@ namespace ServerGUI
                 }
             }
         }
+
+        private void InitControls()
+        {
+            this.tbDate.Text = "";
+            this.tbFileHash.Text = "";
+            this.tbFileName.Text = "";
+            this.tbFilePreview.Text = "";
+            this.tbIpAddress.Text = "";
+            this.tbIType.Text = "";
+            this.tbOldFileName.Text = "";
+            this.tbPacketID.Text = "";
+            this.tbUserName.Text = "";
+
+            this.lDate.Content = "Date: ";
+            this.lFileHash.Content = "File hash: ";
+            this.lFileName.Content = "File name: ";
+            this.lOldFileName.Content = "Old file name: ";
+            this.lIpAddress.Content = "IP Address: ";
+            this.lIType.Content = "Info type: ";
+            this.lPacketID.Content = "Packet ID: ";
+            this.lUserName.Content = "User name: ";
+        }
         public MainWindow()
         {
             InitializeComponent();
+            InitControls();
             NetNamedPipeBinding binding = new NetNamedPipeBinding();
             binding.MaxReceivedMessageSize = 65536 * 32;
-            pipeFactory = new ChannelFactory<IServerConnector>(binding, new EndpointAddress("net.pipe://localhost/PipePacketDB"));
+            pipeFactory = new ChannelFactory<IServerConnector>(binding, new EndpointAddress("net.pipe://localhost/server/PipePacketDB"));
             new Thread(WcfConnectionThreadFunc).Start();
+            //InitWCF();
             //updateLists();
         }
+
+        public void ParseLiverEvent(String ev)
+        {
+            tbFilePreview.Text = ev;
+        }
+
+        //private void InitWCF()
+        //{
+        //    if (wcfHost != null)
+        //    {
+        //        wcfHost.Close();
+        //    }
+
+        //    wcfHost = new ServiceHost(typeof(GuiWcfConnector), new Uri[] { new Uri("net.pipe://localhost/client") });
+        //    wcfHost.AddServiceEndpoint(typeof(SharedClasses.IGuiWcfConnector), new NetNamedPipeBinding(), "PipeLiverGUI");
+        //    wcfHost.Open();
+        //}
 
         private void SetConnected(bool conn)
         {
@@ -105,6 +148,7 @@ namespace ServerGUI
         {
             connector = pipeFactory.CreateChannel();
             list = connector.GetUniqueFileNames();
+            
             if (this.cbIPList.Dispatcher.CheckAccess())
             {
                 lbFileList.Items.Clear();
@@ -113,12 +157,34 @@ namespace ServerGUI
                     lbFileList.Items.Add(packet.FileName);
                 }
                 updateIpList();
+                updateActiveConnections();
+                updateLogs();
             }
             else
             {
                 this.cbIPList.Dispatcher.Invoke(updateLists);
             }
             shownList = list;
+        }
+
+
+        private void updateLogs()
+        {
+            List<String> logList = connector.GetLogs();
+            lbLogList.Items.Clear();
+            foreach (String log in logList)
+            {
+                lbLogList.Items.Add(log);
+            }
+        }
+        private void updateActiveConnections()
+        {
+            ipList = connector.GetActiveConnections();
+            lbClientList.Items.Clear();
+            foreach (String ip in ipList)
+            {
+                lbClientList.Items.Add(ip);
+            }
         }
 
         private void updateIpList()
@@ -225,7 +291,16 @@ namespace ServerGUI
             }
             else
             {
+                int sel = ((ComboBox)sender).SelectedIndex;
                 int id = revList[((ComboBox)sender).SelectedIndex].Id_files;
+                this.tbDate.Text = revList[((ComboBox)sender).SelectedIndex].Date.ToString();
+                this.tbFileHash.Text = revList[((ComboBox)sender).SelectedIndex].FileHash;
+                this.tbFileName.Text = revList[sel].FileName;
+                this.tbOldFileName.Text = revList[sel].OldFileName;
+                this.tbIpAddress.Text = revList[sel].IpAddress;
+                this.tbIType.Text = revList[sel].IType.ToString();
+                this.tbPacketID.Text = revList[sel].Id_packet.ToString();
+                this.tbUserName.Text = revList[sel].User;
                 if (id < 0)
                 {
                     this.tbFilePreview.Text = "No content available";
@@ -245,6 +320,16 @@ namespace ServerGUI
                     this.tbFilePreview.Text = connector.GetFileContents(id);
                 }
             }
+        }
+
+        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            
         }
     }
 }
