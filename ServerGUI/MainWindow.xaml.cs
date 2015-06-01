@@ -135,6 +135,7 @@ namespace ServerGUI
                 }
                 updateIpList();
                 updateActiveConnections();
+                updateLogs();
             }
             else
             {
@@ -143,6 +144,16 @@ namespace ServerGUI
             shownList = list;
         }
 
+
+        private void updateLogs()
+        {
+            List<String> logList = connector.GetLogs();
+            lbLogList.Items.Clear();
+            foreach (String log in logList)
+            {
+                lbLogList.Items.Add(log);
+            }
+        }
         private void updateActiveConnections()
         {
             ipList = connector.GetActiveConnections();
@@ -277,6 +288,11 @@ namespace ServerGUI
                     this.tbFilePreview.Text = connector.GetFileContents(id);
                 }
             }
+        }
+
+        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }
