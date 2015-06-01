@@ -220,16 +220,16 @@ namespace ServerGUI
             //this.circleLiverNotifier.Dispatcher.Invoke(() => setColor(circleLiverNotifier, "Yellow"));
         }
 
-        //private void setColor(Ellipse ellip, String col)
-        //{
-        //    if (col == "Red")
-        //        this.circleLiverNotifier.Fill = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
-        //    else if (col == "Green")
-        //        this.circleLiverNotifier.Fill = new SolidColorBrush(Color.FromArgb(255, 0, 255, 0));
-        //    else if (col == "Yellow")
-        //        this.circleLiverNotifier.Fill = new SolidColorBrush(Color.FromArgb(255, 255, 255, 0));
-        //    Thread.Sleep(500);
-        //}
+        private void setColor(Ellipse ellip, String col)
+        {
+            if (col == "Red")
+                this.circleLiverNotifier.Fill = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
+            else if (col == "Green")
+                this.circleLiverNotifier.Fill = new SolidColorBrush(Color.FromArgb(255, 0, 255, 0));
+            else if (col == "Yellow")
+                this.circleLiverNotifier.Fill = new SolidColorBrush(Color.FromArgb(255, 255, 255, 0));
+            //Thread.Sleep(500);
+        }
 
 
         private void updateLogs()
@@ -288,6 +288,7 @@ namespace ServerGUI
 
         private void cbIPList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            setColor(this.circleLiverNotifier, "Red");
             if (isConnected)
             {
                 if ((string)cbIPList.SelectedValue == "<ANY>")
@@ -311,8 +312,9 @@ namespace ServerGUI
                     shownList = listByIp;
                 }
                 lbFileList.SelectedIndex = -1;
-                
+
             }
+            setColor(this.circleLiverNotifier, "Green");
         }
 
         List<PacketDB> revList;
@@ -352,6 +354,7 @@ namespace ServerGUI
 
         private void cbRevList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            setColor(this.circleLiverNotifier, "Red");
             if (((ComboBox)sender).SelectedIndex == -1)
             {
                 this.tbFilePreview.Text = "No file selected";
@@ -387,6 +390,7 @@ namespace ServerGUI
                     this.tbFilePreview.Text = connector.GetFileContents(id);
                 }
             }
+            setColor(this.circleLiverNotifier, "Green");
         }
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
