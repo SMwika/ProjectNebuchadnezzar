@@ -291,7 +291,16 @@ namespace ServerGUI
             }
             else
             {
+                int sel = ((ComboBox)sender).SelectedIndex;
                 int id = revList[((ComboBox)sender).SelectedIndex].Id_files;
+                this.tbDate.Text = revList[((ComboBox)sender).SelectedIndex].Date.ToString();
+                this.tbFileHash.Text = revList[((ComboBox)sender).SelectedIndex].FileHash;
+                this.tbFileName.Text = revList[sel].FileName;
+                this.tbOldFileName.Text = revList[sel].OldFileName;
+                this.tbIpAddress.Text = revList[sel].IpAddress;
+                this.tbIType.Text = revList[sel].IType.ToString();
+                this.tbPacketID.Text = revList[sel].Id_packet.ToString();
+                this.tbUserName.Text = revList[sel].User;
                 if (id < 0)
                 {
                     this.tbFilePreview.Text = "No content available";

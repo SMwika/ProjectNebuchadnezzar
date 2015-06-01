@@ -49,14 +49,14 @@
                     <Label Content="lFileHash" Name="lFileHash" HorizontalAlignment="Left" Margin="10,165,0,0" VerticalAlignment="Top"/>
                     <Label Content="lIType" Name="lIType" HorizontalAlignment="Left" Margin="10,196,0,0" VerticalAlignment="Top"/>
                     <Label Content="lIpAddress" Name="lIpAddress" HorizontalAlignment="Left" Margin="10,227,0,0" VerticalAlignment="Top"/>
-                    <TextBox HorizontalAlignment="Left" Height="23" Margin="137,14,0,0" TextWrapping="Wrap" Text="tbPacketID" Name="tbPacketID" VerticalAlignment="Top" Width="120"/>
-                    <TextBox HorizontalAlignment="Left" Height="23" Margin="137,45,0,0" TextWrapping="Wrap" Text="tbUserName" Name="tbUserName" VerticalAlignment="Top" Width="120"/>
-                    <TextBox HorizontalAlignment="Left" Height="23" Margin="137,76,0,0" TextWrapping="Wrap" Text="tbDate" Name="tbDate" VerticalAlignment="Top" Width="120"/>
-                    <TextBox HorizontalAlignment="Left" Height="23" Margin="137,107,0,0" TextWrapping="Wrap" Text="tbFileName" Name="tbFileName" VerticalAlignment="Top" Width="120"/>
-                    <TextBox HorizontalAlignment="Left" Height="23" Margin="137,138,0,0" TextWrapping="Wrap" Text="tbOldFileName" Name="tbOldFileName" VerticalAlignment="Top" Width="120"/>
-                    <TextBox HorizontalAlignment="Left" Height="23" Margin="137,169,0,0" TextWrapping="Wrap" Text="tbFileHash" Name="tbFileHash" VerticalAlignment="Top" Width="120"/>
-                    <TextBox HorizontalAlignment="Left" Height="23" Margin="137,200,0,0" TextWrapping="Wrap" Text="tbIType" Name="tbIType" VerticalAlignment="Top" Width="120"/>
-                    <TextBox HorizontalAlignment="Left" Height="23" Margin="137,231,0,0" TextWrapping="Wrap" Text="tbIpAddress" Name="tbIpAddress" VerticalAlignment="Top" Width="120"/>
+                    <TextBox HorizontalAlignment="Left" Height="23" Margin="137,14,0,0" TextWrapping="Wrap" Text="tbPacketID" Name="tbPacketID" VerticalAlignment="Top" Width="273"/>
+                    <TextBox HorizontalAlignment="Left" Height="23" Margin="137,45,0,0" TextWrapping="Wrap" Text="tbUserName" Name="tbUserName" VerticalAlignment="Top" Width="273"/>
+                    <TextBox HorizontalAlignment="Left" Height="23" Margin="137,76,0,0" TextWrapping="Wrap" Text="tbDate" Name="tbDate" VerticalAlignment="Top" Width="273"/>
+                    <TextBox HorizontalAlignment="Left" Height="23" Margin="137,107,0,0" TextWrapping="Wrap" Text="tbFileName" Name="tbFileName" VerticalAlignment="Top" Width="273"/>
+                    <TextBox HorizontalAlignment="Left" Height="23" Margin="137,138,0,0" TextWrapping="Wrap" Text="tbOldFileName" Name="tbOldFileName" VerticalAlignment="Top" Width="273"/>
+                    <TextBox HorizontalAlignment="Left" Height="23" Margin="137,169,0,0" TextWrapping="Wrap" Text="tbFileHash" Name="tbFileHash" VerticalAlignment="Top" Width="273"/>
+                    <TextBox HorizontalAlignment="Left" Height="23" Margin="137,200,0,0" TextWrapping="Wrap" Text="tbIType" Name="tbIType" VerticalAlignment="Top" Width="273"/>
+                    <TextBox HorizontalAlignment="Left" Height="23" Margin="137,231,0,0" TextWrapping="Wrap" Text="tbIpAddress" Name="tbIpAddress" VerticalAlignment="Top" Width="273"/>
                 </Grid>
             </TabItem>
         </TabControl>
