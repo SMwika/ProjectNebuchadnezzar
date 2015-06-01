@@ -53,9 +53,32 @@ namespace ServerGUI
                 }
             }
         }
+
+        private void InitControls()
+        {
+            this.tbDate.Text = "";
+            this.tbFileHash.Text = "";
+            this.tbFileName.Text = "";
+            this.tbFilePreview.Text = "";
+            this.tbIpAddress.Text = "";
+            this.tbIType.Text = "";
+            this.tbOldFileName.Text = "";
+            this.tbPacketID.Text = "";
+            this.tbUserName.Text = "";
+
+            this.lDate.Content = "Date: ";
+            this.lFileHash.Content = "File hash: ";
+            this.lFileName.Content = "File name: ";
+            this.lOldFileName.Content = "Old file name: ";
+            this.lIpAddress.Content = "IP Address: ";
+            this.lIType.Content = "Info type: ";
+            this.lPacketID.Content = "Packet ID: ";
+            this.lUserName.Content = "User name: ";
+        }
         public MainWindow()
         {
             InitializeComponent();
+            InitControls();
             NetNamedPipeBinding binding = new NetNamedPipeBinding();
             binding.MaxReceivedMessageSize = 65536 * 32;
             pipeFactory = new ChannelFactory<IServerConnector>(binding, new EndpointAddress("net.pipe://localhost/server/PipePacketDB"));
@@ -293,6 +316,11 @@ namespace ServerGUI
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            
         }
     }
 }
