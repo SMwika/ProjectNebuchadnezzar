@@ -30,6 +30,8 @@ namespace ServerGUI
         private bool isConnected = false;
         delegate void SetIsConnectedCallback(bool conn);
         private ChannelFactory<IServerConnector> pipeFactory;
+        private List<String> ipList = new List<String>();
+        //ServiceHost wcfHost;
 
         private void WcfConnectionThreadFunc()
         {
@@ -56,10 +58,28 @@ namespace ServerGUI
             InitializeComponent();
             NetNamedPipeBinding binding = new NetNamedPipeBinding();
             binding.MaxReceivedMessageSize = 65536 * 32;
-            pipeFactory = new ChannelFactory<IServerConnector>(binding, new EndpointAddress("net.pipe://localhost/PipePacketDB"));
+            pipeFactory = new ChannelFactory<IServerConnector>(binding, new EndpointAddress("net.pipe://localhost/server/PipePacketDB"));
             new Thread(WcfConnectionThreadFunc).Start();
+            //InitWCF();
             //updateLists();
         }
+
+        public void ParseLiverEvent(String ev)
+        {
+            tbFilePreview.Text = ev;
+        }
+
+        //private void InitWCF()
+        //{
+        //    if (wcfHost != null)
+        //    {
+        //        wcfHost.Close();
+        //    }
+
+        //    wcfHost = new ServiceHost(typeof(GuiWcfConnector), new Uri[] { new Uri("net.pipe://localhost/client") });
+        //    wcfHost.AddServiceEndpoint(typeof(SharedClasses.IGuiWcfConnector), new NetNamedPipeBinding(), "PipeLiverGUI");
+        //    wcfHost.Open();
+        //}
 
         private void SetConnected(bool conn)
         {
@@ -105,6 +125,7 @@ namespace ServerGUI
         {
             connector = pipeFactory.CreateChannel();
             list = connector.GetUniqueFileNames();
+            
             if (this.cbIPList.Dispatcher.CheckAccess())
             {
                 lbFileList.Items.Clear();
@@ -113,12 +134,23 @@ namespace ServerGUI
                     lbFileList.Items.Add(packet.FileName);
                 }
                 updateIpList();
+                updateActiveConnections();
             }
             else
             {
                 this.cbIPList.Dispatcher.Invoke(updateLists);
             }
             shownList = list;
+        }
+
+        private void updateActiveConnections()
+        {
+            ipList = connector.GetActiveConnections();
+            lbClientList.Items.Clear();
+            foreach (String ip in ipList)
+            {
+                lbClientList.Items.Add(ip);
+            }
         }
 
         private void updateIpList()

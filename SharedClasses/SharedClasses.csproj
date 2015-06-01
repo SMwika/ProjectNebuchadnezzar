@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IGuiWcfConnector.cs" />
     <Compile Include="IServerConnector.cs" />
     <Compile Include="Packet.cs" />
     <Compile Include="PacketDB.cs" />

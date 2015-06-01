@@ -22,11 +22,48 @@ namespace ServerService
         private Thread _WCFThread;
         private System.Diagnostics.EventLog events;
         private DBConnect db;
+        public static List<String> clientList = new List<String>();
 
         private String ip = ConfigurationManager.AppSettings["listenerIP"];//"127.0.0.1";
         private int port = Convert.ToInt32(ConfigurationManager.AppSettings["listenerPort"]);//9191;
         //private String ip = "192.168.1.51";
         //private int port = 9191;
+
+        //private bool isConnected = false;
+        //private IGuiWcfConnector connector;
+        //private ChannelFactory<IGuiWcfConnector> pipeFactory;
+
+        //private void WcfGuiThread()
+        //{
+        //    while (true)
+        //    {
+        //        try
+        //        {
+        //            Connect();
+        //            this.isConnected = true;
+        //            break;
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            if (ex is EndpointNotFoundException || ex is CommunicationObjectFaultedException)
+        //            {
+        //                this.isConnected = false;
+        //                Thread.Sleep(5000);
+        //            }
+        //        }
+        //    }
+        //}
+
+        //private void Connect()
+        //{
+        //    connector = pipeFactory.CreateChannel();
+        //}
+
+        //public void StartWcfGuiConnection(ChannelFactory<IGuiWcfConnector> factory)
+        //{
+        //    pipeFactory = factory;
+        //    new Thread(WcfGuiThread).Start();
+        //}
 
         private object ReceiveObject(Socket sock)
         {
@@ -77,6 +114,7 @@ namespace ServerService
                     Socket handler;
                     handler = listener.Accept();
                     Console.WriteLine("Connected before Thread");
+                    //if (isConnected) connector.SendLiverEvent("Connected");
                     Thread clientService = new Thread(() => clientServiceThreadFunc(handler));
                     clientService.Start();
                 }
@@ -92,6 +130,7 @@ namespace ServerService
         {
             IPEndPoint ipep = s.RemoteEndPoint as IPEndPoint;
             String ip = ipep.Address.ToString();
+            clientList.Add(ip);
             /* obsługa każdego klienta - odczyt obiektów z socketa (funkcja ReceiveObject(Socket sock) )*/
           //  Console.WriteLine("[" + ip + "]Connected in Thread");
             new DBConnect().addLogs("[" + ip + "]" + "Connected in Thread");
@@ -109,6 +148,7 @@ namespace ServerService
             }
            // Console.WriteLine("[" + ip + "]Thread Ended");
             new DBConnect().addLogs("[" + ip + "]Thread Ended");
+            clientList.Remove(ip);
         }
 
         private void WCFThreadFunc()

@@ -152,10 +152,15 @@ namespace ServerService
             this.ExecuteNonQuery(query);
         }
 
+        public void addLogs(String mess, int type)
+        {
+            string query = String.Format("INSERT INTO logs(message, date, type) VALUES ('" + mess + "','" + System.DateTime.Now + "', {0})", type);
+            this.ExecuteNonQuery(query);
+        }
+
         public void addLogs(String mess)
         {
-            string query = String.Format("INSERT INTO logs(message, date) VALUES ('" + mess + "','" + System.DateTime.Now + "')");
-            this.ExecuteNonQuery(query);
+            addLogs(mess, 0);
         }
 
         public void Insert(List<String> ins)
