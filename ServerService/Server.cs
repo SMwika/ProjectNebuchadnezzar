@@ -18,53 +18,13 @@ namespace ServerService
     class Server
     {
         private Thread _connectionThread;
-        private Thread _clientServiceThread;
-        private Thread _WCFThread;
         private System.Diagnostics.EventLog events;
         private DBConnect db;
         public static List<String> clientList = new List<String>();
 
         private String ip = ConfigurationManager.AppSettings["listenerIP"];//"127.0.0.1";
         private int port = Convert.ToInt32(ConfigurationManager.AppSettings["listenerPort"]);//9191;
-        //private String ip = "192.168.1.51";
-        //private int port = 9191;
-
-        //private bool isConnected = false;
-        //private IGuiWcfConnector connector;
-        //private ChannelFactory<IGuiWcfConnector> pipeFactory;
-
-        //private void WcfGuiThread()
-        //{
-        //    while (true)
-        //    {
-        //        try
-        //        {
-        //            Connect();
-        //            this.isConnected = true;
-        //            break;
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            if (ex is EndpointNotFoundException || ex is CommunicationObjectFaultedException)
-        //            {
-        //                this.isConnected = false;
-        //                Thread.Sleep(5000);
-        //            }
-        //        }
-        //    }
-        //}
-
-        //private void Connect()
-        //{
-        //    connector = pipeFactory.CreateChannel();
-        //}
-
-        //public void StartWcfGuiConnection(ChannelFactory<IGuiWcfConnector> factory)
-        //{
-        //    pipeFactory = factory;
-        //    new Thread(WcfGuiThread).Start();
-        //}
-
+        
         private object ReceiveObject(Socket sock)
         {
             if (!sock.Connected) return null;

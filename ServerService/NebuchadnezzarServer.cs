@@ -15,7 +15,6 @@ namespace ServerService
     public partial class NebuchadnezzarServer : ServiceBase
     {
         Server srv;
-        ServerConnector srvConn;
         ServiceHost wcfHost;
 
         //ChannelFactory<IGuiWcfConnector> pipeFactory;
