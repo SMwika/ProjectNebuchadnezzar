@@ -31,7 +31,51 @@ namespace ServerGUI
         delegate void SetIsConnectedCallback(bool conn);
         private ChannelFactory<IServerConnector> pipeFactory;
         private List<String> ipList = new List<String>();
+        private Thread autoUpdateThread, wcfConnectionThread;
+        private bool liverBlink = false;
+        private bool connIndicatorBlink = false;
         //ServiceHost wcfHost;
+
+        private void AutoUpdateThreadFunc() // Liver Updates
+        {
+            while (true)
+            {
+                //liverBlink = true;
+                //this.circleLiverNotifier.Dispatcher.Invoke(() => setColor(circleLiverNotifier, "Red"));
+                this.lbLogList.Dispatcher.Invoke(updateLogs);
+                this.lbClientList.Dispatcher.Invoke(updateActiveConnections);
+                //this.circleLiverNotifier.Dispatcher.Invoke(() => setColor(circleLiverNotifier, "Yellow"));
+                //liverBlink = false;
+                Thread.Sleep(5000);
+            }
+        }
+
+        private void blinkerThread()
+        {
+            if (liverBlink)
+            {
+                setColor(circleLiverNotifier, new SolidColorBrush(Color.FromArgb(255, 255, 0, 0)));
+                Thread.Sleep(100);
+                setColor(circleLiverNotifier, new SolidColorBrush(Color.FromArgb(255, 0, 255, 0)));
+                Thread.Sleep(100);
+            }
+            else
+            {
+                setColor(circleLiverNotifier, new SolidColorBrush(Color.FromArgb(255, 255, 255, 0)));
+            }
+        }
+
+        private void setColor(Ellipse el, SolidColorBrush col)
+        {
+            if (el.Dispatcher.CheckAccess())
+            {
+                el.Fill = col;
+            }
+            else
+            {
+                el.Dispatcher.Invoke(() => setColor(el, col));
+            }
+        }
 
         private void WcfConnectionThreadFunc()
         {
@@ -39,8 +83,12 @@ namespace ServerGUI
             {
                 try
                 {
+                    //liverBlink = true;
                     updateLists();
                     this.SetConnected(true);
+                    this.autoUpdateThread = new Thread(AutoUpdateThreadFunc);
+                    autoUpdateThread.Start();
+                    //liverBlink = false;
                     break;
                 }
                 catch (Exception ex)
@@ -82,7 +130,9 @@ namespace ServerGUI
             NetNamedPipeBinding binding = new NetNamedPipeBinding();
             binding.MaxReceivedMessageSize = 65536 * 32;
             pipeFactory = new ChannelFactory<IServerConnector>(binding, new EndpointAddress("net.pipe://localhost/server/PipePacketDB"));
-            new Thread(WcfConnectionThreadFunc).Start();
+            this.wcfConnectionThread = new Thread(WcfConnectionThreadFunc);
+            this.wcfConnectionThread.Start();
+            //new Thread(blinkerThread).Start();
             //InitWCF();
             //updateLists();
         }
@@ -148,9 +198,10 @@ namespace ServerGUI
         {
             connector = pipeFactory.CreateChannel();
             list = connector.GetUniqueFileNames();
-            
+            //this.circleLiverNotifier.Dispatcher.Invoke(() => setColor(circleLiverNotifier, "Red"));
             if (this.cbIPList.Dispatcher.CheckAccess())
             {
+                this.circleLiverNotifier.Fill = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
                 lbFileList.Items.Clear();
                 foreach (PacketDB packet in list)
                 {
@@ -159,23 +210,39 @@ namespace ServerGUI
                 updateIpList();
                 updateActiveConnections();
                 updateLogs();
+                this.circleLiverNotifier.Fill = new SolidColorBrush(Color.FromArgb(255, 255, 255, 0));
             }
             else
             {
                 this.cbIPList.Dispatcher.Invoke(updateLists);
             }
             shownList = list;
+            //this.circleLiverNotifier.Dispatcher.Invoke(() => setColor(circleLiverNotifier, "Yellow"));
         }
+
+        //private void setColor(Ellipse ellip, String col)
+        //{
+        //    if (col == "Red")
+        //        this.circleLiverNotifier.Fill = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
+        //    else if (col == "Green")
+        //        this.circleLiverNotifier.Fill = new SolidColorBrush(Color.FromArgb(255, 0, 255, 0));
+        //    else if (col == "Yellow")
+        //        this.circleLiverNotifier.Fill = new SolidColorBrush(Color.FromArgb(255, 255, 255, 0));
+        //    Thread.Sleep(500);
+        //}
 
 
         private void updateLogs()
         {
+            //Console.WriteLine("red");
             List<String> logList = connector.GetLogs();
+            //if (logList.Count > lbLogList.Items.Count) tabItemLogs.Background = new SolidColorBrush(Color.FromArgb(255, 200, 0, 0));
             lbLogList.Items.Clear();
             foreach (String log in logList)
             {
                 lbLogList.Items.Add(log);
             }
+            //Console.WriteLine("green");
         }
         private void updateActiveConnections()
         {
@@ -329,7 +396,19 @@ namespace ServerGUI
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            
+            this.wcfConnectionThread.Abort();
+            this.autoUpdateThread.Abort();
+        }
+
+        private void tabItemLogs_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            tabItemLogs.Background = new SolidColorBrush(Color.FromArgb(255, 0xe5, 0xe5, 0xe5));
+            tabItemConnections.Background = new SolidColorBrush(Color.FromArgb(0xff, 0xe5, 0xe5, 0xe5));
+        }
+
+        private void circleNotifier_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            this.updateLists();
         }
     }
 }
