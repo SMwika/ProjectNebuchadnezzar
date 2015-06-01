@@ -40,5 +40,10 @@ namespace ServerService
             list = Server.clientList;
             return list;
         }
+
+        public List<String> GetLogs()
+        {
+            return new DBConnect().GetAllLogs(-1);
+        }
     }
 }

@@ -183,6 +183,24 @@ namespace ServerService
             this.ExecuteNonQuery(query);
         }
 
+        public List<String> GetAllLogs(int id)
+        {
+            string query;
+            if (id < 0)
+                query = "SELECT type, message FROM logs";
+            else
+                query = "SELECT type, message FROM logs WHERE id_logs = id";
+            List<String> logs = new List<String>();
+
+            MySqlCommand cmd = new MySqlCommand(query, conn);
+            MySqlDataReader reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                logs.Add(String.Format("[{0}]{1}", reader["type"] + "", reader["message"] + ""));
+            }
+            return logs;
+        }
+
 
         public List<PacketDB> GetUniqueFileNames(String date)
         {

@@ -26,5 +26,8 @@ namespace SharedClasses
 
         [OperationContract]
         List<String> GetActiveConnections();
+
+        [OperationContract]
+        List<String> GetLogs();
     }
 }
