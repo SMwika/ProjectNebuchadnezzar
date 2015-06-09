@@ -56,6 +56,15 @@ namespace ClientService
 
         private System.Collections.Generic.List<System.IO.FileSystemWatcher> watchers;
 
+
+        private bool IsSocketConnected(System.Net.Sockets.Socket s, bool mode)
+        {
+            if (s == null) return false;
+            bool poll = s.Poll(1000, System.Net.Sockets.SelectMode.SelectRead);
+            bool avail = (s.Available == 0);
+            if (poll && avail) return false;
+            else return true;
+        }
         private void ConnectionThreadWorker()
         {
             //Environment.SpecialFolder.
@@ -64,25 +73,38 @@ namespace ClientService
             eventLog1.WriteEntry("Connection Worker started...", EventLogEntryType.Information);
             System.Net.IPAddress ipAddress = System.Net.IPAddress.Parse(ip);
             System.Net.IPEndPoint remoteEP = new System.Net.IPEndPoint(ipAddress, port);
-            this.sockfd = new System.Net.Sockets.Socket(System.Net.Sockets.AddressFamily.InterNetwork,
-                System.Net.Sockets.SocketType.Stream, System.Net.Sockets.ProtocolType.Tcp);
-
+            this.sockfd = null;
+            //this.sockfd = new System.Net.Sockets.Socket(System.Net.Sockets.AddressFamily.InterNetwork,
+            //    System.Net.Sockets.SocketType.Stream, System.Net.Sockets.ProtocolType.Tcp);
+            bool before = true;
             while (true)
             {
-                try
+                if (!IsSocketConnected(this.sockfd, before))
                 {
-                    Console.WriteLine("count: " + packetList.Count);
-                    this.sockfd.Connect(remoteEP);
-                    isConnected = true;
-                    Console.WriteLine("Connected!");
-                    break;
+                    isConnected = false;
+                    try
+                    {
+                        Console.WriteLine("count: " + packetList.Count);
+                        this.sockfd = new System.Net.Sockets.Socket(System.Net.Sockets.AddressFamily.InterNetwork,
+                            System.Net.Sockets.SocketType.Stream, System.Net.Sockets.ProtocolType.Tcp);
+                        this.sockfd.Connect(remoteEP);
+                        isConnected = true;
+                        before = false;
+                        Console.WriteLine("Connected!");
+                        this.SendPacketList(packetList);
+                    }
+                    catch (Exception e)
+                    {
+                        this.sockfd = null;
+                        eventLog1.WriteEntry("Cannot connect to server. Still trying...", EventLogEntryType.Warning);
+                        Console.WriteLine("Cannot connect to server. Still trying...");
+                    }
                 }
-                catch (Exception e)
+                else
                 {
-                    eventLog1.WriteEntry("Cannot connect to server. Still trying...", EventLogEntryType.Warning);
-                    Console.WriteLine("Cannot connect to server. Still trying...");
+                    Console.WriteLine("Already connected");
                 }
-                Thread.Sleep(1000 * 30);
+                Thread.Sleep(1000 * 3);
             }
             Console.WriteLine("Connection Worker ended successfully");
             this.SendPacketList(packetList);
