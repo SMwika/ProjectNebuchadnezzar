@@ -28,7 +28,7 @@ namespace ServerService
             connString = "SERVER=" + "adamodrobina.com.pl" + ";PORT=3306;DATABASE=psr;UID=psr_user;PASSWORD=MisUszatek9;";
             //connString = String.Format("SERVER={0};PORT={1};DATABASE={2};UID={3};PASSWORD={4}", server, port, database, user, password);
             conn = new MySqlConnection(connString);
-            this.OpenConnection();
+            //this.OpenConnection();
         }
 
         public void Destroy()
@@ -98,8 +98,14 @@ namespace ServerService
             Console.WriteLine(query);
             //if (this.OpenConnection() == true)
             //{
-                MySqlCommand cmd = new MySqlCommand(query, conn);
+            using(MySqlConnection conn = new MySqlConnection(connString))
+            using (MySqlCommand cmd = new MySqlCommand(query, conn))
+            {
+                conn.Open();
+                //MySqlCommand cmd = new MySqlCommand(query, conn);
                 cmd.ExecuteNonQuery();
+            }
+                
 
                 //this.CloseConnection();
             //}
@@ -114,26 +120,28 @@ namespace ServerService
 
         private int addFiles(String content)
         {
-           int id =0;
+           int id = 0;
            //if (this.OpenConnection() == true)
            //{
-           using (MySqlDataReader dataReader = new MySqlCommand("SELECT MAX(id_files) FROM files", conn).ExecuteReader())
+           using (MySqlConnection conn = new MySqlConnection(connString))
            {
-               while (dataReader.Read())
+               conn.Open();
+               using (MySqlDataReader dataReader = new MySqlCommand("SELECT MAX(id_files) FROM files", conn).ExecuteReader())
                {
-                   id = dataReader.GetInt32(0);
+                   while (dataReader.Read())
+                   {
+                       id = dataReader.GetInt32(0);
+                   }
+               }
+               id++;
+               using (MySqlCommand comm = conn.CreateCommand())
+               {
+                   comm.CommandText = "INSERT INTO files(id_files, content) VALUES(@id, @content)";
+                   comm.Parameters.AddWithValue("@id", id);
+                   comm.Parameters.AddWithValue("@content", content);
+                   comm.ExecuteNonQuery();
                }
            }
-           id++;
-           MySqlCommand comm = conn.CreateCommand();
-           comm.CommandText = "INSERT INTO files(id_files, content) VALUES(@id, @content)";
-           comm.Parameters.AddWithValue("@id", id);
-           comm.Parameters.AddWithValue("@content", content);
-           comm.ExecuteNonQuery();
-              // this.ExecuteNonQuery(String.Format("INSERT INTO files(id_files, content) VALUES('" + id + "','" + content + "')"));
-               //this.CloseConnection();
-
-           //}
            return id;
         }
 
@@ -198,11 +206,17 @@ namespace ServerService
                 query = "SELECT type, message FROM logs WHERE id_logs = id";
             List<String> logs = new List<String>();
 
-            MySqlCommand cmd = new MySqlCommand(query, conn);
-            MySqlDataReader reader = cmd.ExecuteReader();
-            while (reader.Read())
+            using(MySqlConnection conn = new MySqlConnection(connString))
+            using (MySqlCommand cmd = new MySqlCommand(query, conn))
             {
-                logs.Add(String.Format("[{0}]{1}", reader["type"] + "", reader["message"] + ""));
+                conn.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        logs.Add(String.Format("[{0}]{1}", reader["type"] + "", reader["message"] + ""));
+                    }
+                }
             }
             return logs;
         }
@@ -220,23 +234,30 @@ namespace ServerService
                 query = String.Format("SELECT user, date, fileName, oldFileName, fileHash, iType, id_Packet, id_files, ip, COUNT(*) as count FROM packet WHERE DATE(date) = '{0}' GROUP BY fileName ORDER BY id_Packet DESC", date);
             }
             List<PacketDB> packets = new List<PacketDB>();
-            MySqlCommand cmd = new MySqlCommand(query, conn);
-            MySqlDataReader reader = cmd.ExecuteReader();
-            while (reader.Read())
+            using(MySqlConnection conn = new MySqlConnection(connString))
+            using (MySqlCommand cmd = new MySqlCommand(query, conn))
             {
-                int id_files = -666;
-                string oldFileName = "NULL";
-                if (!(reader["id_files"] is DBNull)) id_files = Convert.ToInt32(reader["id_files"]);
-                if (!(reader["oldFileName"] is DBNull)) oldFileName = reader["oldFileName"] + ""; 
-                PacketDB pack = new PacketDB(new Packet(reader["user"] + "", 
-                    DateTime.ParseExact(reader["date"] + "","yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture),
-                    reader["fileName"] + "", oldFileName, reader["fileHash"] + "", (WatcherInfoType)reader["iType"], 1), 
-                    Convert.ToInt32(reader["id_Packet"]), 
-                    Convert.ToInt32(id_files), 
-                    Convert.ToInt32(reader["count"]),
-                    reader["ip"] + "");
-                packets.Add(pack);
+                conn.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        int id_files = -666;
+                        string oldFileName = "NULL";
+                        if (!(reader["id_files"] is DBNull)) id_files = Convert.ToInt32(reader["id_files"]);
+                        if (!(reader["oldFileName"] is DBNull)) oldFileName = reader["oldFileName"] + "";
+                        PacketDB pack = new PacketDB(new Packet(reader["user"] + "",
+                            DateTime.ParseExact(reader["date"] + "", "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture),
+                            reader["fileName"] + "", oldFileName, reader["fileHash"] + "", (WatcherInfoType)reader["iType"], 1),
+                            Convert.ToInt32(reader["id_Packet"]),
+                            Convert.ToInt32(id_files),
+                            Convert.ToInt32(reader["count"]),
+                            reader["ip"] + "");
+                        packets.Add(pack);
+                    }
+                }
             }
+            
             return packets;
         }
 
@@ -245,22 +266,28 @@ namespace ServerService
             string query = String.Format("SELECT user, date, fileName, oldFileName, fileHash, iType, id_Packet, id_files, ip FROM packet WHERE fileName = '{0}' ORDER BY date DESC", name);
             Console.WriteLine(query);
             List<PacketDB> packets = new List<PacketDB>();
-            MySqlCommand cmd = new MySqlCommand(query, conn);
-            MySqlDataReader reader = cmd.ExecuteReader();
-            while (reader.Read())
+            using(MySqlConnection conn = new MySqlConnection(connString))
+            using (MySqlCommand cmd = new MySqlCommand(query, conn))
             {
-                int id_files = -666;
-                string oldFileName = "NULL";
-                if (!(reader["id_files"] is DBNull)) id_files = Convert.ToInt32(reader["id_files"]);
-                if (!(reader["oldFileName"] is DBNull)) oldFileName = reader["oldFileName"] + "";
-                PacketDB pack = new PacketDB(new Packet(reader["user"] + "",
-                    DateTime.ParseExact(reader["date"] + "", "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture),
-                    reader["fileName"] + "", oldFileName, reader["fileHash"] + "", (WatcherInfoType)reader["iType"], 1),
-                    Convert.ToInt32(reader["id_Packet"]),
-                    Convert.ToInt32(id_files),
-                    Convert.ToInt32(0),
-                    reader["ip"] + "");
-                packets.Add(pack);
+                conn.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        int id_files = -666;
+                        string oldFileName = "NULL";
+                        if (!(reader["id_files"] is DBNull)) id_files = Convert.ToInt32(reader["id_files"]);
+                        if (!(reader["oldFileName"] is DBNull)) oldFileName = reader["oldFileName"] + "";
+                        PacketDB pack = new PacketDB(new Packet(reader["user"] + "",
+                            DateTime.ParseExact(reader["date"] + "", "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture),
+                            reader["fileName"] + "", oldFileName, reader["fileHash"] + "", (WatcherInfoType)reader["iType"], 1),
+                            Convert.ToInt32(reader["id_Packet"]),
+                            Convert.ToInt32(id_files),
+                            Convert.ToInt32(0),
+                            reader["ip"] + "");
+                        packets.Add(pack);
+                    }
+                }
             }
             return packets;
         }
@@ -275,12 +302,18 @@ namespace ServerService
         public String GetFileContents(int id)
         {
             string query = String.Format("SELECT content FROM files WHERE id_files = '{0}'", id);
-            MySqlCommand cmd = new MySqlCommand(query, conn);
-            MySqlDataReader reader = cmd.ExecuteReader();
             string content = "";
-            while (reader.Read())
+            using(MySqlConnection conn = new MySqlConnection(connString))
+            using (MySqlCommand cmd = new MySqlCommand(query, conn))
             {
-                content = reader.GetString(0);
+                conn.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        content = reader.GetString(0);
+                    }
+                }
             }
             return content;            
         }
