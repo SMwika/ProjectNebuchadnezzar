@@ -146,7 +146,6 @@ namespace ClientService
             list.Clear();
         }
 
-        private int xxx;
 
         private void SendObject(object o)
         {
