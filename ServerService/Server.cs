@@ -62,10 +62,10 @@ namespace ServerService
             Socket listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             listener.Bind(localEndPoint);
            // Console.WriteLine("Bind created");
-            new DBConnect().addLogs("Bind created");
+            new DBConnect().addLogs("[" + ip + ":" + port + "] Bind created");
             listener.Listen(10);
             DBConnect db = new DBConnect();
-            Console.WriteLine("Listening...");
+            Console.WriteLine("[" + ip + ":" + port + "] Listening...");
             //db.addLogs("Listening");
 
             while(true){
@@ -98,12 +98,12 @@ namespace ServerService
             {
                 Packet pck = null;
                 pck = (Packet)ReceiveObject(s);
-                if (pck.IsExitPacket())
+                if (pck == null)
                 {
                     s.Close();
                     break;
                 }
-                if (pck == null)
+                if (pck.IsExitPacket())
                 {
                     s.Close();
                     break;

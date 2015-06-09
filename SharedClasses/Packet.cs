@@ -85,7 +85,7 @@ namespace SharedClasses
             }
         }
         public Packet(String usr, DateTime dt, String name, String oldName, String hash, WatcherInfoType type)
-            : this(usr, dt, name, hash, type, 0)
+            : this(usr, dt, name, oldName, hash, type, 0)
         {
             //this.oldFileName = oldName.Replace("\\", "\\\\");
         }
