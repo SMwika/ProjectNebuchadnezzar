@@ -9,29 +9,43 @@ namespace ServerService
     {
         public List<SharedClasses.PacketDB> GetUniqueFileNames()
         {
-            return new DBConnect().GetUniqueFileNames();
+            DBConnect db = new DBConnect();
+            List<SharedClasses.PacketDB> list = db.GetUniqueFileNames();
+            db.Destroy();
+            return list;
         }
 
         public List<SharedClasses.PacketDB> GetUniqueFileNamesByDate(string dt)
         {
-            return new DBConnect().GetUniqueFileNames(dt);
+            DBConnect db = new DBConnect();
+            List<SharedClasses.PacketDB> list = db.GetUniqueFileNames(dt);
+            db.Destroy();
+            return list;
         }
 
         public String GetFileContents(int id)
         {
-            String str = new DBConnect().GetFileContents(id);
+            DBConnect db = new DBConnect();
+            String str = db.GetFileContents(id);
+            db.Destroy();
             //Console.WriteLine(str);
             return str;
         }
 
         public List<SharedClasses.PacketDB> GetFileRevisions(String name)
         {
-            return new DBConnect().GetFileRevisions(name);
+            DBConnect db = new DBConnect();
+            List<SharedClasses.PacketDB> list = db.GetFileRevisions(name);
+            db.Destroy();
+            return list;
         }
 
         public int GetLastRevisionID(String name)
         {
-            return new DBConnect().GetLastRevisionID(name);
+            DBConnect db = new DBConnect();
+            int id = db.GetLastRevisionID(name);
+            db.Destroy();
+            return id;
         }
 
         public List<String> GetActiveConnections()
@@ -43,7 +57,10 @@ namespace ServerService
 
         public List<String> GetLogs()
         {
-            return new DBConnect().GetAllLogs(-1);
+            DBConnect db = new DBConnect();
+            List<String> list = db.GetAllLogs(-1);
+            db.Destroy();
+            return list;
         }
     }
 }
