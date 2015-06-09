@@ -98,6 +98,11 @@ namespace ServerService
             {
                 Packet pck = null;
                 pck = (Packet)ReceiveObject(s);
+                if (pck.IsExitPacket())
+                {
+                    s.Close();
+                    break;
+                }
                 if (pck == null)
                 {
                     s.Close();

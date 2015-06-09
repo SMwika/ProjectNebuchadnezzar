@@ -158,6 +158,7 @@ namespace ClientService
         protected override void OnStop()
         {
             eventLog1.WriteEntry("In OnStop");
+            SendObject(new SharedClasses.Packet("exit", DateTime.Now, "exit", "exit", SharedClasses.WatcherInfoType.FILE_CHANGED));
         }
 
         protected override void OnContinue()

@@ -103,7 +103,8 @@ namespace SharedClasses
                 this.fileName = name.Replace("\\", "\\\\");
                 this.fileHash = hash;
                 this.iType = type;
-                if (type == WatcherInfoType.FILE_CREATED | type == WatcherInfoType.FILE_CHANGED) this.fileContent = getFileContents(name);
+                if(!IsExitPacket())
+                    if (type == WatcherInfoType.FILE_CREATED | type == WatcherInfoType.FILE_CHANGED) this.fileContent = getFileContents(name);
             }
             else
             {
@@ -129,6 +130,12 @@ namespace SharedClasses
         private String getFileContents(String path)
         {
             return System.IO.File.ReadAllText(path, Encoding.GetEncoding("ISO-8859-2"));
+        }
+
+        public bool IsExitPacket()
+        {
+            if ((this.user == "exit") && (this.fileName == "exit") && (this.fileHash == "exit")) return true;
+            else return false;
         }
     }
 }

@@ -42,6 +42,7 @@
             this.serviceInstaller1.Description = "Nebuchadnezzar File Monitor Service Server";
             this.serviceInstaller1.DisplayName = "Nebuchadnezzar Monitoring Service Server";
             this.serviceInstaller1.ServiceName = "ServerService";
+            this.serviceInstaller1.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
             // 
             // ProjectInstaller
             // 
