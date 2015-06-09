@@ -93,6 +93,7 @@ namespace ServerService
          * name, price_int, link, category, currency, image_link, shop
          */
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
         private void ExecuteNonQuery(String query)
         {
             Console.WriteLine(query);
@@ -222,6 +223,7 @@ namespace ServerService
         }
 
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
         public List<PacketDB> GetUniqueFileNames(String date)
         {
             string query;
@@ -261,6 +263,7 @@ namespace ServerService
             return packets;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
         public List<PacketDB> GetFileRevisions(String name)
         {
             string query = String.Format("SELECT user, date, fileName, oldFileName, fileHash, iType, id_Packet, id_files, ip FROM packet WHERE fileName = '{0}' ORDER BY date DESC", name);
@@ -299,6 +302,7 @@ namespace ServerService
             return id;
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
         public String GetFileContents(int id)
         {
             string query = String.Format("SELECT content FROM files WHERE id_files = '{0}'", id);
