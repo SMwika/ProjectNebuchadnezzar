@@ -33,7 +33,6 @@ namespace ServerGUI
         private List<String> ipList = new List<String>();
         private Thread autoUpdateThread, wcfConnectionThread;
         private bool liverBlink = false;
-        private bool connIndicatorBlink = false;
         //ServiceHost wcfHost;
 
         private void AutoUpdateThreadFunc() // Liver Updates
@@ -122,16 +121,33 @@ namespace ServerGUI
             this.lIType.Content = "Info type: ";
             this.lPacketID.Content = "Packet ID: ";
             this.lUserName.Content = "User name: ";
+
+            this.tbServerAddr.Text = "";
+            this.cboxIsLocal.Content = "Is local?";
+            this.bConnect.Content = "Connect";
+
+            this.lServerAddr.Content = "Server addr:";
+
+            this.cboxIsLocal.IsChecked = true;
+            this.tbServerAddr.Visibility = System.Windows.Visibility.Hidden;
+            this.lServerAddr.Visibility = System.Windows.Visibility.Hidden;
         }
         public MainWindow()
         {
             InitializeComponent();
             InitControls();
-            NetNamedPipeBinding binding = new NetNamedPipeBinding();
-            binding.MaxReceivedMessageSize = 65536 * 32;
-            pipeFactory = new ChannelFactory<IServerConnector>(binding, new EndpointAddress("net.pipe://localhost/server/PipePacketDB"));
-            this.wcfConnectionThread = new Thread(WcfConnectionThreadFunc);
-            this.wcfConnectionThread.Start();
+
+            //BasicHttpBinding binding = new BasicHttpBinding();
+            //binding.MaxReceivedMessageSize = 65536 * 32;
+            //pipeFactory = new ChannelFactory<IServerConnector>(binding, new EndpointAddress("http://192.168.1.51:9292/PacketDB"));
+
+            //NetNamedPipeBinding binding = new NetNamedPipeBinding();
+            //binding.MaxReceivedMessageSize = 65536 * 32;
+            //pipeFactory = new ChannelFactory<IServerConnector>(binding, new EndpointAddress("net.pipe://localhost/server/PipePacketDB"));
+
+            //this.wcfConnectionThread = new Thread(WcfConnectionThreadFunc);
+            //this.wcfConnectionThread.Start();
+
             //new Thread(blinkerThread).Start();
             //InitWCF();
             //updateLists();
@@ -159,6 +175,9 @@ namespace ServerGUI
             if (this.circleNotifier.Dispatcher.CheckAccess())
             {
                 this.IsConnected = conn;
+                this.tbServerAddr.IsEnabled = false;
+                this.cboxIsLocal.IsEnabled = false;
+                this.bConnect.IsEnabled = false;
             }
             else
             {
@@ -413,6 +432,41 @@ namespace ServerGUI
         private void circleNotifier_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             this.updateLists();
+        }
+
+        private void bConnect_Click(object sender, RoutedEventArgs e)
+        {
+
+            if (this.cboxIsLocal.IsChecked == true)
+            {
+                NetNamedPipeBinding binding = new NetNamedPipeBinding();
+                binding.MaxReceivedMessageSize = 65536 * 32;
+                pipeFactory = new ChannelFactory<IServerConnector>(binding, new EndpointAddress("net.pipe://localhost/server/PipePacketDB"));
+            }
+            else
+            {
+                BasicHttpBinding binding = new BasicHttpBinding();
+                binding.MaxReceivedMessageSize = 65536 * 32;
+                pipeFactory = new ChannelFactory<IServerConnector>(binding, new EndpointAddress("http://" + this.tbServerAddr.Text + ":9292/PacketDB"));
+            }
+
+            this.wcfConnectionThread = new Thread(WcfConnectionThreadFunc);
+            this.wcfConnectionThread.Start();
+
+        }
+
+        private void cboxIsLocal_Click(object sender, RoutedEventArgs e)
+        {
+            if (((CheckBox)sender).IsChecked == true)
+            {
+                this.tbServerAddr.Visibility = System.Windows.Visibility.Hidden;
+                this.lServerAddr.Visibility = System.Windows.Visibility.Hidden;
+            }
+            else
+            {
+                this.tbServerAddr.Visibility = System.Windows.Visibility.Visible;
+                this.lServerAddr.Visibility = System.Windows.Visibility.Visible;
+            }
         }
     }
 }

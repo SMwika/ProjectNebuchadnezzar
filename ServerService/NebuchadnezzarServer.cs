@@ -9,6 +9,7 @@ using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
 using SharedClasses;
+using System.Configuration;
 
 namespace ServerService
 {
@@ -39,10 +40,10 @@ namespace ServerService
             {
                 wcfHost.Close();
             }
-            wcfHost = new ServiceHost(typeof(ServerConnector), new Uri[] { new Uri("net.pipe://localhost/server") });
+            wcfHost = new ServiceHost(typeof(ServerConnector), new Uri[] { new Uri("net.pipe://localhost/server"), new Uri("http://" + ConfigurationManager.AppSettings["listenerIP"] + ":9292") });
             //srvConn = new ServerConnector();
-            //wcfHost.AddServiceEndpoint(typeof(SharedClasses.IServerConnector), new BasicHttpBinding(), "PacketDB");
             wcfHost.AddServiceEndpoint(typeof(SharedClasses.IServerConnector), new NetNamedPipeBinding(), "PipePacketDB");
+            wcfHost.AddServiceEndpoint(typeof(SharedClasses.IServerConnector), new BasicHttpBinding(), "PacketDB");
             wcfHost.Open();
             //NetNamedPipeBinding binding = new NetNamedPipeBinding();
             //binding.MaxReceivedMessageSize = 65536 * 32;

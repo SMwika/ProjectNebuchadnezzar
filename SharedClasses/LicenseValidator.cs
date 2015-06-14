@@ -13,6 +13,7 @@ namespace SharedClasses
         private String serialNumber { get; set; }
 
         //private String validationServer = "http://nebuchadnezzar.xn--paac-11a.net.pl/validateCopy";
+        private String validationServer = "http://xn--paac-11a.net.pl/my/nebuchadnezzar/validateCopy.php";
 
 
         #region getters setters
