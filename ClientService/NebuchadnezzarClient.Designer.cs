@@ -138,6 +138,7 @@ namespace ClientService
         }
 
         private void SendPacketList(System.Collections.Generic.List<Packet> list){
+            SendObject(new Packet(this.getCurrentUser(), System.DateTime.Now, "USER", "USER", WatcherInfoType.FILE_DELETED));
             foreach (Packet p in list)
             {
                 SendObject(p);

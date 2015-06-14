@@ -255,21 +255,41 @@ namespace ServerGUI
         {
             //Console.WriteLine("red");
             List<String> logList = connector.GetLogs();
-            //if (logList.Count > lbLogList.Items.Count) tabItemLogs.Background = new SolidColorBrush(Color.FromArgb(255, 200, 0, 0));
+            if (logList.Count > lbLogList.Items.Count)
+            {
+                if(!this.tabItemLogs.IsSelected)
+                    tabItemLogs.Background = new SolidColorBrush(Color.FromArgb(255, 200, 0, 0));
+            }
             lbLogList.Items.Clear();
             foreach (String log in logList)
             {
-                lbLogList.Items.Add(log);
+                if (log.StartsWith("[1]"))
+                {
+                    Label l = new Label();
+                    l.Content = log;
+                    l.Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
+                    lbLogList.Items.Add(l);
+                    //MessageBox.Show("Possible plagiarism detected. See logs for more info.", "Possible plagiarism", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+                else
+                {
+                    lbLogList.Items.Add(log);
+                }
             }
             //Console.WriteLine("green");
         }
         private void updateActiveConnections()
         {
             ipList = connector.GetActiveConnections();
-            lbClientList.Items.Clear();
-            foreach (String ip in ipList)
+            if (ipList.Count != lbClientList.Items.Count)
             {
-                lbClientList.Items.Add(ip);
+                if(!this.tabItemConnections.IsSelected)
+                    tabItemConnections.Background = new SolidColorBrush(Color.FromArgb(255, 200, 0, 0));
+                lbClientList.Items.Clear();
+                foreach (String ip in ipList)
+                {
+                    lbClientList.Items.Add(ip);
+                }
             }
         }
 
@@ -425,6 +445,7 @@ namespace ServerGUI
 
         private void tabItemLogs_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            Console.WriteLine("clicked");
             tabItemLogs.Background = new SolidColorBrush(Color.FromArgb(255, 0xe5, 0xe5, 0xe5));
             tabItemConnections.Background = new SolidColorBrush(Color.FromArgb(0xff, 0xe5, 0xe5, 0xe5));
         }
@@ -467,6 +488,14 @@ namespace ServerGUI
                 this.tbServerAddr.Visibility = System.Windows.Visibility.Visible;
                 this.lServerAddr.Visibility = System.Windows.Visibility.Visible;
             }
+        }
+
+        private void TabControl_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
+        {
+            if (tabItemLogs.IsSelected)
+                tabItemLogs.Background = new SolidColorBrush(Color.FromArgb(255, 0xe5, 0xe5, 0xe5));
+            if (tabItemConnections.IsSelected)
+                tabItemConnections.Background = new SolidColorBrush(Color.FromArgb(0xff, 0xe5, 0xe5, 0xe5));
         }
     }
 }
