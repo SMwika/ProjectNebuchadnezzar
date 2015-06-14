@@ -90,7 +90,8 @@ namespace ServerService
         {
             IPEndPoint ipep = s.RemoteEndPoint as IPEndPoint;
             String ip = ipep.Address.ToString();
-            clientList.Add(ip);
+            Packet helo = (Packet)ReceiveObject(s);
+            clientList.Add(ip + " as " + helo.User);
             /* obsługa każdego klienta - odczyt obiektów z socketa (funkcja ReceiveObject(Socket sock) )*/
           //  Console.WriteLine("[" + ip + "]Connected in Thread");
             new DBConnect().addLogs("[" + ip + "]" + "Connected in Thread");
@@ -113,7 +114,7 @@ namespace ServerService
             }
            // Console.WriteLine("[" + ip + "]Thread Ended");
             new DBConnect().addLogs("[" + ip + "]Thread Ended");
-            clientList.Remove(ip);
+            clientList.Remove(ip + " as " + helo.User);
         }
 
         private void WCFThreadFunc()

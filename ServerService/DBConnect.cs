@@ -154,7 +154,7 @@ namespace ServerService
             if (p.IType == WatcherInfoType.FILE_CREATED | p.IType == WatcherInfoType.FILE_CHANGED)
             {
                 id_file = this.addFiles(p.FileContent);
-                query = String.Format("INSERT INTO packet(user, date, fileName, filehash, iType, ip, oldFileName, id_files) VALUES('{0}', '{1}', '{2}', '{3}', {4}, '{5}', '{6}','{7}')",
+                query = String.Format("INSERT INTO packet(user, date, fileName, filehash, iType, ip, oldFileName, id_files) VALUES('{0}', '{1}', '{2}', '{3}', {4}, '{5}', '{6}', '{7}')",
                 p.User, p.Date.ToString(), p.FileName, p.FileHash, (int)p.IType, ip, p.OldFileName, id_file);
             }
             else
@@ -162,8 +162,11 @@ namespace ServerService
                 query = String.Format("INSERT INTO packet(user, date, fileName, filehash, iType, ip, oldFileName) VALUES('{0}', '{1}', '{2}', '{3}', {4}, '{5}', '{6}')",
                 p.User, p.Date.ToString(), p.FileName, p.FileHash, (int)p.IType, ip, p.OldFileName);
             }
-                 
-            
+
+            if (LookForPlagiarism(p.FileHash))
+            {
+                addLogs(String.Format("[{0}]Plagiarism detected on file {1}", ip, p.FileName), 1);
+            }
             this.ExecuteNonQuery(query);
         }
 
@@ -202,9 +205,9 @@ namespace ServerService
         {
             string query;
             if (id < 0)
-                query = "SELECT type, message FROM logs";
+                query = "SELECT type, message FROM logs ORDER BY id_logs DESC";
             else
-                query = "SELECT type, message FROM logs WHERE id_logs = id";
+                query = "SELECT type, message FROM logs WHERE id_logs = id ORDER BY id_logs DESC";
             List<String> logs = new List<String>();
 
             using(MySqlConnection conn = new MySqlConnection(connString))
@@ -220,6 +223,60 @@ namespace ServerService
                 }
             }
             return logs;
+        }
+
+        private bool CheckIfLastDateByHashCouldBePlagiarism(String hash)
+        {
+            DateTime dtNow = DateTime.Now;
+            string query = String.Format("SELECT date FROM packet WHERE filehash = '{0}' ORDER BY id_Packet DESC LIMIT 1", hash);
+            using (MySqlConnection conn = new MySqlConnection(connString))
+            using (MySqlCommand cmd = new MySqlCommand(query, conn))
+            {
+                conn.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        string dt = reader.GetString(0);
+                        DateTime dtThen = DateTime.Parse(dt);
+                        if (dtNow.Subtract(dtThen).Minutes > 5)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        public bool LookForPlagiarism(String hash)
+        {
+            string query = String.Format("SELECT COUNT(*) FROM packet WHERE filehash = '{0}'", hash);
+            using (MySqlConnection conn = new MySqlConnection(connString))
+            using (MySqlCommand cmd = new MySqlCommand(query, conn))
+            {
+                conn.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        if (0 < Convert.ToInt32(reader.GetString(0)))
+                        {
+                            if (CheckIfLastDateByHashCouldBePlagiarism(hash))
+                                return true;
+                            else
+                                return false;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                        
+                }
+            }
+            return false;
         }
 
 
