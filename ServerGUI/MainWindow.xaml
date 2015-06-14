@@ -19,7 +19,7 @@
         <ComboBox HorizontalAlignment="Left" Height="26" Margin="38,5,0,0" VerticalAlignment="Top" Width="124" Name="cbIPList" SelectionChanged="cbIPList_SelectionChanged" Grid.Row="1"/>
         <Label Content="lIP:" HorizontalAlignment="Left" Margin="0,5,0,0" VerticalAlignment="Top" Name="lIP" Height="26" Width="25" Grid.Row="1"/>
         <Ellipse Fill="Yellow" StrokeThickness="1" Stroke="Black" Name="circleNotifier" Grid.Column="2" HorizontalAlignment="Right" Width="32" Margin="0,0,0,3" MouseLeftButtonDown="circleNotifier_MouseLeftButtonDown"/>
-        <ComboBox Grid.Column="1" HorizontalAlignment="Left" Height="27" Margin="204,5,0,0" VerticalAlignment="Top" Width="170" Name="cbRevList" SelectionChanged="cbRevList_SelectionChanged"/>
+        <ComboBox Grid.Column="1" HorizontalAlignment="Left" Height="27" Margin="98,5,0,0" VerticalAlignment="Top" Width="170" Name="cbRevList" SelectionChanged="cbRevList_SelectionChanged"/>
         <Ellipse Fill="Yellow" StrokeThickness="1" Stroke="Black" x:Name="circleLiverNotifier" Grid.Column="2" HorizontalAlignment="Right" Width="32" Margin="0,0,37,3"/>
         <TabControl Grid.Column="2" Margin="0,2,0,0" Grid.Row="1" TabStripPlacement="Bottom" >
             <TabItem Header="Active Connections" Name="tabItemConnections">
@@ -60,5 +60,9 @@
                 </Grid>
             </TabItem>
         </TabControl>
+        <Button Content="bConnect" Grid.Column="2" HorizontalAlignment="Left" Height="24" Margin="16,8,0,0" VerticalAlignment="Top" Width="69" Name="bConnect" Click="bConnect_Click"/>
+        <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="27" Margin="385,5,0,0" TextWrapping="Wrap" Text="tbServerAddr" VerticalAlignment="Top" Width="123" Name="tbServerAddr"/>
+        <Label Content="lServerAddr" Grid.Column="1" HorizontalAlignment="Left" Height="27" Margin="307,5,0,0" VerticalAlignment="Top" Width="73" Name="lServerAddr"/>
+        <CheckBox Content="cboxIsLocal" Grid.Column="1" HorizontalAlignment="Left" Margin="526,10,0,0" VerticalAlignment="Top" Name="cboxIsLocal" Click="cboxIsLocal_Click"/>
     </Grid>
 </Window>

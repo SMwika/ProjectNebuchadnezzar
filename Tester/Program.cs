@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SharedClasses;
 
 namespace Tester
 {
@@ -11,15 +12,10 @@ namespace Tester
     {
         static void Main(string[] args)
         {
-            string path = @"C:\temp\test.java";
+            LicenseValidator lv = new LicenseValidator("b7337eee-d172-4cc7-a9eb-c180662aa950");
 
-            if (!File.Exists(path))
-            {
-                Console.WriteLine("No file");
-                return;
-            }
-            string readText = File.ReadAllText(path);
-            Console.WriteLine(readText);
+            
+            Console.WriteLine("Validation: " + lv.Validate());
             Console.ReadLine();
         }
     }

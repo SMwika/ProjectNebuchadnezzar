@@ -12,7 +12,8 @@ namespace SharedClasses
 
         private String serialNumber { get; set; }
 
-        private String validationServer = "http://nebuchadnezzar.xn--paac-11a.net.pl/validateCopy";
+        //private String validationServer = "http://nebuchadnezzar.xn--paac-11a.net.pl/validateCopy";
+        private String validationServer = "http://xn--paac-11a.net.pl/my/nebuchadnezzar/validateCopy.php";
 
 
         #region getters setters
@@ -32,27 +33,24 @@ namespace SharedClasses
 
         public bool Validate(){
             bool validationOK = false;
-            System.Net.HttpWebRequest req = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(validationServer + "/?serial=" + this.serialNumber + "?hdSerial=" + GetHdId());
-            System.Net.HttpWebResponse res = (System.Net.HttpWebResponse)req.GetResponse();
-            System.IO.Stream respStream = res.GetResponseStream();
-            byte[] response = new byte[32];
-            respStream.Read(response, 0, 32);
-            if (response.Equals(getHash())) validationOK = true;
+            System.Net.WebClient wc = new System.Net.WebClient();
+            String respp = wc.DownloadString(validationServer + "?serial=" + this.serialNumber + "?hdSerial=" + GetHdId());
+            Console.WriteLine("Response: " + respp);
+
+            if (respp.Equals(getHash())) validationOK = true;
+
             return validationOK;
         }
 
-        private byte[] getHash()
+        private String getHash()
         {
             StringBuilder sb = new StringBuilder();
             MD5 md5 = MD5CryptoServiceProvider.Create();
-            byte[] bytes = new byte[this.serialNumber.Length * sizeof(char)];
-            System.Buffer.BlockCopy(this.serialNumber.ToCharArray(), 0, bytes, 0, bytes.Length);
-            byte[] hash = md5.ComputeHash(bytes);
-            return hash;
-            //foreach (byte b in hash)
-            //    sb.Append(b.ToString("x2"));
-
-            //return sb.ToString();
+            byte[] hash = md5.ComputeHash(System.Text.Encoding.ASCII.GetBytes(this.serialNumber));
+            foreach (byte b in hash)
+                sb.Append(b.ToString("x2"));
+            Console.WriteLine("Hash: " + sb.ToString());
+            return sb.ToString();
         }
 
         private String GetHdId(){
@@ -60,6 +58,7 @@ namespace SharedClasses
             foreach (ManagementObject wmi_HD in searcher.Get())
             {
                 String serial = wmi_HD["SerialNumber"].ToString();
+                Console.WriteLine("HDD Serial: " + serial);
                 return serial;
             }
             return "";
