@@ -55,6 +55,13 @@ namespace ServerService
             return list;
         }
 
+        public List<String> GetValidConnections()
+        {
+            List<String> list = new List<String>();
+            list = Server.validClients.ToList<String>();
+            return list;
+        }
+
         public List<String> GetLogs()
         {
             DBConnect db = new DBConnect();

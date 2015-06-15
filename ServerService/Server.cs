@@ -21,6 +21,7 @@ namespace ServerService
         private System.Diagnostics.EventLog events;
         private DBConnect db;
         public static List<String> clientList = new List<String>();
+        public static String[] validClients = System.Configuration.ConfigurationManager.AppSettings["validClientIPs"].Split(';');
 
         private String ip = ConfigurationManager.AppSettings["listenerIP"];//"127.0.0.1";
         private int port = Convert.ToInt32(ConfigurationManager.AppSettings["listenerPort"]);//9191;
@@ -73,6 +74,15 @@ namespace ServerService
                 {
                     Socket handler;
                     handler = listener.Accept();
+                    String accIp = (handler.RemoteEndPoint as IPEndPoint).Address.ToString(); 
+                    if (!validClients.Contains(accIp))
+                    {
+                        new DBConnect().addLogs("Tried to connect from restricted IP: " + accIp, 2);
+                        handler.Send(new byte[] { 0xFF, 0xFE, 0xFD });
+                        handler.Close();
+                        continue;
+                    }
+                    handler.Send(new byte[] { 0xFF, 0xFF, 0xFF });
                     Console.WriteLine("Connected before Thread");
                     //if (isConnected) connector.SendLiverEvent("Connected");
                     Thread clientService = new Thread(() => clientServiceThreadFunc(handler));

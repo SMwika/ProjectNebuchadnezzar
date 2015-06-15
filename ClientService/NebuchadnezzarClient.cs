@@ -64,6 +64,15 @@ namespace ClientService
                         this.sockfd = new System.Net.Sockets.Socket(System.Net.Sockets.AddressFamily.InterNetwork,
                             System.Net.Sockets.SocketType.Stream, System.Net.Sockets.ProtocolType.Tcp);
                         this.sockfd.Connect(remoteEP);
+                        byte[] buf = new byte[3];
+                        sockfd.ReceiveTimeout = 1000;
+                        sockfd.Receive(buf);
+                        if (buf.SequenceEqual(new byte[] { 0xFF, 0xFE, 0xFD }))
+                        {
+                            Console.WriteLine("Cannot connect: Server refuses connection from this IP");
+                            return;
+                        }
+                        sockfd.ReceiveTimeout = 0;
                         isConnected = true;
                         before = false;
                         Console.WriteLine("Connected!");
