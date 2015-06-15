@@ -113,6 +113,16 @@ namespace ServerGUI
             this.tbPacketID.Text = "";
             this.tbUserName.Text = "";
 
+            this.tbDate.IsEnabled = false;
+            this.tbFileHash.IsEnabled = false;
+            this.tbFileName.IsEnabled = false;
+            this.tbFilePreview.IsEnabled = false;
+            this.tbIpAddress.IsEnabled = false;
+            this.tbIType.IsEnabled = false;
+            this.tbOldFileName.IsEnabled = false;
+            this.tbPacketID.IsEnabled = false;
+            this.tbUserName.IsEnabled = false;
+
             this.lDate.Content = "Date: ";
             this.lFileHash.Content = "File hash: ";
             this.lFileName.Content = "File name: ";
@@ -324,17 +334,49 @@ namespace ServerGUI
         }
         private void updateActiveConnections()
         {
-            ipList = connector.GetActiveConnections();
+            //ipList = connector.GetActiveConnections();
+            List<String> activeIpList = connector.GetActiveConnections();
+            ipList = connector.GetValidConnections();
             if (ipList.Count != lbClientList.Items.Count)
             {
-                if(!this.tabItemConnections.IsSelected)
+                if (!this.tabItemConnections.IsSelected)
                     tabItemConnections.Background = new SolidColorBrush(Color.FromArgb(255, 200, 0, 0));
+            }
+            List<String> tmpList = new List<String>();
                 lbClientList.Items.Clear();
                 foreach (String ip in ipList)
                 {
-                    lbClientList.Items.Add(ip);
+                    String tmp = "";
+                    foreach (String aip in activeIpList)
+                    {
+                        if (aip.StartsWith(ip))
+                        {
+                            tmp = aip + "[ON]";
+                            break;
+                            //tmpList.Add(aip + "[ON]");
+                        }
+                    }
+                    if (tmp == "") tmp = ip + "[OFF]";
+                    tmpList.Add(tmp);
+                //    if (ipList.Contains(ip.Split(" as ".ToCharArray())[0]))
+                //    {
+                //        int index = ipList.IndexOf(ip.Split(" as ".ToCharArray())[0]);
+                //        ipList.RemoveAt(index);
+                //        Label l = new Label();
+                //        l.Content = ip;
+                //        ipList.Insert(0, ip+"[ON]");
+                //        //ipList.ElementAt(index = ipList.ElementAt(index) + "[ON]";
+                //    }
                 }
-            }
+                foreach (String ip in tmpList)
+                {
+                    Label l = new Label();
+                    l.Content = ip;
+                    if (ip.EndsWith("[ON]"))
+                        l.Foreground = new SolidColorBrush(Color.FromArgb(255, 0, 255, 0));
+                    lbClientList.Items.Add(l);
+                }
+            //}
         }
 
         private void updateIpList()
@@ -483,8 +525,10 @@ namespace ServerGUI
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            this.wcfConnectionThread.Abort();
-            this.autoUpdateThread.Abort();
+            if(this.wcfConnectionThread != null)
+                this.wcfConnectionThread.Abort();
+            if(this.autoUpdateThread != null)
+                this.autoUpdateThread.Abort();
         }
 
         private void tabItemLogs_MouseDown(object sender, MouseButtonEventArgs e)
