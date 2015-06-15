@@ -41,7 +41,7 @@ namespace ServerGUI
             {
                 //liverBlink = true;
                 //this.circleLiverNotifier.Dispatcher.Invoke(() => setColor(circleLiverNotifier, "Red"));
-                this.lbLogList.Dispatcher.Invoke(updateLogs);
+                this.lbLogList.Dispatcher.Invoke(() => updateLogs(false));
                 this.lbClientList.Dispatcher.Invoke(updateActiveConnections);
                 //this.circleLiverNotifier.Dispatcher.Invoke(() => setColor(circleLiverNotifier, "Yellow"));
                 //liverBlink = false;
@@ -250,32 +250,76 @@ namespace ServerGUI
             //Thread.Sleep(500);
         }
 
-
         private void updateLogs()
         {
-            //Console.WriteLine("red");
+            updateLogs(true);
+        }
+
+        private void updateLogs(bool firstTime)
+        {
+
             List<String> logList = connector.GetLogs();
-            if (logList.Count > lbLogList.Items.Count)
+            if (firstTime)
             {
-                if(!this.tabItemLogs.IsSelected)
-                    tabItemLogs.Background = new SolidColorBrush(Color.FromArgb(255, 200, 0, 0));
-            }
-            lbLogList.Items.Clear();
-            foreach (String log in logList)
-            {
-                if (log.StartsWith("[1]"))
+                lbLogList.Items.Clear();
+                foreach (String log in logList)
                 {
-                    Label l = new Label();
-                    l.Content = log;
-                    l.Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
-                    lbLogList.Items.Add(l);
-                    //MessageBox.Show("Possible plagiarism detected. See logs for more info.", "Possible plagiarism", MessageBoxButton.OK, MessageBoxImage.Warning);
-                }
-                else
-                {
-                    lbLogList.Items.Add(log);
+                    if (log.StartsWith("[1]"))
+                    {
+                        Label l = new Label();
+                        l.Content = log;
+                        l.Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
+                        lbLogList.Items.Add(l);
+                        //MessageBox.Show("Possible plagiarism detected. See logs for more info.", "Possible plagiarism", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
+                    else
+                    {
+                        lbLogList.Items.Add(log);
+                    }
                 }
             }
+            else
+            {
+                if (logList.Count > lbLogList.Items.Count)
+                {
+                    if (!this.tabItemLogs.IsSelected)
+                        tabItemLogs.Background = new SolidColorBrush(Color.FromArgb(255, 200, 0, 0));
+                    foreach (String log in logList)
+                    {
+                        if (lbLogList.Items.Contains(log)) break;
+                        if (log.StartsWith("[1]"))
+                        {
+                            Label l = new Label();
+                            l.Content = log;
+                            l.Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
+                            lbLogList.Items.Insert(0, l);
+                            MessageBox.Show("Possible plagiarism detected. See logs for more info.", "Possible plagiarism", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        }
+                        else
+                        {
+                            lbLogList.Items.Insert(0, log);
+                        }
+                    }
+                }
+            }
+
+            ////Console.WriteLine("red");
+            //lbLogList.Items.Clear();
+            //foreach (String log in logList)
+            //{
+            //    if (log.StartsWith("[1]"))
+            //    {
+            //        Label l = new Label();
+            //        l.Content = log;
+            //        l.Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
+            //        lbLogList.Items.Add(l);
+            //        //MessageBox.Show("Possible plagiarism detected. See logs for more info.", "Possible plagiarism", MessageBoxButton.OK, MessageBoxImage.Warning);
+            //    }
+            //    else
+            //    {
+            //        lbLogList.Items.Add(log);
+            //    }
+            //}
             //Console.WriteLine("green");
         }
         private void updateActiveConnections()
