@@ -201,13 +201,20 @@ namespace ServerService
             this.ExecuteNonQuery(query);
         }
 
+        public List<String> GetLogsFirstID(int fid)
+        {
+            List<String> logs = new List<String>();
+            string query = String.Format("SELECT type, message FROM logs WHERE id_logs > {0}", fid);
+            return logs;
+        }
+
         public List<String> GetAllLogs(int id)
         {
             string query;
             if (id < 0)
-                query = "SELECT type, message FROM logs ORDER BY id_logs DESC";
+                query = "SELECT type, message, date FROM logs ORDER BY id_logs DESC";
             else
-                query = "SELECT type, message FROM logs WHERE id_logs = id ORDER BY id_logs DESC";
+                query = "SELECT type, message, date FROM logs WHERE id_logs = id ORDER BY id_logs DESC";
             List<String> logs = new List<String>();
 
             using(MySqlConnection conn = new MySqlConnection(connString))
@@ -218,7 +225,7 @@ namespace ServerService
                 {
                     while (reader.Read())
                     {
-                        logs.Add(String.Format("[{0}]{1}", reader["type"] + "", reader["message"] + ""));
+                        logs.Add(String.Format("[{0}]({2}){1}", reader["type"] + "", reader["message"] + "", reader["date"] + ""));
                     }
                 }
             }
