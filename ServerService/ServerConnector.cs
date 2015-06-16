@@ -69,5 +69,10 @@ namespace ServerService
             db.Destroy();
             return list;
         }
+
+        public void injectConfig()
+        {
+
+        }
     }
 }

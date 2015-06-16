@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfigPacket.cs" />
     <Compile Include="IGuiWcfConnector.cs" />
     <Compile Include="IServerConnector.cs" />
     <Compile Include="LicenseValidator.cs" />

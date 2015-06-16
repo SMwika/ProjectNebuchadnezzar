@@ -18,6 +18,7 @@ namespace ServerService
     class Server
     {
         private Thread _connectionThread;
+        public static List<Thread> threadsList = new List<Thread>();
         private System.Diagnostics.EventLog events;
         private DBConnect db;
         public static List<String> clientList = new List<String>();
@@ -98,6 +99,7 @@ namespace ServerService
 
         private void clientServiceThreadFunc(Socket s)
         {
+            threadsList.Add(Thread.CurrentThread);
             IPEndPoint ipep = s.RemoteEndPoint as IPEndPoint;
             String ip = ipep.Address.ToString();
             Packet helo = (Packet)ReceiveObject(s);
@@ -125,6 +127,7 @@ namespace ServerService
            // Console.WriteLine("[" + ip + "]Thread Ended");
             new DBConnect().addLogs("[" + ip + "]Thread Ended");
             clientList.Remove(ip + " as " + helo.User);
+            threadsList.Remove(Thread.CurrentThread);
         }
 
         private void WCFThreadFunc()
