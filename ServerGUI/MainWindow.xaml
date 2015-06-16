@@ -64,5 +64,6 @@
         <TextBox Grid.Column="1" HorizontalAlignment="Left" Height="27" Margin="385,5,0,0" TextWrapping="Wrap" Text="tbServerAddr" VerticalAlignment="Top" Width="123" Name="tbServerAddr"/>
         <Label Content="lServerAddr" Grid.Column="1" HorizontalAlignment="Left" Height="27" Margin="307,5,0,0" VerticalAlignment="Top" Width="73" Name="lServerAddr"/>
         <CheckBox Content="cboxIsLocal" Grid.Column="1" HorizontalAlignment="Left" Margin="526,10,0,0" VerticalAlignment="Top" Name="cboxIsLocal" Click="cboxIsLocal_Click" Height="15" Width="81"/>
+        <Button Content="bInjectConfig" Grid.Column="2" HorizontalAlignment="Left" Margin="108,10,0,0" VerticalAlignment="Top" Width="75" Name="bInjectConfig" Click="bInjectConfig_Click"/>
     </Grid>
 </Window>

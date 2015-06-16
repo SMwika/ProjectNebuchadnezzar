@@ -87,6 +87,36 @@ namespace ClientService
                 }
                 else
                 {
+                    SharedClasses.ConfigPacket cp;
+                    cp = (SharedClasses.ConfigPacket)ReceiveObject(sockfd);
+                    if (cp != null)
+                    {
+                        /*
+                         * <add key="serverIP" value="127.0.0.1"/>
+                         * <add key="serverPort" value="9191"/>
+                         * <add key="folderPath" value="C:\\temp;D:\\tmp"/> <!-- enter folder paths to watch separated by semicolons ';' like: "C:\\temp;D:\\temp\\something" -->
+                         * <add key="fileFilter" value="*.java;*.c"/> <!-- enter file filters separated by semicolons ';' like: "*.c;*.cs;*.html" -->
+                         * <add key="includeSubDirs" value="true"/> <!-- true or false -->
+                         * <add key="serialNumber" value="b7337eee-d172-4cc7-a9eb-c180662aa950"/>
+                         * 
+                         */
+                        Console.WriteLine(cp.ToString());
+                        var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+                        config.AppSettings.Settings["serverIP"].Value = cp.ServerIP;
+                        config.AppSettings.Settings["serverPort"].Value = cp.ServerPort;
+                        config.AppSettings.Settings["folderPath"].Value = cp.WatcherDirectories;
+                        config.AppSettings.Settings["fileFilter"].Value = cp.WatcherFilters;
+                        config.AppSettings.Settings["includeSubDirs"].Value = cp.WatcherIncludeSubdirectories;
+                        config.AppSettings.Settings["serialNumber"].Value = cp.SerialNumber;
+                        config.Save(ConfigurationSaveMode.Modified);
+
+                        ConfigurationManager.RefreshSection("appSettings");
+                        //InitWatchers();
+                        Console.WriteLine("New configuration injected - restarting Service");
+                        eventLog1.WriteEntry("New configuration injected - restarting Service", EventLogEntryType.Information);
+                        OnStop();
+                        Environment.Exit(1);
+                    }
                     Console.WriteLine("Already connected");
                 }
                 Thread.Sleep(1000 * 3);

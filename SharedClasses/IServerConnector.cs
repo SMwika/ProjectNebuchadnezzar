@@ -32,5 +32,8 @@ namespace SharedClasses
 
         [OperationContract]
         List<String> GetLogs();
+
+        [OperationContract]
+        void injectConfig();
     }
 }
