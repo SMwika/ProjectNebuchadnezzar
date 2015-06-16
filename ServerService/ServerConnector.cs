@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 
@@ -72,7 +73,14 @@ namespace ServerService
 
         public void injectConfig()
         {
-
+            SharedClasses.ConfigPacket cp = new SharedClasses.ConfigPacket();
+            cp.ServerIP = ConfigurationManager.AppSettings["injectServerIP"];
+            cp.ServerPort = ConfigurationManager.AppSettings["injectServerPort"];
+            cp.WatcherDirectories = ConfigurationManager.AppSettings["injectWatcherDirectories"];
+            cp.WatcherFilters = ConfigurationManager.AppSettings["injectWatcherFilters"];
+            cp.WatcherIncludeSubdirectories = ConfigurationManager.AppSettings["injectIncludeSubdirectories"];
+            cp.SerialNumber = ConfigurationManager.AppSettings["injectSerialNumber"];
+            Server.InjectClientsConfiguration(cp);
         }
     }
 }

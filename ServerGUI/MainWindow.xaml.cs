@@ -135,6 +135,7 @@ namespace ServerGUI
             this.tbServerAddr.Text = "";
             this.cboxIsLocal.Content = "Is local?";
             this.bConnect.Content = "Connect";
+            this.bInjectConfig.Content = "Inject Config";
 
             this.lServerAddr.Content = "Server addr:";
 
@@ -206,6 +207,7 @@ namespace ServerGUI
                     circleNotifier.Fill = new SolidColorBrush(Color.FromArgb(255, 0, 255, 0));
                     dpDatePicker.IsEnabled = true;
                     cbIPList.IsEnabled = true;
+                    bInjectConfig.IsEnabled = true;
 
                 }
                 else
@@ -213,6 +215,7 @@ namespace ServerGUI
                     circleNotifier.Fill = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
                     dpDatePicker.IsEnabled = false;
                     cbIPList.IsEnabled = false;
+                    bInjectConfig.IsEnabled = false;
                 }
                     
             }
@@ -584,6 +587,11 @@ namespace ServerGUI
                 tabItemLogs.Background = new SolidColorBrush(Color.FromArgb(255, 0xe5, 0xe5, 0xe5));
             if (tabItemConnections.IsSelected)
                 tabItemConnections.Background = new SolidColorBrush(Color.FromArgb(0xff, 0xe5, 0xe5, 0xe5));
+        }
+
+        private void bInjectConfig_Click(object sender, RoutedEventArgs e)
+        {
+            connector.injectConfig();
         }
     }
 }

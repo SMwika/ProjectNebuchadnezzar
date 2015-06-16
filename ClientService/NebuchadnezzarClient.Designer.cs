@@ -5,6 +5,10 @@ using System.Security.Cryptography;
 using System.Text;
 using SharedClasses;
 using System.Management;
+using System.Net.Sockets;
+using System.IO;
+using System.Net;
+using System;
 
 namespace ClientService
 {
@@ -164,6 +168,28 @@ namespace ClientService
             IFormatter formatter = new BinaryFormatter();
             System.Net.Sockets.NetworkStream stream = new System.Net.Sockets.NetworkStream(sockfd);
             formatter.Serialize(stream, o);
+        }
+
+        private object ReceiveObject(Socket sock)
+        {
+            if (!sock.Connected) return null;
+            NetworkStream stream = new NetworkStream(sock);
+            stream.ReadTimeout = 1000;
+            IFormatter formatter = new BinaryFormatter();
+            try
+            {
+                object o = (object)formatter.Deserialize(stream);
+                return o;
+            }
+            catch (SocketException)
+            {
+                return null;
+            }
+            catch (IOException)
+            {
+                return null;
+            }
+            return null;
         }
 
         private string getCurrentUser()

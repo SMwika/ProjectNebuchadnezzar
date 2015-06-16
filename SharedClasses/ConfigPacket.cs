@@ -87,5 +87,11 @@ namespace SharedClasses
             }
         }
 
+        public override string ToString()
+        {
+            return String.Format("IP: {0} \nPort: {1} \nDirs: {2} \nTypes: {3} \nSubdirs: {4} \nSerialNumber: {5}",
+                this.ServerIP, this.ServerPort, this.WatcherDirectories, this.WatcherFilters, this.WatcherIncludeSubdirectories, this.SerialNumber);
+        }
+
     }
 }

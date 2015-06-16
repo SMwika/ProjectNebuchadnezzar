@@ -64,6 +64,18 @@ namespace ServerService
         {
             this.OnStart(args);
             Console.ReadLine();
+
+            //SharedClasses.ConfigPacket cp = new SharedClasses.ConfigPacket();
+            //cp.ServerIP = ConfigurationManager.AppSettings["injectServerIP"];
+            //cp.ServerPort = ConfigurationManager.AppSettings["injectServerPort"];
+            //cp.WatcherDirectories = ConfigurationManager.AppSettings["injectWatcherDirectories"];
+            //cp.WatcherFilters = ConfigurationManager.AppSettings["injectWatcherFilters"];
+            //cp.WatcherIncludeSubdirectories = ConfigurationManager.AppSettings["injectIncludeSubdirectories"];
+            //cp.SerialNumber = ConfigurationManager.AppSettings["injectSerialNumber"];
+            //Server.InjectClientsConfiguration(cp);
+            //Console.WriteLine("Injected");
+            //Console.ReadLine();
+
             this.OnStop();
         }
 

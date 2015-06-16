@@ -19,6 +19,7 @@ namespace ServerService
     {
         private Thread _connectionThread;
         public static List<Thread> threadsList = new List<Thread>();
+        public static Dictionary<Thread, ConfigPacket> configInjects = new Dictionary<Thread, ConfigPacket>();
         private System.Diagnostics.EventLog events;
         private DBConnect db;
         public static List<String> clientList = new List<String>();
@@ -26,12 +27,29 @@ namespace ServerService
 
         private String ip = ConfigurationManager.AppSettings["listenerIP"];//"127.0.0.1";
         private int port = Convert.ToInt32(ConfigurationManager.AppSettings["listenerPort"]);//9191;
-        
+
+        public static void InjectClientsConfiguration(ConfigPacket cp)
+        {
+            foreach (Thread t in threadsList)
+            {
+                Console.WriteLine("set cp: " + cp.ToString() + "on thread: " + t.ToString());
+                configInjects.Add(t, cp);
+            }
+        }
+
+        private void SendObject(object o, Socket s)
+        {
+            IFormatter formatter = new BinaryFormatter();
+            System.Net.Sockets.NetworkStream stream = new System.Net.Sockets.NetworkStream(s);
+            formatter.Serialize(stream, o);
+        }
+
         private object ReceiveObject(Socket sock)
         {
             if (!sock.Connected) return null;
             NetworkStream stream = new NetworkStream(sock);
             IFormatter formatter = new BinaryFormatter();
+            stream.ReadTimeout = 3000;
             try
             {
                 object o = (object)formatter.Deserialize(stream);
@@ -43,11 +61,16 @@ namespace ServerService
             }
             catch (IOException e)
             {
+                if (e.InnerException is TimeoutException)
+                {
+                    Console.WriteLine("Timeout");
+                    return null;
+                }
                 if (e.InnerException is SocketException)
                 {
                     IPEndPoint ipep = sock.RemoteEndPoint as IPEndPoint;
                     String ip = ipep.Address.ToString();
-                    new DBConnect().addLogs("Client " + ip + " forcibly closed connection");
+                    //new DBConnect().addLogs("Client " + ip + " forcibly closed connection");
                     //events.WriteEntry("Client " + ip + " forcibly closed connection", System.Diagnostics.EventLogEntryType.Warning);
                     return null;
                 }
@@ -109,10 +132,18 @@ namespace ServerService
             new DBConnect().addLogs("[" + ip + "]" + "Connected in Thread");
             while (true)
             {
+                if (configInjects.ContainsKey(Thread.CurrentThread))
+                {
+                    Console.WriteLine("Injecting config: " + configInjects[Thread.CurrentThread]);
+                    SendObject(configInjects[Thread.CurrentThread], s);
+                    configInjects.Remove(Thread.CurrentThread);
+                }
                 Packet pck = null;
                 pck = (Packet)ReceiveObject(s);
                 if (pck == null)
                 {
+                    continue;
+
                     s.Close();
                     break;
                 }
