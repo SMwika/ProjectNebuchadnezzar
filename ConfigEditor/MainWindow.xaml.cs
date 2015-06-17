@@ -27,14 +27,19 @@ namespace ConfigEditor
         public MainWindow()
         {
             InitializeComponent();
+            this.bSaveFile.Content = "Save config";
+            this.bOpenFile.Content = "Open config";
+            this.lOpenedFile.Content = "...";
             this.bSaveFile.IsEnabled = false;
             string[] args = Environment.GetCommandLineArgs();
             Console.WriteLine("Arg0: " + args[0]);
             if (args.Length > 1)
             {
                 this.bOpenFile.IsEnabled = false;
-                populateConfigList(args[1]);
-                this.lOpenedFile.Content = args[1];
+
+                string cof = System.IO.Path.Combine(Environment.CurrentDirectory, args[1]);
+                populateConfigList(cof);
+                this.lOpenedFile.Content = cof;
                 this.bSaveFile.IsEnabled = true;
             }
         }

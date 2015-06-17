@@ -266,6 +266,7 @@
 		<row><td>NewBinary18</td><td/><td>&lt;ISProductFolder&gt;\Redist\Language Independent\OS Independent\InstallStateMenu.ico</td></row>
 		<row><td>NewBinary19</td><td/><td>C:\Users\Jakub\SkyDrive\Pictures\816_liver.jpg</td></row>
 		<row><td>NewBinary2</td><td/><td>&lt;ISProductFolder&gt;\Redist\Language Independent\OS Independent\New.ibd</td></row>
+		<row><td>NewBinary20</td><td/><td>&lt;ISProductFolder&gt;\redist\Language independent\i386\SerialNumCAHelper.dll</td></row>
 		<row><td>NewBinary3</td><td/><td>&lt;ISProductFolder&gt;\Redist\Language Independent\OS Independent\Up.ibd</td></row>
 		<row><td>NewBinary4</td><td/><td>&lt;ISProductFolder&gt;\Redist\Language Independent\OS Independent\WarningIcon.ibd</td></row>
 		<row><td>NewBinary5</td><td/><td>C:\Users\Jakub\SkyDrive\Pictures\816_liver.jpg</td></row>
@@ -343,6 +344,7 @@
 		<col def="S0">ISDotNetInstallerArgsUninstall</col>
 		<col def="S0">ISDotNetInstallerArgsRollback</col>
 		<row><td>ClientService.exe</td><td>{E0880241-1521-4313-ABFA-5CE2DC0D152A}</td><td>INSTALLDIR</td><td>2</td><td/><td>clientservice.exe</td><td>81</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>ConfigEditor.exe</td><td>{50A840CD-8C15-4900-80CE-D16541FF73B2}</td><td>INSTALLDIR</td><td>2</td><td/><td>configeditor.exe</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ISX_DEFAULTCOMPONENT</td><td>{79F45694-12C3-4902-A473-BEA783961562}</td><td>INSTALLDIR</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>NewComponent1</td><td>{6478D967-F604-46AC-B705-546802B2D722}</td><td>INSTALLDIR</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 	</table>
@@ -1016,9 +1018,10 @@
 		<row><td>SetupCompleteError</td><td>Finish</td><td>DoAction</td><td>ShowMsiLog</td><td>MsiLogFileLocation And (ISSHOWMSILOG="1")</td><td>3</td></row>
 		<row><td>SetupCompleteError</td><td>Finish</td><td>EndDialog</td><td>Exit</td><td>1</td><td>2</td></row>
 		<row><td>SetupCompleteSuccess</td><td>OK</td><td>DoAction</td><td>CleanUp</td><td>ISSCRIPTRUNNING="1"</td><td>1</td></row>
-		<row><td>SetupCompleteSuccess</td><td>OK</td><td>DoAction</td><td>ISSetupFilesCleanup</td><td>1</td><td>200</td></row>
-		<row><td>SetupCompleteSuccess</td><td>OK</td><td>DoAction</td><td>ShowMsiLog</td><td>MsiLogFileLocation And (ISSHOWMSILOG="1") And NOT ISENABLEDWUSFINISHDIALOG</td><td>6</td></row>
-		<row><td>SetupCompleteSuccess</td><td>OK</td><td>EndDialog</td><td>Exit</td><td>1</td><td>2</td></row>
+		<row><td>SetupCompleteSuccess</td><td>OK</td><td>DoAction</td><td>ISSetupFilesCleanup</td><td>1</td><td>201</td></row>
+		<row><td>SetupCompleteSuccess</td><td>OK</td><td>DoAction</td><td>LaunchProgramFileFromSetupCompleteSuccess</td><td>LAUNCHPROGRAM And PROGRAMFILETOLAUNCHATEND &lt;&gt; "" And NOT Installed</td><td>2</td></row>
+		<row><td>SetupCompleteSuccess</td><td>OK</td><td>DoAction</td><td>ShowMsiLog</td><td>MsiLogFileLocation And (ISSHOWMSILOG="1") And NOT ISENABLEDWUSFINISHDIALOG</td><td>7</td></row>
+		<row><td>SetupCompleteSuccess</td><td>OK</td><td>EndDialog</td><td>Exit</td><td>1</td><td>3</td></row>
 		<row><td>SetupError</td><td>A</td><td>EndDialog</td><td>ErrorAbort</td><td>1</td><td>0</td></row>
 		<row><td>SetupError</td><td>C</td><td>EndDialog</td><td>ErrorCancel</td><td>1</td><td>0</td></row>
 		<row><td>SetupError</td><td>I</td><td>EndDialog</td><td>ErrorIgnore</td><td>1</td><td>0</td></row>
@@ -1076,6 +1079,7 @@
 		<row><td>ISSetupFilesCleanup</td><td>257</td><td>ISSetupFilesHelper</td><td>SFCleanupEx</td><td/><td/></row>
 		<row><td>ISSetupFilesExtract</td><td>257</td><td>ISSetupFilesHelper</td><td>SFStartupEx</td><td/><td/></row>
 		<row><td>ISUnSelfRegisterFiles</td><td>3073</td><td>ISSELFREG.DLL</td><td>ISUnSelfRegisterFiles</td><td/><td/></row>
+		<row><td>LaunchProgramFileFromSetupCompleteSuccess</td><td>1</td><td>NewBinary20</td><td>LaunchProgram</td><td/><td/></row>
 		<row><td>SetARPINSTALLLOCATION</td><td>51</td><td>ARPINSTALLLOCATION</td><td>[INSTALLDIR]</td><td/><td/></row>
 		<row><td>SetAllUsersProfileNT</td><td>51</td><td>ALLUSERSPROFILE</td><td>[%SystemRoot]\Profiles\All Users</td><td/><td/></row>
 		<row><td>ShowMsiLog</td><td>226</td><td>SystemFolder</td><td>[SystemFolder]notepad.exe "[MsiLogFileLocation]"</td><td/><td>Shows Property-driven MSI Log</td></row>
@@ -1875,6 +1879,7 @@
 		<col key="yes" def="s38">Feature_</col>
 		<col key="yes" def="s72">Component_</col>
 		<row><td>AlwaysInstall</td><td>ClientService.exe</td></row>
+		<row><td>AlwaysInstall</td><td>ConfigEditor.exe</td></row>
 		<row><td>AlwaysInstall</td><td>ISX_DEFAULTCOMPONENT</td></row>
 		<row><td>AlwaysInstall</td><td>NewComponent1</td></row>
 	</table>
@@ -1893,6 +1898,8 @@
 		<col def="S72">ISComponentSubFolder_</col>
 		<row><td>clientservice.exe</td><td>ClientService.exe</td><td>CLIENT~1.EXE|ClientService.exe</td><td>0</td><td/><td/><td>0</td><td>1</td><td>C:\Users\Jakub\Documents\Visual Studio 2013\Projects\ProjectNebuchadnezzar\ClientService\bin\Debug\ClientService.exe</td><td>1</td><td/></row>
 		<row><td>clientservice.exe.config</td><td>ISX_DEFAULTCOMPONENT</td><td>CLIENT~1.CON|ClientService.exe.config</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Users\Jakub\Documents\Visual Studio 2013\Projects\ProjectNebuchadnezzar\ClientService\bin\Debug\ClientService.exe.config</td><td>1</td><td/></row>
+		<row><td>configeditor.exe</td><td>ConfigEditor.exe</td><td>CONFIG~1.EXE|ConfigEditor.exe</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Users\Jakub\Documents\Visual Studio 2013\Projects\ProjectNebuchadnezzar\ConfigEditor\bin\Debug\ConfigEditor.exe</td><td>1</td><td/></row>
+		<row><td>configeditor.exe.config</td><td>ISX_DEFAULTCOMPONENT</td><td>CONFIG~1.CON|ConfigEditor.exe.config</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Users\Jakub\Documents\Visual Studio 2013\Projects\ProjectNebuchadnezzar\ConfigEditor\bin\Debug\ConfigEditor.exe.config</td><td>1</td><td/></row>
 	</table>
 
 	<table name="FileSFPCatalog">
@@ -2037,6 +2044,7 @@
 		<col def="S0">HTTPLocation</col>
 		<col def="S0">Miscellaneous</col>
 		<row><td>ClientService.exe</td><td/><td/><td>_8EE953DB_A876_4637_A7AA_21DD1CC67045_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>ConfigEditor.exe</td><td/><td/><td>_62297B79_F725_4701_ADB2_889D292E8AA0_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>ISX_DEFAULTCOMPONENT</td><td/><td/><td>_7C1EFAB2_F6B3_4F9C_A45E_B75DB6825521_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>NewComponent1</td><td/><td/><td>_58CAFFC7_87E5_414C_8668_C99829E621AF_FILTER</td><td/><td/><td/><td/></row>
 	</table>
@@ -2375,6 +2383,7 @@
 		<col key="yes" def="s72">ISProductConfiguration_</col>
 		<col key="yes" def="s72">Property</col>
 		<col def="L255">Value</col>
+		<row><td>Express</td><td>SetupFileName</td><td>ClientInstall_NebuchadnezzarMonitor</td></row>
 	</table>
 
 	<table name="ISRelease">
@@ -2414,7 +2423,7 @@
 		<row><td>DVD-18</td><td>Express</td><td>&lt;ISProjectDataFolder&gt;</td><td>Default</td><td>3</td><td>1033</td><td>0</td><td>2</td><td>Intel</td><td/><td>1033</td><td>0</td><td>15.83</td><td>1</td><td>2048</td><td/><td>0</td><td/><td>MediaLocation</td><td/><td>http://</td><td/><td/><td/><td/><td>75805</td><td/><td/><td/><td>3</td></row>
 		<row><td>DVD-5</td><td>Express</td><td>&lt;ISProjectDataFolder&gt;</td><td>Default</td><td>3</td><td>1033</td><td>0</td><td>2</td><td>Intel</td><td/><td>1033</td><td>0</td><td>4.38</td><td>1</td><td>2048</td><td/><td>0</td><td/><td>MediaLocation</td><td/><td>http://</td><td/><td/><td/><td/><td>75805</td><td/><td/><td/><td>3</td></row>
 		<row><td>DVD-9</td><td>Express</td><td>&lt;ISProjectDataFolder&gt;</td><td>Default</td><td>3</td><td>1033</td><td>0</td><td>2</td><td>Intel</td><td/><td>1033</td><td>0</td><td>7.95</td><td>1</td><td>2048</td><td/><td>0</td><td/><td>MediaLocation</td><td/><td>http://</td><td/><td/><td/><td/><td>75805</td><td/><td/><td/><td>3</td></row>
-		<row><td>SingleImage</td><td>Express</td><td>&lt;ISProjectDataFolder&gt;</td><td>PackageName</td><td>1</td><td>1033</td><td>0</td><td>1</td><td>Intel</td><td/><td>1033</td><td>0</td><td>0</td><td>0</td><td>0</td><td/><td>0</td><td/><td>MediaLocation</td><td/><td>http://</td><td/><td/><td/><td/><td>108573</td><td/><td/><td/><td>3</td></row>
+		<row><td>SingleImage</td><td>Express</td><td>&lt;ISProjectDataFolder&gt;</td><td>PackageName</td><td>1</td><td>1033</td><td>0</td><td>1</td><td>Intel</td><td/><td>1033</td><td>0</td><td>0</td><td>0</td><td>0</td><td/><td>0</td><td/><td>MediaLocation</td><td/><td>http://</td><td/><td/><td/><td/><td>108701</td><td/><td/><td/><td>3</td></row>
 		<row><td>WebDeployment</td><td>Express</td><td>&lt;ISProjectDataFolder&gt;</td><td>PackageName</td><td>4</td><td>1033</td><td>2</td><td>1</td><td>Intel</td><td/><td>1033</td><td>0</td><td>0</td><td>0</td><td>0</td><td/><td>0</td><td/><td>MediaLocation</td><td/><td>http://</td><td/><td/><td/><td/><td>124941</td><td/><td/><td/><td>3</td></row>
 	</table>
 
@@ -4008,7 +4017,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>ISTheme</td><td>InstallShield Blue.theme</td></row>
 		<row><td>ISUSLock</td><td>{7357F6C9-A85C-4DE2-A635-1BB132CE2B66}</td></row>
 		<row><td>ISUSSignature</td><td>{C29C63AC-A48D-455E-93A9-CA2E7EAD56C0}</td></row>
-		<row><td>ISVisitedViews</td><td>viewAssistant,viewAppFiles,viewRelease,viewProject,viewUpgradePaths,viewRealSetupDesign,viewServices,viewShortcuts,viewSystemSearch,viewUI,viewFeatureFiles,viewUpdateService,viewAppV,viewInstallScriptStd,viewCustomActions,viewIniFiles,viewFileExtensions,viewVRoots,viewEnvironmentVariables,viewObjects</td></row>
+		<row><td>ISVisitedViews</td><td>viewAssistant,viewAppFiles,viewRelease,viewProject,viewUpgradePaths,viewRealSetupDesign,viewServices,viewShortcuts,viewSystemSearch,viewUI,viewFeatureFiles,viewUpdateService,viewAppV,viewInstallScriptStd,viewCustomActions,viewIniFiles,viewFileExtensions,viewVRoots,viewEnvironmentVariables,viewObjects,viewTextMessages</td></row>
 		<row><td>Limited</td><td>1</td></row>
 		<row><td>LockPermissionMode</td><td>1</td></row>
 		<row><td>MsiExecCmdLineOptions</td><td/></row>
@@ -4324,6 +4333,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>ARPURLINFOABOUT</td><td>##ID_STRING2##</td><td/></row>
 		<row><td>AgreeToLicense</td><td>No</td><td/></row>
 		<row><td>ApplicationUsers</td><td>AllUsers</td><td/></row>
+		<row><td>CMDLINEFORPROGRAMFILE</td><td>ClientService.exe</td><td/></row>
 		<row><td>DWUSINTERVAL</td><td>30</td><td/></row>
 		<row><td>DWUSLINK</td><td>CEEB874F89ABC7AF69AC974F1EDC978FD9ABE08F49FCB04FCE8BA78889ECE0AFDEDCD0D8AEAC</td><td/></row>
 		<row><td>DefaultUIFont</td><td>ExpressDefault</td><td/></row>
@@ -4358,6 +4368,8 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>IS_SQLSERVER_USERNAME</td><td>sa</td><td/></row>
 		<row><td>InstallChoice</td><td>AR</td><td/></row>
 		<row><td>LAUNCHPROGRAM</td><td>1</td><td/></row>
+		<row><td>LAUNCHPROGRAMCOMPCODE</td><td>{50A840CD-8C15-4900-80CE-D16541FF73B2}</td><td/></row>
+		<row><td>LAUNCHPROGRAMFILEKEY</td><td>configeditor.exe</td><td/></row>
 		<row><td>Manufacturer</td><td>##COMPANY_NAME##</td><td/></row>
 		<row><td>PIDKEY</td><td/><td/></row>
 		<row><td>PIDTemplate</td><td>12345&lt;###-%%%%%%%&gt;@@@@@</td><td/></row>
@@ -4384,6 +4396,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>PROGMSG_IIS_ROLLBACKAPPPOOLS</td><td>##IDS_PROGMSG_IIS_ROLLBACKAPPPOOLS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKVROOTS</td><td>##IDS_PROGMSG_IIS_ROLLBACKVROOTS##</td><td/></row>
 		<row><td>PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS</td><td>##IDS_PROGMSG_IIS_ROLLBACKWEBSERVICEEXTENSIONS##</td><td/></row>
+		<row><td>PROGRAMFILETOLAUNCHATEND</td><td>[INSTALLDIR]ConfigEditor.exe</td><td/></row>
 		<row><td>ProductCode</td><td>{2A338852-8E0F-4C09-B8E0-8CC6B34DECCB}</td><td/></row>
 		<row><td>ProductName</td><td>Nebuchadnezzar Monitoring System Client</td><td/></row>
 		<row><td>ProductVersion</td><td>1.12.0000</td><td/></row>
@@ -4398,6 +4411,7 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>RestartManagerOption</td><td>CloseRestart</td><td/></row>
 		<row><td>SERIALNUMBER</td><td/><td/></row>
 		<row><td>SERIALNUMVALSUCCESSRETVAL</td><td>1</td><td/></row>
+		<row><td>SHOWLAUNCHPROGRAM</td><td>-1</td><td/></row>
 		<row><td>SHOWLAUNCHREADME</td><td>0</td><td/></row>
 		<row><td>SecureCustomProperties</td><td>ISFOUNDNEWERPRODUCTVERSION;USERNAME;COMPANYNAME;ISX_SERIALNUM;SUPPORTDIR;DOTNETVERSION40CLIENT</td><td/></row>
 		<row><td>SelectedSetupType</td><td>##IDS__DisplayName_Typical##</td><td/></row>
