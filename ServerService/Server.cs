@@ -32,7 +32,9 @@ namespace ServerService
         {
             foreach (Thread t in threadsList)
             {
+#if(DEBUG)
                 Console.WriteLine("set cp: " + cp.ToString() + "on thread: " + t.ToString());
+#endif
                 configInjects.Add(t, cp);
             }
         }
@@ -44,12 +46,21 @@ namespace ServerService
             formatter.Serialize(stream, o);
         }
 
+        private bool IsSocketConnected(System.Net.Sockets.Socket s)
+        {
+            if (s == null) return false;
+            bool poll = s.Poll(1000, System.Net.Sockets.SelectMode.SelectRead);
+            bool avail = (s.Available == 0);
+            if (poll && avail) return false;
+            else return true;
+        }
+
         private object ReceiveObject(Socket sock)
         {
             if (!sock.Connected) return null;
             NetworkStream stream = new NetworkStream(sock);
             IFormatter formatter = new BinaryFormatter();
-            stream.ReadTimeout = 3000;
+            stream.ReadTimeout = 10000;
             try
             {
                 object o = (object)formatter.Deserialize(stream);
@@ -61,19 +72,19 @@ namespace ServerService
             }
             catch (IOException e)
             {
-                if (e.InnerException is TimeoutException)
-                {
-                    Console.WriteLine("Timeout");
-                    return null;
-                }
-                if (e.InnerException is SocketException)
-                {
-                    IPEndPoint ipep = sock.RemoteEndPoint as IPEndPoint;
-                    String ip = ipep.Address.ToString();
-                    //new DBConnect().addLogs("Client " + ip + " forcibly closed connection");
-                    //events.WriteEntry("Client " + ip + " forcibly closed connection", System.Diagnostics.EventLogEntryType.Warning);
-                    return null;
-                }
+                //if (e.InnerException is TimeoutException)
+                //{
+                //    Console.WriteLine("Timeout");
+                //    return null;
+                //}
+                //if (e.InnerException is SocketException)
+                //{
+                //    IPEndPoint ipep = sock.RemoteEndPoint as IPEndPoint;
+                //    String ip = ipep.Address.ToString();
+                //    //new DBConnect().addLogs("Client " + ip + " forcibly closed connection");
+                //    //events.WriteEntry("Client " + ip + " forcibly closed connection", System.Diagnostics.EventLogEntryType.Warning);
+                //    return null;
+                //}
             }
             return null;
         }
@@ -90,7 +101,9 @@ namespace ServerService
             new DBConnect().addLogs("[" + ip + ":" + port + "] Bind created");
             listener.Listen(10);
             DBConnect db = new DBConnect();
+#if(DEBUG)
             Console.WriteLine("[" + ip + ":" + port + "] Listening...");
+#endif
             //db.addLogs("Listening");
 
             while(true){
@@ -107,7 +120,9 @@ namespace ServerService
                         continue;
                     }
                     handler.Send(new byte[] { 0xFF, 0xFF, 0xFF });
+#if(DEBUG)
                     Console.WriteLine("Connected before Thread");
+#endif
                     //if (isConnected) connector.SendLiverEvent("Connected");
                     Thread clientService = new Thread(() => clientServiceThreadFunc(handler));
                     clientService.Start();
@@ -132,28 +147,41 @@ namespace ServerService
             new DBConnect().addLogs("[" + ip + "]" + "Connected in Thread");
             while (true)
             {
-                if (configInjects.ContainsKey(Thread.CurrentThread))
+                if (IsSocketConnected(s))
                 {
-                    Console.WriteLine("Injecting config: " + configInjects[Thread.CurrentThread]);
-                    SendObject(configInjects[Thread.CurrentThread], s);
-                    configInjects.Remove(Thread.CurrentThread);
-                }
-                Packet pck = null;
-                pck = (Packet)ReceiveObject(s);
-                if (pck == null)
-                {
-                    continue;
+                    if (configInjects.ContainsKey(Thread.CurrentThread))
+                    {
+#if(DEBUG)
+                        Console.WriteLine("Injecting config: " + configInjects[Thread.CurrentThread]);
+#endif
+                        SendObject(configInjects[Thread.CurrentThread], s);
+                        configInjects.Remove(Thread.CurrentThread);
+                    }
+                    Packet pck = null;
+                    pck = (Packet)ReceiveObject(s);
+                    if (pck == null)
+                    {
+                        continue;
 
-                    s.Close();
-                    break;
+                        s.Close();
+                        break;
+                    }
+                    if (pck.IsExitPacket())
+                    {
+                        Console.WriteLine("Thread exited");
+                        s.Close();
+                        break;
+                    }
+#if(DEBUG)
+                    Console.WriteLine(pck.getString());
+#endif
+                    db.addPacket(pck, ip);
                 }
-                if (pck.IsExitPacket())
+                else
                 {
-                    s.Close();
                     break;
                 }
-                Console.WriteLine(pck.getString());
-                db.addPacket(pck, ip);
+                
             }
            // Console.WriteLine("[" + ip + "]Thread Ended");
             new DBConnect().addLogs("[" + ip + "]Thread Ended");
