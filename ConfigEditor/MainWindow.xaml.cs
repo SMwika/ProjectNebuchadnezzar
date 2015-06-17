@@ -33,7 +33,8 @@ namespace ConfigEditor
             if (args.Length > 1)
             {
                 this.bOpenFile.IsEnabled = false;
-                populateConfigList(args[0]);
+                populateConfigList(args[1]);
+                this.lOpenedFile.Content = args[1];
                 this.bSaveFile.IsEnabled = true;
             }
         }
@@ -48,7 +49,7 @@ namespace ConfigEditor
             foreach (KeyValueConfigurationElement set in config.AppSettings.Settings)
             {
                 Label l = new Label();
-                l.Content = set.Key;
+                l.Content = set.Key + ":";
                 lbSettingList.Items.Add(l);
                 TextBox tb = new TextBox();
                 tb.Name = set.Key;
@@ -77,7 +78,12 @@ namespace ConfigEditor
             {
                 if (o is Label)
                 {
-
+                    continue;
+                }
+                if (o is TextBox)
+                {
+                    TextBox tb = (TextBox)o;
+                    config.AppSettings.Settings[tb.Name].Value = tb.Text;
                 }
             }
             config.Save(ConfigurationSaveMode.Modified);
