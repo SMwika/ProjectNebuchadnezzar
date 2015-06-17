@@ -116,12 +116,13 @@ namespace ServerGUI
             this.tbDate.IsEnabled = false;
             this.tbFileHash.IsEnabled = false;
             this.tbFileName.IsEnabled = false;
-            this.tbFilePreview.IsEnabled = false;
+            this.tbFilePreview.IsEnabled = true;
             this.tbIpAddress.IsEnabled = false;
             this.tbIType.IsEnabled = false;
             this.tbOldFileName.IsEnabled = false;
             this.tbPacketID.IsEnabled = false;
             this.tbUserName.IsEnabled = false;
+            this.bInjectConfig.IsEnabled = false;
 
             this.lDate.Content = "Date: ";
             this.lFileHash.Content = "File hash: ";
@@ -132,10 +133,15 @@ namespace ServerGUI
             this.lPacketID.Content = "Packet ID: ";
             this.lUserName.Content = "User name: ";
 
+            this.lIP.Content = "IP: ";
+            this.lFilePreview.Content = "File content preview: ";
+            this.lFileList.Content = "File list: ";
+
             this.tbServerAddr.Text = "";
             this.cboxIsLocal.Content = "Is local?";
             this.bConnect.Content = "Connect";
-            this.bInjectConfig.Content = "Inject Config";
+            this.bInjectConfig.Content = "Inject config";
+            this.bEditConfig.Content = "Edit config";
 
             this.lServerAddr.Content = "Server addr:";
 
@@ -592,6 +598,16 @@ namespace ServerGUI
         private void bInjectConfig_Click(object sender, RoutedEventArgs e)
         {
             connector.injectConfig();
+        }
+
+        private void bEditConfig_Click(object sender, RoutedEventArgs e)
+        {
+            string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "ConfigEditor.exe");
+            string configName = System.IO.Path.Combine(Environment.CurrentDirectory, "ServerService.exe");
+            filename = "\"C:\\Users\\Jakub\\Documents\\Visual Studio 2013\\Projects\\ProjectNebuchadnezzar\\ConfigEditor\\bin\\Debug\\ConfigEditor.exe\"";
+            configName = "\"C:\\Users\\Jakub\\Documents\\Visual Studio 2013\\Projects\\ProjectNebuchadnezzar\\ServerService\\bin\\Debug\\ServerService.exe\"";
+            Console.WriteLine(filename + " " + configName);
+            System.Diagnostics.Process proc = System.Diagnostics.Process.Start(filename, configName);
         }
     }
 }

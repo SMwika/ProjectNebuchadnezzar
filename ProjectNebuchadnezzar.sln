@@ -22,6 +22,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tester", "Tester\Tester.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerGUI", "ServerGUI\ServerGUI.csproj", "{E1D18584-6EEE-4B2A-8FBD-35509E88DC61}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConfigEditor", "ConfigEditor\ConfigEditor.csproj", "{F6AD5D3F-750B-4891-9353-D897816F6E7F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		CD_ROM|Any CPU = CD_ROM|Any CPU
@@ -111,6 +113,16 @@ Global
 		{E1D18584-6EEE-4B2A-8FBD-35509E88DC61}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E1D18584-6EEE-4B2A-8FBD-35509E88DC61}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
 		{E1D18584-6EEE-4B2A-8FBD-35509E88DC61}.SingleImage|Any CPU.Build.0 = Release|Any CPU
+		{F6AD5D3F-750B-4891-9353-D897816F6E7F}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
+		{F6AD5D3F-750B-4891-9353-D897816F6E7F}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
+		{F6AD5D3F-750B-4891-9353-D897816F6E7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6AD5D3F-750B-4891-9353-D897816F6E7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6AD5D3F-750B-4891-9353-D897816F6E7F}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6AD5D3F-750B-4891-9353-D897816F6E7F}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
+		{F6AD5D3F-750B-4891-9353-D897816F6E7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6AD5D3F-750B-4891-9353-D897816F6E7F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6AD5D3F-750B-4891-9353-D897816F6E7F}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
+		{F6AD5D3F-750B-4891-9353-D897816F6E7F}.SingleImage|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

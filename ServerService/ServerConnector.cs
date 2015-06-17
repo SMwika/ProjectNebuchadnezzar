@@ -73,6 +73,9 @@ namespace ServerService
 
         public void injectConfig()
         {
+            //var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            //config.Save(ConfigurationSaveMode.Modified);
+            ConfigurationManager.RefreshSection("appSettings");
             SharedClasses.ConfigPacket cp = new SharedClasses.ConfigPacket();
             cp.ServerIP = ConfigurationManager.AppSettings["injectServerIP"];
             cp.ServerPort = ConfigurationManager.AppSettings["injectServerPort"];
