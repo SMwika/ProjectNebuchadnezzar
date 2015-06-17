@@ -116,12 +116,13 @@ namespace ServerGUI
             this.tbDate.IsEnabled = false;
             this.tbFileHash.IsEnabled = false;
             this.tbFileName.IsEnabled = false;
-            this.tbFilePreview.IsEnabled = false;
+            this.tbFilePreview.IsEnabled = true;
             this.tbIpAddress.IsEnabled = false;
             this.tbIType.IsEnabled = false;
             this.tbOldFileName.IsEnabled = false;
             this.tbPacketID.IsEnabled = false;
             this.tbUserName.IsEnabled = false;
+            this.bInjectConfig.IsEnabled = false;
 
             this.lDate.Content = "Date: ";
             this.lFileHash.Content = "File hash: ";
