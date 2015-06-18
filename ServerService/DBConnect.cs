@@ -96,7 +96,9 @@ namespace ServerService
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
         private void ExecuteNonQuery(String query)
         {
+#if(DEBUG)
             Console.WriteLine(query);
+#endif
             //if (this.OpenConnection() == true)
             //{
             using(MySqlConnection conn = new MySqlConnection(connString))
@@ -331,7 +333,9 @@ namespace ServerService
         public List<PacketDB> GetFileRevisions(String name)
         {
             string query = String.Format("SELECT user, date, fileName, oldFileName, fileHash, iType, id_Packet, id_files, ip FROM packet WHERE fileName = '{0}' ORDER BY date DESC", name);
+#if(DEBUG)
             Console.WriteLine(query);
+#endif
             List<PacketDB> packets = new List<PacketDB>();
             using(MySqlConnection conn = new MySqlConnection(connString))
             using (MySqlCommand cmd = new MySqlCommand(query, conn))

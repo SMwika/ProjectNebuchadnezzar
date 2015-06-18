@@ -56,8 +56,8 @@ namespace ClientService
             System.IO.FileSystemWatcher watcher = null;
             System.String[] paths = System.Configuration.ConfigurationManager.AppSettings["folderPath"].Split(';');
             System.String[] filters = System.Configuration.ConfigurationManager.AppSettings["fileFilter"].Split(';');
-            System.Console.WriteLine(paths);
-            System.Console.WriteLine(filters);
+            //System.Console.WriteLine(paths);
+            //System.Console.WriteLine(filters);
             this.watchers = new System.Collections.Generic.List<System.IO.FileSystemWatcher>();
             foreach (System.String path in paths)
             {
@@ -125,7 +125,9 @@ namespace ClientService
                     sb.Append(b.ToString("x2"));
                 stream.Seek(0, System.IO.SeekOrigin.Begin);
                 stream.Close();
+#if(DEBUG)
                 System.Console.WriteLine("StreamClosed");
+#endif
             }
             return sb.ToString();
         }
@@ -219,7 +221,9 @@ namespace ClientService
         private void watcherDeleted(object sender, System.IO.FileSystemEventArgs e)
         {
             eventLog1.WriteEntry("Deleted file " + e.FullPath, System.Diagnostics.EventLogEntryType.Information);
+#if(DEBUG)
             System.Console.WriteLine("Deleted file " + e.FullPath);
+#endif
             this.SendObject(new Packet(getCurrentUser(), System.DateTime.Now, e.FullPath, "", WatcherInfoType.FILE_DELETED));
         }
 
@@ -236,7 +240,9 @@ namespace ClientService
         private void watcherRenamed(object sender, System.IO.RenamedEventArgs e)
         {
             eventLog1.WriteEntry("Renamed file " + e.OldFullPath + " to " + e.FullPath, System.Diagnostics.EventLogEntryType.Information);
+#if(DEBUG)
             System.Console.WriteLine("Renamed file " + e.OldFullPath + " to " + e.FullPath);
+#endif
             this.SendObject(new Packet(getCurrentUser(), System.DateTime.Now, e.FullPath, e.OldFullPath, GetFileHash(e.FullPath), WatcherInfoType.FILE_RENAMED));
         }
         #endregion

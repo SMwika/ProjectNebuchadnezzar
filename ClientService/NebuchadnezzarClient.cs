@@ -60,7 +60,9 @@ namespace ClientService
                     isConnected = false;
                     try
                     {
+#if(DEBUG)
                         Console.WriteLine("count: " + packetList.Count);
+#endif
                         this.sockfd = new System.Net.Sockets.Socket(System.Net.Sockets.AddressFamily.InterNetwork,
                             System.Net.Sockets.SocketType.Stream, System.Net.Sockets.ProtocolType.Tcp);
                         this.sockfd.Connect(remoteEP);
@@ -69,20 +71,26 @@ namespace ClientService
                         sockfd.Receive(buf);
                         if (buf.SequenceEqual(new byte[] { 0xFF, 0xFE, 0xFD }))
                         {
+#if(DEBUG)
                             Console.WriteLine("Cannot connect: Server refuses connection from this IP");
+#endif
                             return;
                         }
                         sockfd.ReceiveTimeout = 0;
                         isConnected = true;
                         before = false;
+#if(DEBUG)
                         Console.WriteLine("Connected!");
+#endif
                         this.SendPacketList(packetList);
                     }
                     catch (Exception e)
                     {
                         this.sockfd = null;
                         eventLog1.WriteEntry("Cannot connect to server. Still trying...", EventLogEntryType.Warning);
+#if(DEBUG)
                         Console.WriteLine("Cannot connect to server. Still trying...");
+#endif
                     }
                 }
                 else
@@ -100,7 +108,9 @@ namespace ClientService
                          * <add key="serialNumber" value="b7337eee-d172-4cc7-a9eb-c180662aa950"/>
                          * 
                          */
+#if(DEBUG)
                         Console.WriteLine(cp.ToString());
+#endif
                         var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
                         config.AppSettings.Settings["serverIP"].Value = cp.ServerIP;
                         config.AppSettings.Settings["serverPort"].Value = cp.ServerPort;
@@ -112,17 +122,21 @@ namespace ClientService
 
                         ConfigurationManager.RefreshSection("appSettings");
                         //InitWatchers();
+#if(DEBUG)
                         Console.WriteLine("New configuration injected - restarting Service");
+#endif
                         eventLog1.WriteEntry("New configuration injected - restarting Service", EventLogEntryType.Information);
                         OnStop();
                         Environment.Exit(1);
                     }
+#if(DEBUG)
                     Console.WriteLine("Already connected");
+#endif
                 }
                 Thread.Sleep(1000 * 3);
             }
-            Console.WriteLine("Connection Worker ended successfully");
-            this.SendPacketList(packetList);
+            //Console.WriteLine("Connection Worker ended successfully");
+            //this.SendPacketList(packetList);
             
         }
         #endregion
