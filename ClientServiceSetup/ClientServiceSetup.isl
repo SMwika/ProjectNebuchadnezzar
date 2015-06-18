@@ -253,7 +253,6 @@
 		<col def="S255">ISBuildSourcePath</col>
 		<row><td>ISExpHlp.dll</td><td/><td>&lt;ISRedistPlatformDependentFolder&gt;\ISExpHlp.dll</td></row>
 		<row><td>ISSELFREG.DLL</td><td/><td>&lt;ISRedistPlatformDependentFolder&gt;\isregsvr.dll</td></row>
-		<row><td>ISSetupFilesHelper</td><td/><td>&lt;ISRedistPlatformDependentFolder&gt;\SFHelper.dll</td></row>
 		<row><td>NewBinary1</td><td/><td>&lt;ISProductFolder&gt;\Support\Themes\InstallShield Blue Theme\banner.jpg</td></row>
 		<row><td>NewBinary10</td><td/><td>&lt;ISProductFolder&gt;\Redist\Language Independent\OS Independent\CompleteSetupIco.ibd</td></row>
 		<row><td>NewBinary11</td><td/><td>&lt;ISProductFolder&gt;\Redist\Language Independent\OS Independent\CustomSetupIco.ibd</td></row>
@@ -343,10 +342,12 @@
 		<col def="S0">ISDotNetInstallerArgsCommit</col>
 		<col def="S0">ISDotNetInstallerArgsUninstall</col>
 		<col def="S0">ISDotNetInstallerArgsRollback</col>
-		<row><td>ClientService.exe</td><td>{E0880241-1521-4313-ABFA-5CE2DC0D152A}</td><td>INSTALLDIR</td><td>2</td><td/><td>clientservice.exe</td><td>81</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>ConfigEditor.exe</td><td>{50A840CD-8C15-4900-80CE-D16541FF73B2}</td><td>INSTALLDIR</td><td>2</td><td/><td>configeditor.exe</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>ClientService.exe</td><td>{8F9F966F-64DC-4FAF-85D7-A61F20695CCB}</td><td>INSTALLDIR</td><td>2</td><td/><td>clientservice.exe</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>ClientService.vshost.exe</td><td>{73EA4E0F-D43E-441F-919C-7BDE0AF25289}</td><td>INSTALLDIR</td><td>2</td><td/><td>clientservice.vshost.exe</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>ConfigEditor.exe</td><td>{9D786434-4AC7-409C-865C-9DE96AC7D025}</td><td>INSTALLDIR</td><td>2</td><td/><td>configeditor.exe</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ISX_DEFAULTCOMPONENT</td><td>{79F45694-12C3-4902-A473-BEA783961562}</td><td>INSTALLDIR</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>NewComponent1</td><td>{6478D967-F604-46AC-B705-546802B2D722}</td><td>INSTALLDIR</td><td>2</td><td/><td/><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>SharedClasses.dll</td><td>{9C199BCB-4258-49F3-B25B-FDC4EA72BF3B}</td><td>INSTALLDIR</td><td>2</td><td/><td>sharedclasses.dll</td><td>17</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 	</table>
 
 	<table name="Condition">
@@ -904,7 +905,6 @@
 		<row><td>AdminWelcome</td><td>Next</td><td>NewDialog</td><td>AdminNetworkLocation</td><td>1</td><td>0</td></row>
 		<row><td>CancelSetup</td><td>No</td><td>EndDialog</td><td>Return</td><td>1</td><td>0</td></row>
 		<row><td>CancelSetup</td><td>Yes</td><td>DoAction</td><td>CleanUp</td><td>ISSCRIPTRUNNING="1"</td><td>1</td></row>
-		<row><td>CancelSetup</td><td>Yes</td><td>DoAction</td><td>ISSetupFilesCleanup</td><td>1</td><td>200</td></row>
 		<row><td>CancelSetup</td><td>Yes</td><td>EndDialog</td><td>Exit</td><td>1</td><td>2</td></row>
 		<row><td>CustomSetup</td><td>Back</td><td>NewDialog</td><td>CustomerInformation</td><td>NOT Installed</td><td>0</td></row>
 		<row><td>CustomSetup</td><td>Back</td><td>NewDialog</td><td>MaintenanceType</td><td>Installed</td><td>0</td></row>
@@ -1014,11 +1014,9 @@
 		<row><td>SetupCompleteError</td><td>Cancel</td><td>EndDialog</td><td>Return</td><td>1</td><td>2</td></row>
 		<row><td>SetupCompleteError</td><td>Cancel</td><td>[Suspend]</td><td>1</td><td>1</td><td>1</td></row>
 		<row><td>SetupCompleteError</td><td>Finish</td><td>DoAction</td><td>CleanUp</td><td>ISSCRIPTRUNNING="1"</td><td>1</td></row>
-		<row><td>SetupCompleteError</td><td>Finish</td><td>DoAction</td><td>ISSetupFilesCleanup</td><td>1</td><td>200</td></row>
 		<row><td>SetupCompleteError</td><td>Finish</td><td>DoAction</td><td>ShowMsiLog</td><td>MsiLogFileLocation And (ISSHOWMSILOG="1")</td><td>3</td></row>
 		<row><td>SetupCompleteError</td><td>Finish</td><td>EndDialog</td><td>Exit</td><td>1</td><td>2</td></row>
 		<row><td>SetupCompleteSuccess</td><td>OK</td><td>DoAction</td><td>CleanUp</td><td>ISSCRIPTRUNNING="1"</td><td>1</td></row>
-		<row><td>SetupCompleteSuccess</td><td>OK</td><td>DoAction</td><td>ISSetupFilesCleanup</td><td>1</td><td>201</td></row>
 		<row><td>SetupCompleteSuccess</td><td>OK</td><td>DoAction</td><td>LaunchProgramFileFromSetupCompleteSuccess</td><td>LAUNCHPROGRAM And PROGRAMFILETOLAUNCHATEND &lt;&gt; "" And NOT Installed</td><td>2</td></row>
 		<row><td>SetupCompleteSuccess</td><td>OK</td><td>DoAction</td><td>ShowMsiLog</td><td>MsiLogFileLocation And (ISSHOWMSILOG="1") And NOT ISENABLEDWUSFINISHDIALOG</td><td>7</td></row>
 		<row><td>SetupCompleteSuccess</td><td>OK</td><td>EndDialog</td><td>Exit</td><td>1</td><td>3</td></row>
@@ -1035,7 +1033,6 @@
 		<row><td>SetupInterrupted</td><td>Cancel</td><td>EndDialog</td><td>Exit</td><td>1</td><td>2</td></row>
 		<row><td>SetupInterrupted</td><td>Cancel</td><td>[Suspend]</td><td>1</td><td>1</td><td>1</td></row>
 		<row><td>SetupInterrupted</td><td>Finish</td><td>DoAction</td><td>CleanUp</td><td>ISSCRIPTRUNNING="1"</td><td>1</td></row>
-		<row><td>SetupInterrupted</td><td>Finish</td><td>DoAction</td><td>ISSetupFilesCleanup</td><td>1</td><td>200</td></row>
 		<row><td>SetupInterrupted</td><td>Finish</td><td>DoAction</td><td>ShowMsiLog</td><td>MsiLogFileLocation And (ISSHOWMSILOG="1")</td><td>3</td></row>
 		<row><td>SetupInterrupted</td><td>Finish</td><td>EndDialog</td><td>Exit</td><td>1</td><td>2</td></row>
 		<row><td>SetupProgress</td><td>Cancel</td><td>SpawnDialog</td><td>CancelSetup</td><td>1</td><td>0</td></row>
@@ -1076,8 +1073,6 @@
 		<row><td>ISSelfRegisterCosting</td><td>1</td><td>ISSELFREG.DLL</td><td>ISSelfRegisterCosting</td><td/><td/></row>
 		<row><td>ISSelfRegisterFiles</td><td>3073</td><td>ISSELFREG.DLL</td><td>ISSelfRegisterFiles</td><td/><td/></row>
 		<row><td>ISSelfRegisterFinalize</td><td>1</td><td>ISSELFREG.DLL</td><td>ISSelfRegisterFinalize</td><td/><td/></row>
-		<row><td>ISSetupFilesCleanup</td><td>257</td><td>ISSetupFilesHelper</td><td>SFCleanupEx</td><td/><td/></row>
-		<row><td>ISSetupFilesExtract</td><td>257</td><td>ISSetupFilesHelper</td><td>SFStartupEx</td><td/><td/></row>
 		<row><td>ISUnSelfRegisterFiles</td><td>3073</td><td>ISSELFREG.DLL</td><td>ISUnSelfRegisterFiles</td><td/><td/></row>
 		<row><td>LaunchProgramFileFromSetupCompleteSuccess</td><td>1</td><td>NewBinary20</td><td>LaunchProgram</td><td/><td/></row>
 		<row><td>SetARPINSTALLLOCATION</td><td>51</td><td>ARPINSTALLLOCATION</td><td>[INSTALLDIR]</td><td/><td/></row>
@@ -1879,9 +1874,11 @@
 		<col key="yes" def="s38">Feature_</col>
 		<col key="yes" def="s72">Component_</col>
 		<row><td>AlwaysInstall</td><td>ClientService.exe</td></row>
+		<row><td>AlwaysInstall</td><td>ClientService.vshost.exe</td></row>
 		<row><td>AlwaysInstall</td><td>ConfigEditor.exe</td></row>
 		<row><td>AlwaysInstall</td><td>ISX_DEFAULTCOMPONENT</td></row>
 		<row><td>AlwaysInstall</td><td>NewComponent1</td></row>
+		<row><td>AlwaysInstall</td><td>SharedClasses.dll</td></row>
 	</table>
 
 	<table name="File">
@@ -1896,10 +1893,18 @@
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="I4">ISAttributes</col>
 		<col def="S72">ISComponentSubFolder_</col>
-		<row><td>clientservice.exe</td><td>ClientService.exe</td><td>CLIENT~1.EXE|ClientService.exe</td><td>0</td><td/><td/><td>0</td><td>1</td><td>C:\Users\Jakub\Documents\Visual Studio 2013\Projects\ProjectNebuchadnezzar\ClientService\bin\Debug\ClientService.exe</td><td>1</td><td/></row>
-		<row><td>clientservice.exe.config</td><td>ISX_DEFAULTCOMPONENT</td><td>CLIENT~1.CON|ClientService.exe.config</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Users\Jakub\Documents\Visual Studio 2013\Projects\ProjectNebuchadnezzar\ClientService\bin\Debug\ClientService.exe.config</td><td>1</td><td/></row>
-		<row><td>configeditor.exe</td><td>ConfigEditor.exe</td><td>CONFIG~1.EXE|ConfigEditor.exe</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Users\Jakub\Documents\Visual Studio 2013\Projects\ProjectNebuchadnezzar\ConfigEditor\bin\Debug\ConfigEditor.exe</td><td>1</td><td/></row>
-		<row><td>configeditor.exe.config</td><td>ISX_DEFAULTCOMPONENT</td><td>CONFIG~1.CON|ConfigEditor.exe.config</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Users\Jakub\Documents\Visual Studio 2013\Projects\ProjectNebuchadnezzar\ConfigEditor\bin\Debug\ConfigEditor.exe.config</td><td>1</td><td/></row>
+		<row><td>clientservice.application</td><td>ISX_DEFAULTCOMPONENT</td><td>CLIENT~1.APP|ClientService.application</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Users\Jakub\Documents\Visual Studio 2013\Projects\ProjectNebuchadnezzar\ClientService\bin\Release\ClientService.application</td><td>1</td><td/></row>
+		<row><td>clientservice.exe</td><td>ClientService.exe</td><td>CLIENT~1.EXE|ClientService.exe</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Users\Jakub\Documents\Visual Studio 2013\Projects\ProjectNebuchadnezzar\ClientService\bin\Release\ClientService.exe</td><td>1</td><td/></row>
+		<row><td>clientservice.exe.config</td><td>ISX_DEFAULTCOMPONENT</td><td>CLIENT~1.CON|ClientService.exe.config</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Users\Jakub\Documents\Visual Studio 2013\Projects\ProjectNebuchadnezzar\ClientService\bin\Release\ClientService.exe.config</td><td>1</td><td/></row>
+		<row><td>clientservice.exe.manifest</td><td>ISX_DEFAULTCOMPONENT</td><td>CLIENT~1.MAN|ClientService.exe.manifest</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Users\Jakub\Documents\Visual Studio 2013\Projects\ProjectNebuchadnezzar\ClientService\bin\Release\ClientService.exe.manifest</td><td>1</td><td/></row>
+		<row><td>clientservice.pdb</td><td>ISX_DEFAULTCOMPONENT</td><td>CLIENT~1.PDB|ClientService.pdb</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Users\Jakub\Documents\Visual Studio 2013\Projects\ProjectNebuchadnezzar\ClientService\bin\Release\ClientService.pdb</td><td>1</td><td/></row>
+		<row><td>clientservice.vshost.exe</td><td>ClientService.vshost.exe</td><td>CLIENT~1.EXE|ClientService.vshost.exe</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Users\Jakub\Documents\Visual Studio 2013\Projects\ProjectNebuchadnezzar\ClientService\bin\Release\ClientService.vshost.exe</td><td>1</td><td/></row>
+		<row><td>clientservice.vshost.exe.con</td><td>ISX_DEFAULTCOMPONENT</td><td>CLIENT~1.CON|ClientService.vshost.exe.config</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Users\Jakub\Documents\Visual Studio 2013\Projects\ProjectNebuchadnezzar\ClientService\bin\Release\ClientService.vshost.exe.config</td><td>1</td><td/></row>
+		<row><td>configeditor.exe</td><td>ConfigEditor.exe</td><td>CONFIG~1.EXE|ConfigEditor.exe</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Users\Jakub\Documents\Visual Studio 2013\Projects\ProjectNebuchadnezzar\ConfigEditor\bin\Release\ConfigEditor.exe</td><td>1</td><td/></row>
+		<row><td>configeditor.exe.config</td><td>ISX_DEFAULTCOMPONENT</td><td>CONFIG~1.CON|ConfigEditor.exe.config</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Users\Jakub\Documents\Visual Studio 2013\Projects\ProjectNebuchadnezzar\ConfigEditor\bin\Release\ConfigEditor.exe.config</td><td>1</td><td/></row>
+		<row><td>configeditor.pdb</td><td>ISX_DEFAULTCOMPONENT</td><td>CONFIG~1.PDB|ConfigEditor.pdb</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Users\Jakub\Documents\Visual Studio 2013\Projects\ProjectNebuchadnezzar\ConfigEditor\bin\Release\ConfigEditor.pdb</td><td>1</td><td/></row>
+		<row><td>sharedclasses.dll</td><td>SharedClasses.dll</td><td>SHARED~1.DLL|SharedClasses.dll</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Users\Jakub\Documents\Visual Studio 2013\Projects\ProjectNebuchadnezzar\ClientService\bin\Release\SharedClasses.dll</td><td>1</td><td/></row>
+		<row><td>sharedclasses.pdb</td><td>ISX_DEFAULTCOMPONENT</td><td>SHARED~1.PDB|SharedClasses.pdb</td><td>0</td><td/><td/><td/><td>1</td><td>C:\Users\Jakub\Documents\Visual Studio 2013\Projects\ProjectNebuchadnezzar\ClientService\bin\Release\SharedClasses.pdb</td><td>1</td><td/></row>
 	</table>
 
 	<table name="FileSFPCatalog">
@@ -2043,10 +2048,12 @@
 		<col def="S0">FTPLocation</col>
 		<col def="S0">HTTPLocation</col>
 		<col def="S0">Miscellaneous</col>
-		<row><td>ClientService.exe</td><td/><td/><td>_8EE953DB_A876_4637_A7AA_21DD1CC67045_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>ConfigEditor.exe</td><td/><td/><td>_62297B79_F725_4701_ADB2_889D292E8AA0_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>ClientService.exe</td><td/><td/><td>_B01901AD_C98E_49C2_8C15_97A5DEBC2851_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>ClientService.vshost.exe</td><td/><td/><td>_213CCDBF_B6F6_4A92_AF11_02C103C227C1_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>ConfigEditor.exe</td><td/><td/><td>_358ACEA8_CD6A_4028_A848_6301813E32E5_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>ISX_DEFAULTCOMPONENT</td><td/><td/><td>_7C1EFAB2_F6B3_4F9C_A45E_B75DB6825521_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>NewComponent1</td><td/><td/><td>_58CAFFC7_87E5_414C_8668_C99829E621AF_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>SharedClasses.dll</td><td/><td/><td>_F7982694_53C7_4E57_982E_25C802254398_FILTER</td><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="ISCustomActionReference">
@@ -2423,7 +2430,7 @@
 		<row><td>DVD-18</td><td>Express</td><td>&lt;ISProjectDataFolder&gt;</td><td>Default</td><td>3</td><td>1033</td><td>0</td><td>2</td><td>Intel</td><td/><td>1033</td><td>0</td><td>15.83</td><td>1</td><td>2048</td><td/><td>0</td><td/><td>MediaLocation</td><td/><td>http://</td><td/><td/><td/><td/><td>75805</td><td/><td/><td/><td>3</td></row>
 		<row><td>DVD-5</td><td>Express</td><td>&lt;ISProjectDataFolder&gt;</td><td>Default</td><td>3</td><td>1033</td><td>0</td><td>2</td><td>Intel</td><td/><td>1033</td><td>0</td><td>4.38</td><td>1</td><td>2048</td><td/><td>0</td><td/><td>MediaLocation</td><td/><td>http://</td><td/><td/><td/><td/><td>75805</td><td/><td/><td/><td>3</td></row>
 		<row><td>DVD-9</td><td>Express</td><td>&lt;ISProjectDataFolder&gt;</td><td>Default</td><td>3</td><td>1033</td><td>0</td><td>2</td><td>Intel</td><td/><td>1033</td><td>0</td><td>7.95</td><td>1</td><td>2048</td><td/><td>0</td><td/><td>MediaLocation</td><td/><td>http://</td><td/><td/><td/><td/><td>75805</td><td/><td/><td/><td>3</td></row>
-		<row><td>SingleImage</td><td>Express</td><td>&lt;ISProjectDataFolder&gt;</td><td>PackageName</td><td>1</td><td>1033</td><td>0</td><td>1</td><td>Intel</td><td/><td>1033</td><td>0</td><td>0</td><td>0</td><td>0</td><td/><td>0</td><td/><td>MediaLocation</td><td/><td>http://</td><td/><td/><td/><td/><td>108701</td><td/><td/><td/><td>3</td></row>
+		<row><td>SingleImage</td><td>Express</td><td>D:\appDeploy\NebuchadnezzarSystem\ClientInstaller</td><td>PackageName</td><td>1</td><td>1033</td><td>0</td><td>1</td><td>Intel</td><td/><td>1033</td><td>0</td><td>0</td><td>0</td><td>0</td><td/><td>0</td><td/><td>MediaLocation</td><td/><td>http://</td><td/><td/><td/><td/><td>108701</td><td/><td/><td/><td>3</td></row>
 		<row><td>WebDeployment</td><td>Express</td><td>&lt;ISProjectDataFolder&gt;</td><td>PackageName</td><td>4</td><td>1033</td><td>2</td><td>1</td><td>Intel</td><td/><td>1033</td><td>0</td><td>0</td><td>0</td><td>0</td><td/><td>0</td><td/><td>MediaLocation</td><td/><td>http://</td><td/><td/><td/><td/><td>124941</td><td/><td/><td/><td>3</td></row>
 	</table>
 
@@ -2625,7 +2632,6 @@
 		<col def="S50">Language</col>
 		<col def="I2">Splash</col>
 		<col def="S0">Path</col>
-		<row><td>_isconfig.xml</td><td>_isconfig.xml</td><td/><td>0</td><td>0</td><td>&lt;ISProjectDataFolder&gt;\_isconfig.xml</td></row>
 	</table>
 
 	<table name="ISSetupPrerequisites">
@@ -3928,8 +3934,6 @@
 		<row><td>ISSelfRegisterCosting</td><td/><td>2201</td><td/><td/></row>
 		<row><td>ISSelfRegisterFiles</td><td/><td>5601</td><td/><td/></row>
 		<row><td>ISSelfRegisterFinalize</td><td/><td>6601</td><td/><td/></row>
-		<row><td>ISSetupFilesCleanup</td><td>UILevel &lt; 5</td><td>6602</td><td/><td/></row>
-		<row><td>ISSetupFilesExtract</td><td/><td>3</td><td/><td/></row>
 		<row><td>ISUnSelfRegisterFiles</td><td/><td>2202</td><td/><td/></row>
 		<row><td>InstallFiles</td><td/><td>4000</td><td>InstallFiles</td><td/></row>
 		<row><td>InstallFinalize</td><td/><td>6600</td><td>InstallFinalize</td><td/></row>
@@ -4049,8 +4053,6 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<row><td>FileCost</td><td/><td>900</td><td>FileCost</td><td/></row>
 		<row><td>FindRelatedProducts</td><td/><td>430</td><td>FindRelatedProducts</td><td/></row>
 		<row><td>ISPreventDowngrade</td><td>ISFOUNDNEWERPRODUCTVERSION</td><td>450</td><td>ISPreventDowngrade</td><td/></row>
-		<row><td>ISSetupFilesCleanup</td><td>UILevel &lt; 5</td><td>1301</td><td/><td/></row>
-		<row><td>ISSetupFilesExtract</td><td/><td>3</td><td/><td/></row>
 		<row><td>InstallWelcome</td><td>Not Installed</td><td>1210</td><td>InstallWelcome</td><td/></row>
 		<row><td>IsolateComponents</td><td/><td>950</td><td>IsolateComponents</td><td/></row>
 		<row><td>LaunchConditions</td><td>Not Installed</td><td>410</td><td>LaunchConditions</td><td/></row>
@@ -4477,8 +4479,6 @@ UwBpAG4AZwBsAGUASQBtAGEAZwBlAAEARQB4AHAAcgBlAHMAcwA=
 		<col def="L255">FileName</col>
 		<col def="s72">DirProperty</col>
 		<col def="i2">InstallMode</col>
-		<row><td>FileKey1</td><td>ClientService.exe</td><td/><td>company_name</td><td>2</td></row>
-		<row><td>FileKey2</td><td>ClientService.exe</td><td/><td>nebuch_1_nebuchadnezzar_monitoring_system_client</td><td>2</td></row>
 		<row><td>UNINST_Uninstall_Nebuchadnezzar_Monitoring_System_Client</td><td>NewComponent1</td><td/><td>nebuch_1_nebuchadnezzar_monitoring_system_client</td><td>2</td></row>
 	</table>
 

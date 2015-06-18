@@ -7,6 +7,9 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace SharedClasses
 {
+    /// <summary>
+    /// Serializable packet to transmit primary informations about Client events
+    /// </summary>
     [Serializable()]
     public class Packet
     {

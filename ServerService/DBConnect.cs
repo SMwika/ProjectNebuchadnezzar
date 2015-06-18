@@ -9,6 +9,9 @@ using SharedClasses;
 
 namespace ServerService
 {
+    /// <summary>
+    /// DataBase wrapper class
+    /// </summary>
     class DBConnect
     {
         private MySqlConnection conn;
@@ -72,60 +75,31 @@ namespace ServerService
             }
         }
 
-
-
-        public List<string>[] getGagdets()
-        {
-            return list;
-        }
-
-        public List<string>[] getCurrencies()
-        {
-            return currencies;
-        }
-
-        public List<string>[] getShops()
-        {
-            return shops;
-        }
-
-        /*
-         * name, price_int, link, category, currency, image_link, shop
-         */
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
+        /// <summary>
+        /// executes the given query on DBMS
+        /// </summary>
+        /// <param name="query">query to execute</param>
         private void ExecuteNonQuery(String query)
         {
 #if(DEBUG)
             Console.WriteLine(query);
 #endif
-            //if (this.OpenConnection() == true)
-            //{
             using(MySqlConnection conn = new MySqlConnection(connString))
             using (MySqlCommand cmd = new MySqlCommand(query, conn))
             {
                 conn.Open();
-                //MySqlCommand cmd = new MySqlCommand(query, conn);
                 cmd.ExecuteNonQuery();
             }
-                
-
-                //this.CloseConnection();
-            //}
         }
 
-        public void AddShop(String sname)
-        {
-            string query = String.Format("INSERT INTO shops(sname) VALUES('{0}');", sname);
-            this.ExecuteNonQuery(query);
-        }
-
-
+        /// <summary>
+        /// add file content record to DB
+        /// </summary>
+        /// <param name="content">content of the file to be written</param>
+        /// <returns></returns>
         private int addFiles(String content)
         {
            int id = 0;
-           //if (this.OpenConnection() == true)
-           //{
            using (MySqlConnection conn = new MySqlConnection(connString))
            {
                conn.Open();
@@ -147,10 +121,13 @@ namespace ServerService
            }
            return id;
         }
-
+        /// <summary>
+        /// add monitoring event to DB
+        /// </summary>
+        /// <param name="p">Packet object containing information about event</param>
+        /// <param name="ip">IP address of event sender</param>
         public void addPacket(Packet p, String ip)
         {
-          //  Console.WriteLine(addFiles("alejajaa"));
             int id_file = -666;
             string query;
             if (p.IType == WatcherInfoType.FILE_CREATED | p.IType == WatcherInfoType.FILE_CHANGED)
@@ -171,38 +148,25 @@ namespace ServerService
             }
             this.ExecuteNonQuery(query);
         }
-
+        /// <summary>
+        /// add log message to DB
+        /// </summary>
+        /// <param name="mess">message content</param>
+        /// <param name="type">message type</param>
         public void addLogs(String mess, int type)
         {
             string query = String.Format("INSERT INTO logs(message, date, type) VALUES ('" + mess + "','" + System.DateTime.Now + "', {0})", type);
             this.ExecuteNonQuery(query);
         }
-
+        /// <summary>
+        /// <see cref="addLogs(String mess, int type)"/>
+        /// </summary>
+        /// <param name="mess"></param>
         public void addLogs(String mess)
         {
             addLogs(mess, 0);
         }
-
-        public void Insert(List<String> ins)
-        {
-            string query = String.Format("INSERT INTO gadgetList(gname, price_int, link, category, cash_curr, image_link, shop, promote, shop_id) VALUES('{0}', {1}, '{2}', {3}, {4}, '{5}', '{6}', {7}, {8});", ins[0], ins[1], ins[2], ins[3], ins[4], ins[5], ins[6], ins[7], ins[8]);
-
-            this.ExecuteNonQuery(query);
-        }
-        public void Update(List<String> upd, string id)
-        {
-            string query = String.Format("UPDATE gadgetList SET gname='{0}', price_int={1}, link='{2}', category={3}, cash_curr={4}, image_link='{5}', shop='{6}', promote={8}, shop_id={9} WHERE id={7};", upd[0], upd[1], upd[2], upd[3], upd[4], upd[5], upd[6], id, upd[7], upd[8]);
-
-            this.ExecuteNonQuery(query);
-        }
-
-        public void Delete(string id)
-        {
-            string query = String.Format("DELETE FROM gadgetList WHERE id={0};", id);
-
-            this.ExecuteNonQuery(query);
-        }
-
+        
         public List<String> GetLogsFirstID(int fid)
         {
             List<String> logs = new List<String>();
@@ -210,6 +174,12 @@ namespace ServerService
             return logs;
         }
 
+        /// <summary>
+        /// gets all logs (or log by given ID) from DB
+        /// used in GUI Log list
+        /// </summary>
+        /// <param name="id">id of given log (or -1 to get all logs)</param>
+        /// <returns></returns>
         public List<String> GetAllLogs(int id)
         {
             string query;
@@ -233,7 +203,12 @@ namespace ServerService
             }
             return logs;
         }
-
+        /// <summary>
+        /// checks the given hash in DB for plagiarism detecion
+        /// extension method
+        /// </summary>
+        /// <param name="hash">hash of checked file</param>
+        /// <returns></returns>
         private bool CheckIfLastDateByHashCouldBePlagiarism(String hash)
         {
             DateTime dtNow = DateTime.Now;
@@ -258,7 +233,11 @@ namespace ServerService
 
             return false;
         }
-
+        /// <summary>
+        /// checks the given hash in DB for plagiarism detecion
+        /// </summary>
+        /// <param name="hash">hash of checked file</param>
+        /// <returns></returns>
         public bool LookForPlagiarism(String hash)
         {
             string query = String.Format("SELECT COUNT(*) FROM packet WHERE filehash = '{0}'", hash);
@@ -289,7 +268,12 @@ namespace ServerService
         }
 
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
+        /// <summary>
+        /// gets unique file names from DB
+        /// <seealso cref="SharedClasses.PacketDB"/>
+        /// </summary>
+        /// <param name="date">date to check (if "NO_DATE" - it gets all file names</param>
+        /// <returns>List of PacketDB objects</returns>
         public List<PacketDB> GetUniqueFileNames(String date)
         {
             string query;
@@ -329,7 +313,11 @@ namespace ServerService
             return packets;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
+        /// <summary>
+        /// gets file revisions of given file name
+        /// </summary>
+        /// <param name="name">file name to check</param>
+        /// <returns>list of PacketDB objects</returns>
         public List<PacketDB> GetFileRevisions(String name)
         {
             string query = String.Format("SELECT user, date, fileName, oldFileName, fileHash, iType, id_Packet, id_files, ip FROM packet WHERE fileName = '{0}' ORDER BY date DESC", name);
@@ -362,7 +350,11 @@ namespace ServerService
             }
             return packets;
         }
-
+        /// <summary>
+        /// gets the last revision id of the given file name
+        /// </summary>
+        /// <param name="name">file name to check</param>
+        /// <returns>id of the file</returns>
         public int GetLastRevisionID(String name)
         {
             List<PacketDB> list = GetFileRevisions(name);
@@ -370,7 +362,11 @@ namespace ServerService
             return id;
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
+        /// <summary>
+        /// gets file contents from databaase
+        /// </summary>
+        /// <param name="id">ID of the file</param>
+        /// <returns>String containing contents of the file</returns>
         public String GetFileContents(int id)
         {
             string query = String.Format("SELECT content FROM files WHERE id_files = '{0}'", id);
@@ -390,85 +386,13 @@ namespace ServerService
             return content;            
         }
 
+        /// <summary>
+        /// <see cref="GetUniqueFileNames(String date)"/>
+        /// </summary>
+        /// <returns></returns>
         public List<PacketDB> GetUniqueFileNames()
         {
             return GetUniqueFileNames("NO_DATE");
-        }
-        public int Select()
-        {
-            //string query = "SELECT * FROM gadgetList";
-            string query = "SELECT g.id, gname, price_int, link, category, shop, sname, currency, image_link, promote FROM gadgetList g INNER JOIN currencies c ON g.cash_curr = c.id INNER JOIN shops s ON g.shop_id = s.id_shop ORDER BY gname ASC;";
-            string queryCurrency = "SELECT * FROM currencies";
-            string queryShop = "SELECT * FROM shops";
-            list = new List<string>[9];
-            list[0] = new List<string>();
-            list[1] = new List<string>();
-            list[2] = new List<string>();
-            list[3] = new List<string>();
-            list[4] = new List<string>();
-            list[5] = new List<string>();
-            list[6] = new List<string>();
-            list[7] = new List<string>();
-            list[8] = new List<string>();
-            currencies = new List<string>[2];
-            currencies[0] = new List<string>();
-            currencies[1] = new List<string>();
-            shops = new List<string>[2];
-            shops[0] = new List<string>();
-            shops[1] = new List<string>();
-
-
-            if (this.OpenConnection() == true)
-            {
-                MySqlCommand cmd = new MySqlCommand(query, conn);
-                MySqlDataReader dataReader = cmd.ExecuteReader();
-
-                while (dataReader.Read())
-                {
-                    list[0].Add(dataReader["id"] + "");
-                    list[1].Add(dataReader["gname"] + "");
-                    list[2].Add(dataReader["price_int"] + "");
-                    list[3].Add(dataReader["link"] + "");
-                    list[4].Add(dataReader["category"] + "");
-                    list[5].Add(dataReader["currency"] + "");
-                    list[6].Add(dataReader["image_link"] + "");
-                    list[7].Add(dataReader["sname"] + "");
-                    list[8].Add(dataReader["promote"] + "");
-                }
-
-                dataReader.Close();
-
-                cmd = new MySqlCommand(queryCurrency, conn);
-                dataReader = cmd.ExecuteReader();
-
-                while (dataReader.Read())
-                {
-                    currencies[0].Add(dataReader["id"] + "");
-                    currencies[1].Add(dataReader["currency"] + "");
-                }
-
-                dataReader.Close();
-
-                cmd = new MySqlCommand(queryShop, conn);
-                dataReader = cmd.ExecuteReader();
-
-                while (dataReader.Read())
-                {
-                    shops[0].Add(dataReader["id_shop"] + "");
-                    shops[1].Add(dataReader["sname"] + "");
-                }
-
-                dataReader.Close();
-
-                this.CloseConnection();
-
-                return 1;
-            }
-            else
-            {
-                return 0;
-            }
-
         }
 
     }

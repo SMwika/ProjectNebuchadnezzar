@@ -31,7 +31,11 @@ namespace ServerAppBeta
         private string data = null;
         private Packet pck;
         private Socket handler;
-
+        /// <summary>
+        /// Method for receiving serialized object from socket
+        /// </summary>
+        /// <param name="sock">receiving socket</param>
+        /// <returns>deserialized object from stream</returns>
         private object ReceiveObject(Socket sock){
             if (!sock.Connected) return null;
             NetworkStream stream = new NetworkStream(sock);
@@ -41,7 +45,7 @@ namespace ServerAppBeta
                 object o = (object)formatter.Deserialize(stream);
                 return o;
             }
-            catch(SocketException se){
+            catch(SocketException){
                 Console.WriteLine("Exception socket");
             }
             return null;

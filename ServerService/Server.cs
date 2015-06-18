@@ -15,6 +15,9 @@ using System.ServiceModel;
 
 namespace ServerService
 {
+    /// <summary>
+    /// Main server class
+    /// </summary>
     class Server
     {
         private Thread _connectionThread;
@@ -27,7 +30,10 @@ namespace ServerService
 
         private String ip = ConfigurationManager.AppSettings["listenerIP"];//"127.0.0.1";
         private int port = Convert.ToInt32(ConfigurationManager.AppSettings["listenerPort"]);//9191;
-
+        /// <summary>
+        /// prepares distributed configuration injection to connected threads
+        /// </summary>
+        /// <param name="cp">configuraton to be injected</param>
         public static void InjectClientsConfiguration(ConfigPacket cp)
         {
             foreach (Thread t in threadsList)
@@ -38,14 +44,24 @@ namespace ServerService
                 configInjects.Add(t, cp);
             }
         }
-
+        /// <summary>
+        /// Serializes and sends given object via NetworkStream
+        /// <seealso cref="System.Net.Sockets.NetworkStream"/>
+        /// </summary>
+        /// <param name="o">given object</param>
+        /// <param name="s">socket to write to</param>
         private void SendObject(object o, Socket s)
         {
             IFormatter formatter = new BinaryFormatter();
             System.Net.Sockets.NetworkStream stream = new System.Net.Sockets.NetworkStream(s);
             formatter.Serialize(stream, o);
         }
-
+        /// <summary>
+        /// polls socket if endpoint is available
+        /// <seealso cref="System.Net.Sockets.Socket"/>
+        /// </summary>
+        /// <param name="s">socket to check</param>
+        /// <returns></returns>
         private bool IsSocketConnected(System.Net.Sockets.Socket s)
         {
             if (s == null) return false;
@@ -54,7 +70,12 @@ namespace ServerService
             if (poll && avail) return false;
             else return true;
         }
-
+        /// <summary>
+        /// receives serialized object from given NetworkStream
+        /// <seealso cref="System.Net.Sockets.NetworkStream"/>
+        /// </summary>
+        /// <param name="sock">socket to read from</param>
+        /// <returns>deserialized object</returns>
         private object ReceiveObject(Socket sock)
         {
             if (!sock.Connected) return null;
@@ -88,7 +109,9 @@ namespace ServerService
             }
             return null;
         }
-
+        /// <summary>
+        /// Listener thread
+        /// </summary>
         private void connectionThreadFunc()
         {
             //Packet pck = null;
@@ -134,7 +157,11 @@ namespace ServerService
                 }
             }
         }
-
+        /// <summary>
+        /// client thread from listener thread
+        /// <seealso cref="connectionThreadFunc()"/>
+        /// </summary>
+        /// <param name="s">accepted socket from listener</param>
         private void clientServiceThreadFunc(Socket s)
         {
             threadsList.Add(Thread.CurrentThread);

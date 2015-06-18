@@ -47,15 +47,17 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>ClientService.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>5094E2714B08FE728FD112C071ED696C64B6BC6D</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>357A5FD4E5262F85E80CC1FAE41CA41777EBDCA1</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>ClientService_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>ClientService_1_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -73,6 +75,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Management" />
     <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -101,6 +104,7 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="ClientService_1_TemporaryKey.pfx" />
     <None Include="ClientService_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>

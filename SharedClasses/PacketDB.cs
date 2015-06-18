@@ -5,6 +5,10 @@ using System.Text;
 
 namespace SharedClasses
 {
+    /// <summary>
+    /// Extension for Packet class used for database connections
+    /// <seealso cref="SharedClasses.Packet"/>
+    /// </summary>
     [Serializable()]
     public class PacketDB : Packet
     {
