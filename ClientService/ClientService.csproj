@@ -47,8 +47,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>
-    </DocumentationFile>
+    <DocumentationFile>bin\Release\ClientService.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>ClientService.Program</StartupObject>

@@ -142,7 +142,7 @@ namespace ServerService
                 p.User, p.Date.ToString(), p.FileName, p.FileHash, (int)p.IType, ip, p.OldFileName);
             }
 
-            if (LookForPlagiarism(p.FileHash))
+            if (LookForPlagiarism(p.FileHash, p.User))
             {
                 addLogs(String.Format("[{0}]Plagiarism detected on file {1}", ip, p.FileName), 1);
             }
@@ -209,10 +209,10 @@ namespace ServerService
         /// </summary>
         /// <param name="hash">hash of checked file</param>
         /// <returns></returns>
-        private bool CheckIfLastDateByHashCouldBePlagiarism(String hash)
+        private bool CheckIfLastDateByHashCouldBePlagiarism(String hash, String user)
         {
             DateTime dtNow = DateTime.Now;
-            string query = String.Format("SELECT date FROM packet WHERE filehash = '{0}' ORDER BY id_Packet DESC LIMIT 1", hash);
+            string query = String.Format("SELECT date, user FROM packet WHERE filehash = '{0}' ORDER BY id_Packet DESC LIMIT 1", hash);
             using (MySqlConnection conn = new MySqlConnection(connString))
             using (MySqlCommand cmd = new MySqlCommand(query, conn))
             {
@@ -222,11 +222,32 @@ namespace ServerService
                     while (reader.Read())
                     {
                         string dt = reader.GetString(0);
+                        string usert = reader.GetString(1);
+                        usert = usert.Replace("\\", "\\\\");
+#if(DEBUG)
+                        Console.WriteLine("user1: " + user + "  user2: " + usert);
+#endif
                         DateTime dtThen = DateTime.Parse(dt);
-                        if (dtNow.Subtract(dtThen).Minutes > 5)
+                        if (user == usert)
                         {
+                            if (dtNow.Subtract(dtThen).Minutes > 5)
+                            {
+                                return true;
+                            }
+                            return false;
+                        }
+                        else
+                        {
+                            if (dtNow.Subtract(dtThen).Seconds > 10)
+                            {
+                                return false;
+                            }
                             return true;
                         }
+                        //if (dtNow.Subtract(dtThen).Minutes > 5)
+                        //{
+                        //    return true;
+                        //}
                     }
                 }
             }
@@ -238,7 +259,7 @@ namespace ServerService
         /// </summary>
         /// <param name="hash">hash of checked file</param>
         /// <returns></returns>
-        public bool LookForPlagiarism(String hash)
+        public bool LookForPlagiarism(String hash, String user)
         {
             string query = String.Format("SELECT COUNT(*) FROM packet WHERE filehash = '{0}'", hash);
             using (MySqlConnection conn = new MySqlConnection(connString))
@@ -251,7 +272,7 @@ namespace ServerService
                     {
                         if (0 < Convert.ToInt32(reader.GetString(0)))
                         {
-                            if (CheckIfLastDateByHashCouldBePlagiarism(hash))
+                            if (CheckIfLastDateByHashCouldBePlagiarism(hash, user))
                                 return true;
                             else
                                 return false;
