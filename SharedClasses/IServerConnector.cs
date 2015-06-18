@@ -6,6 +6,9 @@ using System.ServiceModel;
 
 namespace SharedClasses
 {
+    /// <summary>
+    /// interface for WCF connections between Server and GUI
+    /// </summary>
     [ServiceContract]
     public interface IServerConnector
     {

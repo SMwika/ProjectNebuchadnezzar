@@ -35,34 +35,35 @@ namespace ServerGUI
         private bool liverBlink = false;
         //ServiceHost wcfHost;
 
+        /// <summary>
+        /// thread implementation for live GUI updates
+        /// </summary>
         private void AutoUpdateThreadFunc() // Liver Updates
         {
             while (true)
             {
-                //liverBlink = true;
-                //this.circleLiverNotifier.Dispatcher.Invoke(() => setColor(circleLiverNotifier, "Red"));
                 this.lbLogList.Dispatcher.Invoke(() => updateLogs(false));
                 this.lbClientList.Dispatcher.Invoke(updateActiveConnections);
-                //this.circleLiverNotifier.Dispatcher.Invoke(() => setColor(circleLiverNotifier, "Yellow"));
-                //liverBlink = false;
                 Thread.Sleep(5000);
             }
         }
-
-        private void blinkerThread()
-        {
-            if (liverBlink)
-            {
-                setColor(circleLiverNotifier, new SolidColorBrush(Color.FromArgb(255, 255, 0, 0)));
-                Thread.Sleep(100);
-                setColor(circleLiverNotifier, new SolidColorBrush(Color.FromArgb(255, 0, 255, 0)));
-                Thread.Sleep(100);
-            }
-            else
-            {
-                setColor(circleLiverNotifier, new SolidColorBrush(Color.FromArgb(255, 255, 255, 0)));
-            }
-        }
+        ///// <summary>
+        ///// not used
+        ///// </summary>
+        //private void blinkerThread()
+        //{
+        //    if (liverBlink)
+        //    {
+        //        setColor(circleLiverNotifier, new SolidColorBrush(Color.FromArgb(255, 255, 0, 0)));
+        //        Thread.Sleep(100);
+        //        setColor(circleLiverNotifier, new SolidColorBrush(Color.FromArgb(255, 0, 255, 0)));
+        //        Thread.Sleep(100);
+        //    }
+        //    else
+        //    {
+        //        setColor(circleLiverNotifier, new SolidColorBrush(Color.FromArgb(255, 255, 255, 0)));
+        //    }
+        //}
 
         private void setColor(Ellipse el, SolidColorBrush col)
         {
@@ -100,7 +101,9 @@ namespace ServerGUI
                 }
             }
         }
-
+        /// <summary>
+        /// initializes basic form components
+        /// </summary>
         private void InitControls()
         {
             this.tbDate.Text = "";
@@ -175,18 +178,10 @@ namespace ServerGUI
             tbFilePreview.Text = ev;
         }
 
-        //private void InitWCF()
-        //{
-        //    if (wcfHost != null)
-        //    {
-        //        wcfHost.Close();
-        //    }
-
-        //    wcfHost = new ServiceHost(typeof(GuiWcfConnector), new Uri[] { new Uri("net.pipe://localhost/client") });
-        //    wcfHost.AddServiceEndpoint(typeof(SharedClasses.IGuiWcfConnector), new NetNamedPipeBinding(), "PipeLiverGUI");
-        //    wcfHost.Open();
-        //}
-
+        /// <summary>
+        /// Dispatcher method to set connected flag to GUI
+        /// </summary>
+        /// <param name="conn"></param>
         private void SetConnected(bool conn)
         {
             if (this.circleNotifier.Dispatcher.CheckAccess())
@@ -202,7 +197,10 @@ namespace ServerGUI
                 this.circleNotifier.Dispatcher.Invoke(d, new object[] {conn});
             }
         }
-
+        /// <summary>
+        /// simple getter and setter for bool isConnected value.
+        /// setter also changes color of inGUI notificator
+        /// </summary>
         private bool IsConnected
         {
             set
@@ -232,6 +230,9 @@ namespace ServerGUI
         }
         private List<PacketDB> list;
         private List<PacketDB> shownList;
+        /// <summary>
+        /// simple method to update lists of files/connected users/logs
+        /// </summary>
         private void updateLists()
         {
             connector = pipeFactory.CreateChannel();
@@ -268,12 +269,17 @@ namespace ServerGUI
                 this.circleLiverNotifier.Fill = new SolidColorBrush(Color.FromArgb(255, 255, 255, 0));
             //Thread.Sleep(500);
         }
-
+        /// <summary>
+        /// <see cref="updateLogs(bool firstTime)"/>
+        /// </summary>
         private void updateLogs()
         {
             updateLogs(true);
         }
-
+        /// <summary>
+        /// method for updating log list in GUI
+        /// </summary>
+        /// <param name="firstTime">true if it's a initialization update</param>
         private void updateLogs(bool firstTime)
         {
 
@@ -321,26 +327,11 @@ namespace ServerGUI
                     }
                 }
             }
-
-            ////Console.WriteLine("red");
-            //lbLogList.Items.Clear();
-            //foreach (String log in logList)
-            //{
-            //    if (log.StartsWith("[1]"))
-            //    {
-            //        Label l = new Label();
-            //        l.Content = log;
-            //        l.Foreground = new SolidColorBrush(Color.FromArgb(255, 255, 0, 0));
-            //        lbLogList.Items.Add(l);
-            //        //MessageBox.Show("Possible plagiarism detected. See logs for more info.", "Possible plagiarism", MessageBoxButton.OK, MessageBoxImage.Warning);
-            //    }
-            //    else
-            //    {
-            //        lbLogList.Items.Add(log);
-            //    }
-            //}
-            //Console.WriteLine("green");
         }
+
+        /// <summary>
+        /// updates active connection list in GUI
+        /// </summary>
         private void updateActiveConnections()
         {
             //ipList = connector.GetActiveConnections();
@@ -367,15 +358,6 @@ namespace ServerGUI
                     }
                     if (tmp == "") tmp = ip + "[OFF]";
                     tmpList.Add(tmp);
-                //    if (ipList.Contains(ip.Split(" as ".ToCharArray())[0]))
-                //    {
-                //        int index = ipList.IndexOf(ip.Split(" as ".ToCharArray())[0]);
-                //        ipList.RemoveAt(index);
-                //        Label l = new Label();
-                //        l.Content = ip;
-                //        ipList.Insert(0, ip+"[ON]");
-                //        //ipList.ElementAt(index = ipList.ElementAt(index) + "[ON]";
-                //    }
                 }
                 foreach (String ip in tmpList)
                 {
@@ -388,6 +370,9 @@ namespace ServerGUI
             //}
         }
 
+        /// <summary>
+        /// updates IP list to filter files stored in DB
+        /// </summary>
         private void updateIpList()
         {
             List<string> uniqueIPs = list.Select(x => x.IpAddress).Distinct().ToList();
@@ -400,6 +385,7 @@ namespace ServerGUI
             }
         }
 
+        #region component events methods
         private void dpDatePicker_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             if (isConnected)
@@ -469,20 +455,6 @@ namespace ServerGUI
                     cbRevList.Items.Add(packet.Date.ToString("dd-MM-yyyy HH:mm:ss")); ;
                 }
                 if (cbRevList.Items.Count > 0) cbRevList.SelectedIndex = 0;
-                //this.tbFilePreview.Text = shownList[((ListBox)sender).SelectedIndex].ToString();
-                //int id = shownList[((ListBox)sender).SelectedIndex].Id_files;
-                //if (id < 0)
-                //{
-                //    this.tbFilePreview.Text = "No content available";
-                //}
-                //else
-                //{
-                //    id = connector.GetLastRevisionID(((ListBox)sender).SelectedValue.ToString().Replace("\\", "\\\\"));
-                //    //this.tbFilePreview.Text = ((ListBox)sender).SelectedIndex.ToString();
-                //    //this.tbFilePreview.Text += id;
-                //    //this.tbFilePreview.Text = connector.GetFileContents(shownList[((ListBox)sender).SelectedIndex].Id_files);
-                //    this.tbFilePreview.Text = connector.GetFileContents(id);
-                //}
             }
         }
 
@@ -604,10 +576,13 @@ namespace ServerGUI
         {
             string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "ConfigEditor.exe");
             string configName = System.IO.Path.Combine(Environment.CurrentDirectory, "ServerService.exe");
+#if(DEBUG)
             filename = "\"C:\\Users\\Jakub\\Documents\\Visual Studio 2013\\Projects\\ProjectNebuchadnezzar\\ConfigEditor\\bin\\Debug\\ConfigEditor.exe\"";
             configName = "\"C:\\Users\\Jakub\\Documents\\Visual Studio 2013\\Projects\\ProjectNebuchadnezzar\\ServerService\\bin\\Debug\\ServerService.exe\"";
             Console.WriteLine(filename + " " + configName);
+#endif
             System.Diagnostics.Process proc = System.Diagnostics.Process.Start(filename, configName);
         }
+        #endregion
     }
 }

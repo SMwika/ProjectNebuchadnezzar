@@ -32,7 +32,12 @@ namespace ClientService
 
         private System.Collections.Generic.List<System.IO.FileSystemWatcher> watchers;
 
-
+        /// <summary>
+        /// polls given socket to check connection
+        /// </summary>
+        /// <param name="s">socket to check</param>
+        /// <param name="mode"></param>
+        /// <returns>boolean value</returns>
         private bool IsSocketConnected(System.Net.Sockets.Socket s, bool mode)
         {
             if (s == null) return false;
@@ -41,6 +46,11 @@ namespace ClientService
             if (poll && avail) return false;
             else return true;
         }
+        /// <summary>
+        /// Connection worker thread - checks if server is available
+        /// if server is available it sets the flag and starts polling for configuration injects
+        /// if not it unset the flag and trying again sleeping given time
+        /// </summary>
         private void ConnectionThreadWorker()
         {
             //Environment.SpecialFolder.

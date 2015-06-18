@@ -46,11 +46,8 @@ namespace ConfigEditor
 
         private void populateConfigList(String configFileName)
         {
-            //config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
             config = ConfigurationManager.OpenExeConfiguration(configFileName);
-            //config.AppSettings.File = configFileName;
             Console.WriteLine("config: " + config.FilePath);
-            //Console.WriteLine(config.AppSettings.Settings.AllKeys[0]);
             foreach (KeyValueConfigurationElement set in config.AppSettings.Settings)
             {
                 Label l = new Label();

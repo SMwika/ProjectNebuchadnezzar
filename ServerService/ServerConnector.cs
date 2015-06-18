@@ -6,8 +6,17 @@ using System.Text;
 
 namespace ServerService
 {
+    /// <summary>
+    /// implementation of WCF connetor inteface
+    /// <seealso cref="SharedClasses.IServerConnector"/>
+    /// </summary>
     class ServerConnector : SharedClasses.IServerConnector
     {
+        /// <summary>
+        /// gets list of unique file names from DB
+        /// <seealso cref="SharedClasses.PacketDB"/>
+        /// </summary>
+        /// <returns>List of PacketDB objects</returns>
         public List<SharedClasses.PacketDB> GetUniqueFileNames()
         {
             DBConnect db = new DBConnect();
@@ -15,7 +24,11 @@ namespace ServerService
             db.Destroy();
             return list;
         }
-
+        /// <summary>
+        /// get list of unique filenames from given date
+        /// </summary>
+        /// <param name="dt">day to get from DB</param>
+        /// <returns>List of PacketDB objects</returns>
         public List<SharedClasses.PacketDB> GetUniqueFileNamesByDate(string dt)
         {
             DBConnect db = new DBConnect();
@@ -23,7 +36,11 @@ namespace ServerService
             db.Destroy();
             return list;
         }
-
+        /// <summary>
+        /// gets the contents of file from DB by given ID
+        /// </summary>
+        /// <param name="id">id of the file</param>
+        /// <returns></returns>
         public String GetFileContents(int id)
         {
             DBConnect db = new DBConnect();
@@ -32,7 +49,11 @@ namespace ServerService
             //Console.WriteLine(str);
             return str;
         }
-
+        /// <summary>
+        /// gets the list of file revisons from DB by given name
+        /// </summary>
+        /// <param name="name">name of the file</param>
+        /// <returns>list of PacketDB obejcts</returns>
         public List<SharedClasses.PacketDB> GetFileRevisions(String name)
         {
             DBConnect db = new DBConnect();
@@ -40,7 +61,11 @@ namespace ServerService
             db.Destroy();
             return list;
         }
-
+        /// <summary>
+        /// gets the id of last file revision
+        /// </summary>
+        /// <param name="name">file name</param>
+        /// <returns>id of the file</returns>
         public int GetLastRevisionID(String name)
         {
             DBConnect db = new DBConnect();
@@ -55,14 +80,20 @@ namespace ServerService
             list = Server.clientList;
             return list;
         }
-
+        /// <summary>
+        /// gets the valid possible IP that can connect to Server service
+        /// </summary>
+        /// <returns>list of String IPs</returns>
         public List<String> GetValidConnections()
         {
             List<String> list = new List<String>();
             list = Server.validClients.ToList<String>();
             return list;
         }
-
+        /// <summary>
+        /// gets the logs from DB
+        /// </summary>
+        /// <returns>List of strings with logs</returns>
         public List<String> GetLogs()
         {
             DBConnect db = new DBConnect();
@@ -70,11 +101,11 @@ namespace ServerService
             db.Destroy();
             return list;
         }
-
+        /// <summary>
+        /// prepares and calls the distibuted configurations injection
+        /// </summary>
         public void injectConfig()
         {
-            //var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            //config.Save(ConfigurationSaveMode.Modified);
             ConfigurationManager.RefreshSection("appSettings");
             SharedClasses.ConfigPacket cp = new SharedClasses.ConfigPacket();
             cp.ServerIP = ConfigurationManager.AppSettings["injectServerIP"];
