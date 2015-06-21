@@ -88,6 +88,7 @@ namespace ConfigEditor
                     config.AppSettings.Settings[tb.Name].Value = tb.Text;
                 }
             }
+            Console.WriteLine("config: " + config.FilePath);
             config.Save(ConfigurationSaveMode.Modified);
             ConfigurationManager.RefreshSection("appSettings");
         }

@@ -43,6 +43,7 @@
             this.serviceInstaller1.Description = "A monitoring service";
             this.serviceInstaller1.DisplayName = "Nebuchadnezzar Monitoring Service Client";
             this.serviceInstaller1.ServiceName = "NebuchadnezzarClient";
+            this.serviceInstaller1.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
             // 
             // ProjectInstaller
             // 

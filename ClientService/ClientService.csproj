@@ -83,7 +83,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FileMonitor.cs" />
     <Compile Include="NebuchadnezzarClient.cs">
       <SubType>Component</SubType>
     </Compile>
