@@ -23,13 +23,10 @@ namespace ServerService
         private string user = System.Configuration.ConfigurationManager.AppSettings["mySqlUsername"];
         private string password = System.Configuration.ConfigurationManager.AppSettings["mySqlPassword"];
 
-        private List<string>[] list;
-        private List<string>[] currencies;
-        private List<string>[] shops;
         public DBConnect()
         {
-            connString = "SERVER=" + "adamodrobina.com.pl" + ";PORT=3306;DATABASE=psr;UID=psr_user;PASSWORD=MisUszatek9;";
-            //connString = String.Format("SERVER={0};PORT={1};DATABASE={2};UID={3};PASSWORD={4}", server, port, database, user, password);
+            //connString = "SERVER=" + "adamodrobina.com.pl" + ";PORT=3306;DATABASE=psr;UID=psr_user;PASSWORD=MisUszatek9;";
+            connString = String.Format("SERVER={0};PORT={1};DATABASE={2};UID={3};PASSWORD={4}", server, port, database, user, password);
             conn = new MySqlConnection(connString);
             //this.OpenConnection();
         }

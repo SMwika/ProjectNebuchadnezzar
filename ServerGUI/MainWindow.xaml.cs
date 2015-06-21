@@ -576,6 +576,7 @@ namespace ServerGUI
         {
             string filename = System.IO.Path.Combine(Environment.CurrentDirectory, "ConfigEditor.exe");
             string configName = System.IO.Path.Combine(Environment.CurrentDirectory, "ServerService.exe");
+            configName = "ServerService.exe";
 #if(DEBUG)
             filename = "\"C:\\Users\\Jakub\\Documents\\Visual Studio 2013\\Projects\\ProjectNebuchadnezzar\\ConfigEditor\\bin\\Debug\\ConfigEditor.exe\"";
             configName = "\"C:\\Users\\Jakub\\Documents\\Visual Studio 2013\\Projects\\ProjectNebuchadnezzar\\ServerService\\bin\\Debug\\ServerService.exe\"";
